@@ -35,20 +35,27 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	sysclk_init();
+	ioport_init();
 	board_init();
 
 	/* Insert application code here, after the board has been initialized. */
 
 	#define LED_STATUS_PIN IOPORT_CREATE_PIN( PORTD, 4 )
-	#define LED_BOARD_PIN IOPORT_CREATE_PIN( PORTA, 0 )
+	#define MY_LED IOPORT_CREATE_PIN( PORTA, 0 )
+	#define MY_BUTTON IOPORT_CREATE_PIN( PORTA, 1 )
 
 	ioport_set_pin_dir( LED_STATUS_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir( LED_BOARD_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir( MY_LED, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(MY_BUTTON,IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(MY_BUTTON, IOPORT_MODE_PULLUP);
+
+	bool value;
 
 	while (1)
 	{
+		value = ioport_get_pin_level(MY_BUTTON);
+		ioport_set_pin_level(MY_LED,value);
 		ioport_toggle_pin(LED_STATUS_PIN);
-		ioport_toggle_pin(LED_BOARD_PIN);
 		delay_ms(500);
 	}
 }

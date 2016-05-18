@@ -40,12 +40,15 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 
 	#define LED_STATUS_PIN IOPORT_CREATE_PIN( PORTD, 4 )
+	#define LED_BOARD_PIN IOPORT_CREATE_PIN( PORTA, 0 )
 
 	ioport_set_pin_dir( LED_STATUS_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir( LED_BOARD_PIN, IOPORT_DIR_OUTPUT);
 
 	while (1)
 	{
 		ioport_toggle_pin(LED_STATUS_PIN);
+		ioport_toggle_pin(LED_BOARD_PIN);
 		delay_ms(500);
 	}
 }

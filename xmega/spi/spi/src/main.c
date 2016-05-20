@@ -30,30 +30,59 @@
  */
 #include <asf.h>
 
-#define DRDY_PIN IOPORT_CREATE_PIN(PORTC, 1)
-#define CS_PIN IOPORT_CREATE_PIN(PORTC, 4)
-#define MOSI_PIN IOPORT_CREATE_PIN(PORTC, 5)
-#define MISO_PIN IOPORT_CREATE_PIN(PORTC, 6)
-#define SCK_PIN IOPORT_CREATE_PIN(PORTC, 7)
+void mediate(int income);
+void interrupt_init(void);
+void adc_init(void);
 
 struct spi_device SPI_ADC = {
 	//! Board specific select id
-	.id = CS_PIN
+	.id = SPIC_SS
 };
 
-unsigned int result;
+
+unsigned int massive[16];
+int counter = 0;
+
+void mediate(int income)
+{
+	massive[counter] = income;
+	if (counter++ > 16)
+		counter = 0; 
+}
 
 ISR(PORTC_INT0_vect)
 {
+	unsigned int result = 0;
 	spi_select_device(&SPIC, &SPI_ADC);
 	spi_put(&SPIC,0x08);
 	if (spi_get(&SPIC) == 8)
 	{
 		spi_put(&SPIC,0x38);
-		result = 0;
 		MSB(result) = spi_get(&SPIC);
 		LSB(result) = spi_get(&SPIC);
+		mediate(result);
 	}
+	spi_deselect_device(&SPIC, &SPI_ADC);
+}
+
+void interrupt_init(void)
+{
+	ioport_set_pin_dir(J1_PIN4, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(J1_PIN4, IOPORT_MODE_PULLUP);
+	ioport_set_pin_sense_mode(J1_PIN4, IOPORT_SENSE_FALLING);
+	PORTC.INT0MASK = PIN1_bm;
+	PORTC.INTCTRL = PORT_INT0LVL_LO_gc;
+	PMIC.CTRL |= PMIC_LOLVLEN_bm;
+	cpu_irq_enable();
+}
+
+void adc_init(void)
+{
+	spi_select_device(&SPIC, &SPI_ADC);
+	spi_put(&SPIC,0x20);
+	spi_put(&SPIC,0x0C);
+	spi_put(&SPIC,0x10);
+	spi_put(&SPIC,0x40);
 	spi_deselect_device(&SPIC, &SPI_ADC);
 }
 
@@ -63,31 +92,12 @@ int main (void)
 
 	sysclk_init();
 	board_init();
-	ioport_init();
-
-	/* Insert application code here, after the board has been initialized. */
-
-	ioport_set_pin_dir(DRDY_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(CS_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(MOSI_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(MISO_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(SCK_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(DRDY_PIN, IOPORT_MODE_PULLUP);
-	ioport_set_pin_mode(MISO_PIN, IOPORT_MODE_PULLUP);
-	ioport_set_pin_sense_mode(DRDY_PIN, IOPORT_SENSE_FALLING);
-	PORTC.INT0MASK = PIN1_bm;
-	PORTC.INTCTRL = PORT_INT0LVL_LO_gc;
-	PMIC.CTRL |= PMIC_LOLVLEN_bm;
-	cpu_irq_enable();
+	interrupt_init();
 	spi_master_init(&SPIC);
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0);
 	spi_enable(&SPIC);
+	adc_init();
 
-	spi_select_device(&SPIC, &SPI_ADC);
-	spi_put(&SPIC,0x20);
-	spi_put(&SPIC,0x0C);
-	spi_put(&SPIC,0x10);
-	spi_put(&SPIC,0x40);
-	spi_deselect_device(&SPIC, &SPI_ADC);
+	/* Insert application code here, after the board has been initialized. */
 
 }

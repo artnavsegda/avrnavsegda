@@ -402,6 +402,14 @@
 #    define CONF_BOARD_ENABLE_USARTE0
 #  endif
 
+/**
+ * \def CONF_BOARD_ENABLE_SPIC
+ * \brief Initialize IO pins for USART 0 on port E
+ */
+#  if !defined(CONF_BOARD_ENABLE_SPIC)
+#    define CONF_BOARD_ENABLE_SPIC
+#  endif
+
 //@}
 
 #endif // __DOXYGEN__

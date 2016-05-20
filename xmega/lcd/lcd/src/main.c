@@ -35,6 +35,9 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
+	sysclk_init();
+	gfx_mono_init();
 
 	/* Insert application code here, after the board has been initialized. */
+	gfx_mono_draw_string("Hello world", 15, 15, &sysfont);
 }

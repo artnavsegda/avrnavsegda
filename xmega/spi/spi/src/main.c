@@ -35,6 +35,11 @@
 #define MISO_PIN IOPORT_CREATE_PIN(PORTC, 6)
 #define SCK_PIN IOPORT_CREATE_PIN(PORTC, 7)
 
+struct spi_device SPI_ADC = {
+	//! Board specific select id
+	.id = CS_PIN
+};
+
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
@@ -51,5 +56,14 @@ int main (void)
 	ioport_set_pin_dir(SCK_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(MISO_PIN, IOPORT_MODE_PULLUP);
 	spi_master_init(&SPIC);
+	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0);
+	spi_enable(&SPIC);
+
+	spi_select_device(&SPIC, &SPI_ADC);
+	spi_put(&SPIC,0x20);
+	spi_put(&SPIC,0x0C);
+	spi_put(&SPIC,0x10);
+	spi_put(&SPIC,0x40);
+	spi_deselect_device(&SPIC, &SPI_ADC);
 
 }

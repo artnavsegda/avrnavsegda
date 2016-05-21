@@ -30,14 +30,35 @@
  */
 #include <asf.h>
 
+ISR(PORTF_INT0_vect)
+{
+	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
+}
+
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
 	sysclk_init();
+	ioport_init();
 	gfx_mono_init();
 
 	/* Insert application code here, after the board has been initialized. */
-	gfx_mono_draw_string("Hello world", 15, 15, &sysfont);
+
+	ioport_set_pin_dir(LCD_BACKLIGHT_ENABLE_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
+	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
+	PORTF.INT0MASK = PIN1_bm;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc;
+	PMIC.CTRL |= PMIC_LOLVLEN_bm;
+	cpu_irq_enable();
+
+	gfx_mono_draw_string("Hello world",10,10,&sysfont);
+
+	while (true) {
+		/* Intentionally left empty. */
+	}
 }

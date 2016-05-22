@@ -29,17 +29,11 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "stdio.h"
 
-int num = 0;
-
-ISR(PORTF_INT0_vect)
-{
-	char string[10];
-	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
-	snprintf(string,10,"%d",num++);
-	gfx_mono_draw_string(string,10,10,&sysfont);
-}
+twi_master_options_t opt = {
+	.speed = 50000,
+	.chip  = 0x18
+};
 
 int main (void)
 {
@@ -47,23 +41,7 @@ int main (void)
 
 	board_init();
 	sysclk_init();
-	ioport_init();
-	gfx_mono_init();
+	twi_master_setup(&TWIE, &opt);
 
 	/* Insert application code here, after the board has been initialized. */
-
-	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
-	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
-	PORTF.INT0MASK = PIN1_bm;
-	PORTF.INTCTRL = PORT_INT0LVL_LO_gc;
-	PMIC.CTRL |= PMIC_LOLVLEN_bm;
-	cpu_irq_enable();
-
-	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	gfx_mono_draw_string("Hello world",10,10,&sysfont);
-
-	while (true) {
-		/* Intentionally left empty. */
-	}
 }

@@ -42,33 +42,35 @@ void spi_sensor_init(void)
 	spi_write_packet(&SPIC, resetdata, 5);
 	//clock reg
 	data_buffer[0] = 0x20;
-	spi_write_packet(&SPIC, data_buffer, 1);
+	spi_write_packet(&SPIC, "\x20", 1);
 	//data_buffer[0] = 0x00;
 	data_buffer[0] = clockreg;
 	spi_write_packet(&SPIC, data_buffer, 1);
 	
 	//setup reg
 	data_buffer[0] = 0x10;
-	spi_write_packet(&SPIC, data_buffer, 1);
+	spi_write_packet(&SPIC, "\x10", 1);
 	//data_buffer[0] = 0x04;
 	data_buffer[0] = setupreg;
 	spi_write_packet(&SPIC, data_buffer, 1);
 	
 	//offset reg
 	data_buffer[0] = 0x60;
-	spi_write_packet(&SPIC, data_buffer, 1);
+	spi_write_packet(&SPIC, "\x60", 1);
 	data_buffer[0] = 0x18;
 	data_buffer[1] = 0x3A;
 	data_buffer[2] = 0x00;
-	spi_write_packet(&SPIC, data_buffer, 3);
+	//spi_write_packet(&SPIC, data_buffer, 3);
+	spi_write_packet(&SPIC, "\x18\x3A\x00", 3);
 	
 	//gain reg
 	data_buffer[0] = 0x70;
-	spi_write_packet(&SPIC, data_buffer, 1);
+	spi_write_packet(&SPIC, "\x70", 1);
 	data_buffer[0] = 0x89;
 	data_buffer[1] = 0x78;
 	data_buffer[2] = 0xD7;
-	spi_write_packet(&SPIC, data_buffer, 3);
+	//spi_write_packet(&SPIC, data_buffer, 3);
+	spi_write_packet(&SPIC, "\x89\x78\xD7", 3);
 
 	spi_deselect_device(&SPIC, &SPI_ADC);
 }
@@ -80,9 +82,20 @@ twi_master_options_t opt = {
 		.chip  = 0x18
 };
 
-const uint8_t setup_pattern[] = {0x03,0x3f};
+uint8_t setup_pattern[] = {0x03,0x3f};
 const uint8_t raise_pattern[] = {0x01,0x40};
 const uint8_t drop_pattern[]  = {0x01,0x80};
+
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
+{
+	twi_package_t packet = {
+		.addr_length  = 0,
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = (void *)message, // transfer data source buffer
+		.length       = sizeof(message)  // transfer data size (bytes)
+	};
+	return twi_master_write(twi, &packet);
+}
 
 void spi_application(void)
 {
@@ -112,13 +125,14 @@ void spi_application(void)
 	twi_master_setup(&TWIE, &opt);
 	twi_master_enable(&TWIE);
 	
-	while (twi_master_write(&TWIE, &packet) != TWI_SUCCESS);
+	//while (twi_master_write(&TWIE, &packet) != TWI_SUCCESS);
+	i2c_send(&TWIE, 0x18, setup_pattern);
 	
 	spi_sensor_init();
 	while (true) {
 			spi_select_device(&SPIC, &SPI_ADC);
 			data_buffer[0] = 0x08;
-			spi_write_packet(&SPIC, data_buffer, 1);
+			spi_write_packet(&SPIC, "\x08", 1);
 			spi_read_packet(&SPIC, &number, 1);
 
 				if (number == 8)
@@ -145,7 +159,7 @@ void spi_application(void)
 					gfx_mono_draw_string(string_buf, 70, 16, &sysfont);*/
 					
 					data_buffer[0] = 0x38;
-					spi_write_packet(&SPIC, data_buffer, 1);
+					spi_write_packet(&SPIC, "\x38", 1);
 					spi_read_packet(&SPIC, &read_buffer, 2);
 					// snprintf(string_buf, sizeof(string_buf), " %2.2X%2.2X", read_buffer[0],read_buffer[1]);
 					// gfx_mono_draw_string(string_buf, 30, 6, &sysfont);
@@ -176,6 +190,14 @@ void spi_application(void)
 			if ((input_key.keycode == KEYBOARD_ENTER) &&
 			(input_key.type == KEYBOARD_RELEASE)) {
 				break;
+			}
+			if ((input_key.keycode == KEYBOARD_UP) &&
+			(input_key.type == KEYBOARD_RELEASE)) {
+				i2c_send(&TWIE, 0x18, raise_pattern);
+			}
+			if ((input_key.keycode == KEYBOARD_DOWN) &&
+			(input_key.type == KEYBOARD_RELEASE)) {
+				i2c_send(&TWIE, 0x18, drop_pattern);
 			}
 	}
 }

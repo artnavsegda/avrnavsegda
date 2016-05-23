@@ -35,10 +35,12 @@ int num = 0;
 
 ISR(PORTF_INT0_vect)
 {
-	char string[10];
 	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
-	snprintf(string,10,"%d",num++);
-	gfx_mono_draw_string(string,10,10,&sysfont);
+}
+
+ISR(PORTF_INT1_vect)
+{
+	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
 }
 
 int main (void)
@@ -55,13 +57,18 @@ int main (void)
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
+	ioport_set_pin_dir(GPIO_PUSH_BUTTON_2,IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(GPIO_PUSH_BUTTON_2, IOPORT_MODE_PULLUP);
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING);
 	PORTF.INT0MASK = PIN1_bm;
-	PORTF.INTCTRL = PORT_INT0LVL_LO_gc;
+	PORTF.INT1MASK = PIN2_bm;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
 	PMIC.CTRL |= PMIC_LOLVLEN_bm;
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 	gfx_mono_draw_string("Hello world",10,10,&sysfont);
+	delay_ms(500);
 
 	while (true) {
 		/* Intentionally left empty. */

@@ -29,11 +29,37 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include "stdio.h"
+
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message);
+
+int num = 0;
 
 twi_master_options_t opt = {
 	.speed = 50000,
-	.chip  = 0x18
 };
+
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
+{
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = (void *)message, // transfer data source buffer
+		.length       = sizeof(message)  // transfer data size (bytes)
+	};
+	return twi_master_write(twi, &packet);
+}
+
+ISR(PORTF_INT0_vect)
+{
+	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
+	i2c_send(&TWIE, 0x18, "\x01\x40");
+}
+
+ISR(PORTF_INT1_vect)
+{
+	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
+	i2c_send(&TWIE, 0x18, "\x01\x80");
+}
 
 int main (void)
 {
@@ -41,7 +67,33 @@ int main (void)
 
 	board_init();
 	sysclk_init();
+	ioport_init();
 	twi_master_setup(&TWIE, &opt);
 
 	/* Insert application code here, after the board has been initialized. */
+
+	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
+	ioport_set_pin_dir(GPIO_PUSH_BUTTON_2,IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(GPIO_PUSH_BUTTON_2, IOPORT_MODE_PULLUP);
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING);
+	PORTF.INT0MASK = PIN1_bm;
+	PORTF.INT1MASK = PIN2_bm;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
+	PMIC.CTRL |= PMIC_LOLVLEN_bm;
+	cpu_irq_enable();
+
+	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	delay_ms(500);
+	i2c_send(&TWIE, 0x18, "\x03\x3f");
+	delay_ms(500);
+	i2c_send(&TWIE, 0x18, "\x01\x40");
+	delay_ms(500);
+	i2c_send(&TWIE, 0x18, "\x01\x80");
+	delay_ms(500);
+
+	while (true) {
+		/* Intentionally left empty. */
+	}
 }

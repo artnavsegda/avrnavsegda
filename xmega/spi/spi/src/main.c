@@ -39,12 +39,17 @@ void mediate(int income);
 void interrupt_init(void);
 void adc_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message);
 
 char string[10];
 
 struct spi_device SPI_ADC = {
 	//! Board specific select id
 	.id = SPIC_SS
+};
+
+twi_master_options_t opt = {
+	.speed = 50000,
 };
 
 #define AVERAGING 32
@@ -84,25 +89,28 @@ ISR(PORTC_INT0_vect)
 	spi_deselect_device(&SPIC, &SPI_ADC);
 }
 
+ISR(PORTF_INT1_vect)
+{
+	i2c_send(&TWIE, 0x18, "\x01\x40");
+}
+
 ISR(PORTF_INT0_vect)
 {
-	LED_Toggle(LCD_BACKLIGHT_ENABLE_PIN);
-	snprintf(string,10,"%d",num++);
-	gfx_mono_draw_string(string,10,10,&sysfont);
+	i2c_send(&TWIE, 0x18, "\x01\x80");
 }
 
 void interrupt_init(void)
 {
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
-	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
 	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING);
 	PORTC.INT0MASK = PIN1_bm;
 	PORTF.INT0MASK = PIN1_bm;
+	PORTF.INT1MASK = PIN2_bm;
 	PORTC.INTCTRL = PORT_INT0LVL_LO_gc;
-	PORTF.INTCTRL = PORT_INT0LVL_LO_gc;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
 	PMIC.CTRL |= PMIC_LOLVLEN_bm;
 	cpu_irq_enable();
 }
@@ -125,6 +133,16 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data)
 	return spi_get(spi);
 }
 
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
+{
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = (void *)message, // transfer data source buffer
+		.length       = sizeof(message)  // transfer data size (bytes)
+	};
+	return twi_master_write(twi, &packet);
+}
+
 int main (void)
 {
 	uint8_t read_buffer[3] = {0x00, 0x00, 0x00};
@@ -133,6 +151,7 @@ int main (void)
 	sysclk_init();
 	ioport_init();
 	board_init();
+	twi_master_setup(&TWIE, &opt);
 	gfx_mono_init();
 	interrupt_init();
 
@@ -150,6 +169,7 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	i2c_send(&TWIE, 0x18, "\x03\x3f");
 	//gfx_mono_draw_string("Hello world",10,10,&sysfont);
 
 	//unsigned int result = 0;
@@ -181,9 +201,9 @@ int main (void)
 		x = 0;
 		for(i=0;i<AVERAGING;i++)
 			x=x+massive[i];
-		snprintf(string, sizeof(string), "%5ld ", (long)result-0x17CC);
+		snprintf(string, sizeof(string), "  %5ld ", (long)result-0x17CC);
 		gfx_mono_draw_string(string,10,10,&sysfont);
-		snprintf(string, sizeof(string), "%5ld ", (x >> STEP)-0x17CC);
+		snprintf(string, sizeof(string), "  %5ld ", (x >> STEP)-0x17CC);
 		gfx_mono_draw_string(string,10,20,&sysfont);
 		delay_ms(REFRESH);
 	}

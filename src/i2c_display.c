@@ -13,6 +13,8 @@
 #include "i2c_display.h"
 #include "sensor.h"
 #include "sensor_bus.h"
+#include "spi_display.h"
+
 
 void i2c_application(void)
 {
@@ -31,6 +33,7 @@ void i2c_application(void)
 	sensor_bus_init(&TWIE, 400000);
 	delay_ms(50);
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
+	//i2c_send(&TWIE, 0x18, "\x03\x3f");
 	
 	if (barometer.err) {
 		gfx_mono_draw_string("Error", 10, 10, &sysfont);
@@ -63,11 +66,11 @@ void i2c_application(void)
 			keyboard_get_key_state(&input_key);
 			if ((input_key.keycode == KEYBOARD_UP) &&
 			(input_key.type == KEYBOARD_RELEASE)) {
-				
+				//i2c_send(&TWIE, 0x18, "\x01\x40");
 			}
 			if ((input_key.keycode == KEYBOARD_DOWN) &&
 			(input_key.type == KEYBOARD_RELEASE)) {
-				
+				//i2c_send(&TWIE, 0x18, "\x01\x80");
 			}
 			if ((input_key.keycode == KEYBOARD_ENTER) &&
 			(input_key.type == KEYBOARD_RELEASE)) {

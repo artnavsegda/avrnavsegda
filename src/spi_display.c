@@ -10,11 +10,24 @@
 #include "bitmaps.h"
 #include "keyboard.h"
 #include "twi_master.h"
+#include "sensor.h"
+#include "sensor_bus.h"
 #include "spi_master.h"
 #include "spi_display.h"
 #include "setup.h"
 
 uint8_t resetdata[5] = {0xFF,0xFF,0xFF,0xFF,0xFF};
+
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
+{
+	twi_package_t packet = {
+		.addr_length  = 0,
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = (void *)message, // transfer data source buffer
+		.length       = sizeof(message)  // transfer data size (bytes)
+	};
+	return twi_master_write(twi, &packet);
+}
 
 struct spi_device SPI_ADC = {
 	//! Board specific select id
@@ -82,29 +95,11 @@ twi_master_options_t opt = {
 		.chip  = 0x18
 };
 
-uint8_t setup_pattern[] = {0x03,0x3f};
-const uint8_t raise_pattern[] = {0x01,0x40};
-const uint8_t drop_pattern[]  = {0x01,0x80};
-
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
-{
-	twi_package_t packet = {
-		.addr_length  = 0,
-		.chip         = addr,      // TWI slave bus address
-		.buffer       = (void *)message, // transfer data source buffer
-		.length       = sizeof(message)  // transfer data size (bytes)
-	};
-	return twi_master_write(twi, &packet);
-}
-
 void spi_application(void)
 {
-	twi_package_t packet = {
-		.addr_length = 0,
-		.chip         = 0x18,      // TWI slave bus address
-		.buffer       = (void *)setup_pattern, // transfer data source buffer
-		.length       = sizeof(setup_pattern)  // transfer data size (bytes)
-	};
+	sensor_t barometer;             /* Pressure sensor device descriptor */
+	sensor_data_t press_data;       /* Pressure data */
+	sensor_data_t temp_data;        /* Temperature data */
 	
 	int median;
 	long average = 0;
@@ -122,14 +117,39 @@ void spi_application(void)
 	// Draw static strings outside the loop
 	gfx_mono_draw_string("SPI", 0, 0, &sysfont);
 	
-	twi_master_setup(&TWIE, &opt);
-	twi_master_enable(&TWIE);
+	sensor_bus_init(&TWIE, 400000);
+	delay_ms(50);
+	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
+
+	if (barometer.err) {
+		gfx_mono_draw_string("Error", 10, 10, &sysfont);
+
+		while (true) {
+			keyboard_get_key_state(&input_key);
+			if ((input_key.keycode == KEYBOARD_ENTER) &&
+			(input_key.type == KEYBOARD_RELEASE)) {
+				return 0;
+			}
+		}
+	}
+
+	/* Initialize sensor data structure flags for scaled vs. raw data */
+	press_data.scaled = true;
+	temp_data.scaled = true;
 	
 	//while (twi_master_write(&TWIE, &packet) != TWI_SUCCESS);
-	i2c_send(&TWIE, 0x18, setup_pattern);
+	i2c_send(&TWIE, 0x18, "\x03\x3f");
 	
 	spi_sensor_init();
 	while (true) {
+			sensor_get_pressure(&barometer, &press_data);
+			sensor_get_temperature(&barometer, &temp_data);
+
+			snprintf(string_buf, sizeof(string_buf), "%.2f", (press_data.pressure.value / 100.0));
+			gfx_mono_draw_string(string_buf, 20, 10, &sysfont);
+			snprintf(string_buf, sizeof(string_buf), "%.1f", (temp_data.temperature.value / 10.0));
+			gfx_mono_draw_string(string_buf, 20, 20, &sysfont);
+
 			spi_select_device(&SPIC, &SPI_ADC);
 			data_buffer[0] = 0x08;
 			spi_write_packet(&SPIC, "\x08", 1);
@@ -165,10 +185,10 @@ void spi_application(void)
 					// gfx_mono_draw_string(string_buf, 30, 6, &sysfont);
 					MSB(result) = read_buffer[0];
 					LSB(result) = read_buffer[1];
-					// snprintf(string_buf, sizeof(string_buf), "%5ld ", (long)result-0x17CC);
+					snprintf(string_buf, sizeof(string_buf), "%5ld ", (long)result-0x17CC);
 					//printf("%ld\n\r",(long)result-0x17CC);
 					//snprintf(string_buf, sizeof(string_buf), "%X",number2);
-					// gfx_mono_draw_string(string_buf, 30, 16, &sysfont);
+					gfx_mono_draw_string(string_buf, 70, 6, &sysfont);
 					average = average + result;
 					median++;
 					if (median == 32)
@@ -193,11 +213,11 @@ void spi_application(void)
 			}
 			if ((input_key.keycode == KEYBOARD_UP) &&
 			(input_key.type == KEYBOARD_RELEASE)) {
-				i2c_send(&TWIE, 0x18, raise_pattern);
+				i2c_send(&TWIE, 0x18, "\x01\x40");
 			}
 			if ((input_key.keycode == KEYBOARD_DOWN) &&
 			(input_key.type == KEYBOARD_RELEASE)) {
-				i2c_send(&TWIE, 0x18, drop_pattern);
+				i2c_send(&TWIE, 0x18, "\x01\x80");
 			}
 	}
 }

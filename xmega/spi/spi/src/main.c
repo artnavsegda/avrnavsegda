@@ -31,10 +31,6 @@
 #include <asf.h>
 #include "stdio.h"
 
-#define LED_STATUS_PIN IOPORT_CREATE_PIN( PORTD, 4 )
-#define MY_LED IOPORT_CREATE_PIN( PORTE, 4 )
-#define MY_BUTTON IOPORT_CREATE_PIN( PORTF, 1 )
-
 void mediate(int income);
 void interrupt_init(void);
 void adc_init(void);
@@ -66,15 +62,11 @@ void mediate(int income)
 		counter = 0; 
 }
 
-int num = 0;
-
 unsigned int result = 0;
 
 ISR(PORTC_INT0_vect)
 {
 	LED_Toggle(LED2);
-	//snprintf(string,10,"%d",num++);
-	//gfx_mono_draw_string(string,10,10,&sysfont);
 	spi_select_device(&SPIC, &SPI_ADC);
 	spi_gut(&SPIC,0x08);
 	if (spi_gut(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
@@ -117,7 +109,6 @@ void interrupt_init(void)
 
 void adc_init(void)
 {
-	uint8_t init[] = {0x20,0x0C,0x10,0x40};
 	spi_select_device(&SPIC, &SPI_ADC);
 	spi_write_packet(&SPIC, "\x20\x0C\x10\x04", 4);
 	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
@@ -145,7 +136,6 @@ status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
 
 int main (void)
 {
-	uint8_t read_buffer[3] = {0x00, 0x00, 0x00};
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	sysclk_init();
@@ -172,30 +162,9 @@ int main (void)
 	i2c_send(&TWIE, 0x18, "\x03\x3f");
 	//gfx_mono_draw_string("Hello world",10,10,&sysfont);
 
-	//unsigned int result = 0;
 	long x = 0;
 	int i;
 
-	while (0)
-	{
-		spi_select_device(&SPIC, &SPI_ADC);
-		spi_gut(&SPIC,0x08);
-		if (spi_gut(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
-		{
-			spi_gut(&SPIC,0x38);
-			//spi_read_packet(&SPIC, read_buffer, 2);
-			//MSB(result) = read_buffer[0];
-			//LSB(result) = read_buffer[1];
-			MSB(result) = spi_gut(&SPIC,0xFF);
-			LSB(result) = spi_gut(&SPIC,0xFF);
-			//snprintf(string, 10, " %2.2X%2.2X", read_buffer[0],read_buffer[1]);
-			//snprintf(string, 10, " %2.2X%2.2X", spi_gut(&SPIC,0xFF),spi_gut(&SPIC,0xFF));
-			snprintf(string, sizeof(string), "%5ld ", (long)result-0x17CC);
-			gfx_mono_draw_string(string,10,10,&sysfont);
-		}
-		//ioport_toggle_pin(LED_STATUS_PIN);
-		delay_ms(500);
-	}
 	while (1)
 	{
 		x = 0;

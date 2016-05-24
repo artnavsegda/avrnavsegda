@@ -137,6 +137,8 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_ENABLE_SPIC
+ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 4), IOPORT_DIR_OUTPUT
+| IOPORT_INIT_HIGH);
 ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 5), IOPORT_DIR_OUTPUT
 | IOPORT_INIT_HIGH);
 ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 6), IOPORT_DIR_INPUT);

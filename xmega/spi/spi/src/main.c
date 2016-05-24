@@ -110,6 +110,7 @@ void interrupt_init(void)
 void adc_init(void)
 {
 	spi_select_device(&SPIC, &SPI_ADC);
+	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
 	spi_write_packet(&SPIC, "\x20\x0C\x10\x04", 4);
 	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
 	spi_write_packet(&SPIC, "\x70\x89\x78\xD7", 4);
@@ -144,12 +145,6 @@ int main (void)
 	twi_master_setup(&TWIE, &opt);
 	gfx_mono_init();
 	interrupt_init();
-
-	ioport_set_pin_dir(SPIC_SS, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(SPIC_MOSI, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(SPIC_MISO, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(SPIC_SCK, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(SPIC_MISO, IOPORT_MODE_PULLUP);
 
 	spi_master_init(&SPIC);
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0);

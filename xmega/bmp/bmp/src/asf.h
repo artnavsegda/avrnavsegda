@@ -59,6 +59,12 @@
 // From module: Delay routines
 #include <delay.h>
 
+// From module: GFX Monochrome - Monochrome Graphic Library
+#include <gfx_mono.h>
+
+// From module: GFX Monochrome - System Font
+#include <sysfont.h>
+
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
 
@@ -74,8 +80,21 @@
 // From module: NVM - Non Volatile Memory
 #include <nvm.h>
 
+// From module: PMIC - Programmable Multi-level Interrupt Controller
+#include <pmic.h>
+
 // From module: Part identification macros
 #include <parts.h>
+
+// From module: SPI - Serial Peripheral Interface
+#include <spi.h>
+
+// From module: SPI - XMEGA implementation
+#include <spi_master.h>
+#include <spi_master.h>
+
+// From module: ST7565R LCD controller
+#include <st7565r.h>
 
 // From module: Sensors - Common Sensor Service
 #include <sensor.h>
@@ -92,6 +111,9 @@
 // From module: TWI - Two-wire Master and Slave Interface
 #include <twim.h>
 #include <twis.h>
+
+// From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
+#include <usart.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

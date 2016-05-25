@@ -86,11 +86,11 @@ int main (void)
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 	delay_ms(500);
-	i2c_send(&TWIE, 0x18, "\x03\x3f");
+	i2c_send(&TWIE, 0x18, "\x03\x3f"); // register 03, contents 3f
 	delay_ms(500);
-	i2c_send(&TWIE, 0x18, "\x01\x40");
+	i2c_send(&TWIE, 0x18, "\x01\x40"); // register 01, contents 40
 	delay_ms(500);
-	i2c_send(&TWIE, 0x18, "\x01\x80");
+	i2c_send(&TWIE, 0x18, "\x01\x80"); // register 01, contents 80
 	delay_ms(500);
 
 	while (true) {

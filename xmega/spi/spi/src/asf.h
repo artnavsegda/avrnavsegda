@@ -93,6 +93,9 @@
 // From module: ST7565R LCD controller
 #include <st7565r.h>
 
+// From module: Sensors - Common Sensor Service
+#include <sensor.h>
+
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
 

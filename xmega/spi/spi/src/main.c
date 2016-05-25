@@ -146,6 +146,18 @@ status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message) // ??????? i2
 	return twi_master_write(twi, &packet);
 }
 
+uint8_t i2c_read(TWI_t *twi, uint8_t addr)
+{
+	uint8_t data_received[1];
+	twi_package_t packet_read = {
+		.chip         = 0x18,      // TWI slave bus address
+		.buffer       = data_received,        // transfer data destination buffer
+		.length       = 1                    // transfer data size (bytes)
+	};
+	if(twi_master_read(&TWIE, &packet_read) == TWI_SUCCESS)
+	return data_received[0];
+}
+
 int main (void)
 {
 	sensor_t barometer;             /* Pressure sensor device descriptor */
@@ -185,16 +197,16 @@ int main (void)
 	{
 		sensor_get_pressure(&barometer, &press_data);
 		sensor_get_temperature(&barometer, &temp_data);
-
 		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
 		gfx_mono_draw_string(string, 10, 10, &sysfont);
 		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
 		gfx_mono_draw_string(string, 10, 20, &sysfont);
-
 		snprintf(string, sizeof(string), "%5ld", (long)result-EXPECTEDZERO);
-		gfx_mono_draw_string(string,70,10,&sysfont); // ?????????? ????????
+		gfx_mono_draw_string(string,60,10,&sysfont); // ?????????? ????????
 		snprintf(string, sizeof(string), "%5ld", (average()>>STEP)-EXPECTEDZERO);
-		gfx_mono_draw_string(string,70,20,&sysfont); // ??????????? ????????
+		gfx_mono_draw_string(string,60,20,&sysfont); // ??????????? ????????
+		snprintf(string, sizeof(string), "%3d", i2c_read(&TWIE, 0x18));
+		gfx_mono_draw_string(string,100,10,&sysfont);
 		delay_ms(REFRESH); // ?????
 	}
 }

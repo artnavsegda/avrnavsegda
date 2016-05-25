@@ -49,6 +49,18 @@ status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
 	return twi_master_write(twi, &packet);
 }
 
+uint8_t i2c_read(TWI_t *twi, uint8_t addr)
+{
+	uint8_t data_received[1];
+	twi_package_t packet_read = {
+		.chip         = 0x18,      // TWI slave bus address
+		.buffer       = data_received,        // transfer data destination buffer
+		.length       = 1                    // transfer data size (bytes)
+	};
+	if(twi_master_read(&TWIE, &packet_read) == TWI_SUCCESS)
+		return data_received[0];
+}
+
 ISR(PORTF_INT0_vect)
 {
 	i2c_send(&TWIE, 0x18, "\x01\x40");
@@ -90,22 +102,11 @@ int main (void)
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	//delay_ms(500);
 	i2c_send(&TWIE, 0x18, "\x03\x3f"); // register 03, contents 3f
-	//delay_ms(500);
-	//i2c_send(&TWIE, 0x18, "\x01\x40"); // register 01, contents 40
-	//delay_ms(500);
-	//i2c_send(&TWIE, 0x18, "\x01\x80"); // register 01, contents 80
-	//delay_ms(500);*/
 
 	while (true) {
-		if(twi_master_read(&TWIE, &packet_read) == TWI_SUCCESS){
-		twi_master_read(&TWIE, &packet_read);
-//			//Check read content
-			//data_received[0];
-			snprintf(string,sizeof(string),"hello %3d",data_received[0]);
-			gfx_mono_draw_string(string,10,10,&sysfont);
-			delay_ms(500);
-		}
+		snprintf(string,sizeof(string),"%3d",i2c_read(&TWIE, 0x18));
+		gfx_mono_draw_string(string,10,10,&sysfont);
+		delay_ms(500);
 	}
 }

@@ -31,7 +31,7 @@
 #include <asf.h>
 #include "stdio.h"
 
-int num = 0;
+char string[20];
 
 ISR(PORTF_INT0_vect)
 {
@@ -67,7 +67,8 @@ int main (void)
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	gfx_mono_draw_string("Hello world",10,10,&sysfont);
+	snprintf(string,sizeof(string),"Hello world");
+	gfx_mono_draw_string(string,10,10,&sysfont);
 	delay_ms(500);
 
 	while (true) {

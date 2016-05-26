@@ -56,7 +56,7 @@ int main (void)
 	ioport_set_pin_sense_mode(MY_BUTTON, IOPORT_SENSE_FALLING);
 	PORTF.INT0MASK = PIN1_bm;
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc;
-	PMIC.CTRL |= PMIC_LOLVLEN_bm;
+	irq_initialize_vectors()
 	cpu_irq_enable();
 
 	//bool value;

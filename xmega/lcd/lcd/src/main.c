@@ -63,7 +63,7 @@ int main (void)
 	PORTF.INT0MASK = PIN1_bm;
 	PORTF.INT1MASK = PIN2_bm;
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
-	PMIC.CTRL |= PMIC_LOLVLEN_bm;
+	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);

@@ -201,18 +201,26 @@ int main (void)
 
 	while (1)
 	{
+		int averaged = average()>>STEP;
 		sensor_get_pressure(&barometer, &press_data);
 		sensor_get_temperature(&barometer, &temp_data);
-		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
-		gfx_mono_draw_string(string, 10, 10, &sysfont);
-		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
-		gfx_mono_draw_string(string, 10, 20, &sysfont);
+		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
+		//snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
+		//gfx_mono_draw_string(string, 10, 10, &sysfont);
+		//snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
+		//gfx_mono_draw_string(string, 10, 20, &sysfont);
 		snprintf(string, sizeof(string), "%5ld", (long)result-EXPECTEDZERO);
 		gfx_mono_draw_string(string,60,10,&sysfont); // ?????????? ????????
-		snprintf(string, sizeof(string), "%5ld", (average()>>STEP)-EXPECTEDZERO);
+		snprintf(string, sizeof(string), "%5ld", (long)averaged-EXPECTEDZERO);
 		gfx_mono_draw_string(string,60,20,&sysfont); // ??????????? ????????
 		snprintf(string, sizeof(string), "%3d", i2c_read(&TWIE, 0x18));
 		gfx_mono_draw_string(string,100,10,&sysfont);
+		for (int i=0; i<AVERAGING; ++i)
+		{
+			gfx_mono_draw_pixel(i , ((massive[i]-(average()>>STEP)))+16, GFX_PIXEL_SET);
+			if (i == counter)
+				gfx_mono_draw_line(i, 0, i, 32, GFX_PIXEL_SET);
+		}
 		delay_ms(REFRESH); // ?????
 	}
 }

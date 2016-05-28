@@ -50,10 +50,6 @@ int main (void)
 	board_init();
 	sysclk_init();
 	ioport_init();
-	gfx_mono_init();
-
-	/* Insert application code here, after the board has been initialized. */
-
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING);
@@ -65,13 +61,16 @@ int main (void)
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
 	irq_initialize_vectors();
 	cpu_irq_enable();
+	gfx_mono_init();
+
+	/* Insert application code here, after the board has been initialized. */
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	snprintf(string,sizeof(string),"Hello world");
-	gfx_mono_draw_string(string,10,10,&sysfont);
-	delay_ms(500);
-
 	while (true) {
-		/* Intentionally left empty. */
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		gfx_mono_draw_pixel(10 , 10, GFX_PIXEL_SET);
+		//snprintf(string,sizeof(string),"Hello world");
+		//gfx_mono_draw_string(string,10,10,&sysfont);
+		delay_ms(500);
 	}
 }

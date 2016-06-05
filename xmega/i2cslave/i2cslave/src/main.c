@@ -33,7 +33,7 @@
 #define TWI_SPEED 50000
 
 void adc_init(void);
-int analogRead(ADC_t *adc, uint8_t ch_mask);
+void analogRead(ADC_t *adc, uint8_t ch_mask);
 void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
 
 TWI_Slave_t slave;
@@ -43,11 +43,13 @@ ISR(TWIE_TWIS_vect)
 	TWI_SlaveInterruptHandler(&slave);
 }
 
-int analogRead(ADC_t *adc, uint8_t ch_mask)
+void analogRead(ADC_t *adc, uint8_t ch_mask)
 {
 	adc_start_conversion(adc, ch_mask);
 	adc_wait_for_interrupt_flag(adc, ch_mask);
-	return adc_get_result(adc, ch_mask);
+	uint16_t result = adc_get_result(adc, ch_mask);
+	slave.sendData[0] = LSB(result);
+	slave.sendData[1] = MSB(result);
 }
 
 static void slave_process(void)
@@ -55,28 +57,28 @@ static void slave_process(void)
 	switch(slave.receivedData[0])
 	{
 	case 0x00:
-		slave.sendData[0] = analogRead(&ADCB, ADC_CH0);
+		analogRead(&ADCB, ADC_CH0);
 		break;
 	case 0x01:
-		slave.sendData[0] = analogRead(&ADCB, ADC_CH1);
+		analogRead(&ADCB, ADC_CH1);
 		break;
 	case 0x02:
-		slave.sendData[0] = analogRead(&ADCB, ADC_CH2);
+		analogRead(&ADCB, ADC_CH2);
 		break;
 	case 0x03:
-		slave.sendData[0] = analogRead(&ADCB, ADC_CH3);
+		analogRead(&ADCB, ADC_CH3);
 		break;
 	case 0x04:
-		slave.sendData[0] = analogRead(&ADCA, ADC_CH0);
+		analogRead(&ADCA, ADC_CH0);
 		break;
 	case 0x05:
-		slave.sendData[0] = analogRead(&ADCA, ADC_CH1);
+		analogRead(&ADCA, ADC_CH1);
 		break;
 	case 0x06:
-		slave.sendData[0] = analogRead(&ADCA, ADC_CH2);
+		analogRead(&ADCA, ADC_CH2);
 		break;
 	case 0x07:
-		slave.sendData[0] = analogRead(&ADCA, ADC_CH3);
+		analogRead(&ADCA, ADC_CH3);
 		break;
 	default:
 		break;
@@ -101,20 +103,20 @@ void adc_init(void)
 	struct adc_config adca_conf, adcb_conf;
 	adc_read_configuration(&ADCA, &adca_conf);
 	adc_read_configuration(&ADCB, &adcb_conf);
-	adc_set_conversion_parameters(&adca_conf, ADC_SIGN_OFF, ADC_RES_8, ADC_REF_VCC);
-	adc_set_conversion_parameters(&adcb_conf, ADC_SIGN_OFF, ADC_RES_8, ADC_REF_VCC);
+	adc_set_conversion_parameters(&adca_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
+	adc_set_conversion_parameters(&adcb_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
 	adc_set_conversion_trigger(&adca_conf, ADC_TRIG_MANUAL, 1, 0);
 	adc_set_conversion_trigger(&adcb_conf, ADC_TRIG_MANUAL, 1, 0);
 	adc_set_clock_rate(&adca_conf, 200000UL);
 	adc_set_clock_rate(&adcb_conf, 200000UL);
-	analogInput(&ADCA, ADC_CH0, ADCCH_POS_PIN4);
-	analogInput(&ADCA, ADC_CH1, ADCCH_POS_PIN5);
-	analogInput(&ADCA, ADC_CH2, ADCCH_POS_PIN6);
-	analogInput(&ADCA, ADC_CH3, ADCCH_POS_PIN7);
 	analogInput(&ADCB, ADC_CH0, ADCCH_POS_PIN0);
 	analogInput(&ADCB, ADC_CH1, ADCCH_POS_PIN1);
 	analogInput(&ADCB, ADC_CH2, ADCCH_POS_PIN2);
 	analogInput(&ADCB, ADC_CH3, ADCCH_POS_PIN3);
+	analogInput(&ADCA, ADC_CH0, ADCCH_POS_PIN4);
+	analogInput(&ADCA, ADC_CH1, ADCCH_POS_PIN5);
+	analogInput(&ADCA, ADC_CH2, ADCCH_POS_PIN6);
+	analogInput(&ADCA, ADC_CH3, ADCCH_POS_PIN7);
 	adc_write_configuration(&ADCA, &adca_conf);
 	adc_write_configuration(&ADCB, &adcb_conf);
 	adc_enable(&ADCA);

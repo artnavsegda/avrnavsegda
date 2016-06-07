@@ -31,8 +31,8 @@
 #include <asf.h>
 
 #define TWI_SPEED 50000
-#define AVERAGING 32 // ????????? ??????????
-#define STEP 5 // ???????? ?????
+#define AVERAGING 64 // ????????? ??????????
+#define STEP 6 // ???????? ?????
 #define REFRESH 1000 // ??????? ?????????? ??????? ? ?????????????
 #define EXPECTEDZERO 0x17CC // ?????????????? ????
 #define YSCALE 1
@@ -46,12 +46,16 @@ void analogRead(ADC_t *adc, uint8_t ch_mask);
 void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
 void interrupt_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
+void bladerunner(uint8_t drift);
 
 char string[20];
 unsigned int massive[AVERAGING+1];
 int counter = 0;
 unsigned int result = EXPECTEDZERO;
 uint8_t lobyte, hibyte;
+
+unsigned int runner[200];
+int runflag = 0;
 
 TWI_Slave_t slave;
 
@@ -125,9 +129,26 @@ void analogRead(ADC_t *adc, uint8_t ch_mask)
 	slave.sendData[1] = MSB(resist);
 }
 
+void bladerunner(uint8_t drift)
+{
+	uint16_t resdark = 0;
+	if (drift > runflag)
+		resdark = runner[runflag-drift+100];
+	else
+		resdark = runner[runflag-drift];
+	slave.sendData[0] = LSB(resdark);
+	slave.sendData[1] = MSB(resdark);
+}
+
 static void slave_process(void)
 {
 	int averaged;
+	if (slave.receivedData[0] > 100)
+	{
+		bladerunner(slave.receivedData[0]-100);
+	}
+	else
+	{
 	switch(slave.receivedData[0])
 	{
 	case 0x00:
@@ -165,6 +186,7 @@ static void slave_process(void)
 		break;
 	default:
 		break;
+	}
 	}
 }
 
@@ -249,6 +271,10 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	do {
-		// nothing
+		runner[runflag] = average()>>STEP;
+		runflag++;
+		if (runflag > 100)
+			runflag = 0;
+		delay_ms(1000);
 	} while (true);
 }

@@ -31,10 +31,11 @@
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.basic.spi_master" value="Add" config="standard_spi" content-id="Atmel.ASF" />
     <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.spi_master" value="Add" config="standard_spi" content-id="Atmel.ASF" />
+    <option id="common.services.delay" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -110,6 +111,8 @@
     <file path="src/ASF/common/services/spi/spi_master.h" framework="" version="3.31.0" source="common\services\spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/spi/xmega_spi/spi_master.h" framework="" version="3.31.0" source="common\services\spi\xmega_spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/Config/conf_spi_master.h" framework="" version="3.31.0" source="common\services\spi\xmega_spi\module_config\conf_spi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.31.0" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/delay/xmega/cycle_counter.h" framework="" version="3.31.0" source="common\services\delay\xmega\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.31.0/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -178,6 +181,7 @@
       <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -219,6 +223,7 @@
       <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -267,6 +272,7 @@
       <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -309,6 +315,7 @@
       <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -323,6 +330,8 @@
     <Folder Include="src\ASF\common\services\" />
     <Folder Include="src\ASF\common\services\clock\" />
     <Folder Include="src\ASF\common\services\clock\xmega\" />
+    <Folder Include="src\ASF\common\services\delay\" />
+    <Folder Include="src\ASF\common\services\delay\xmega\" />
     <Folder Include="src\ASF\common\services\gpio\" />
     <Folder Include="src\ASF\common\services\gpio\xmega_gpio\" />
     <Folder Include="src\ASF\common\services\ioport\" />
@@ -362,6 +371,12 @@
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\common\services\sleepmgr\sleepmgr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\delay\delay.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\delay\xmega\cycle_counter.h">
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\ASF\common\services\sleepmgr\xmega\sleepmgr.c">

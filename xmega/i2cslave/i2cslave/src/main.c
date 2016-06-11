@@ -47,6 +47,7 @@ void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
 void interrupt_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void bladerunner(uint8_t drift);
+void bigmagic(uint8_t drift);
 
 char string[20];
 unsigned int massive[AVERAGING+1];
@@ -56,6 +57,10 @@ uint8_t lobyte, hibyte;
 
 unsigned int runner[200];
 int runflag = 0;
+
+unsigned int bigdata[6000];
+int knf = 1;
+int bdp = 0;
 
 TWI_Slave_t slave;
 
@@ -140,15 +145,27 @@ void bladerunner(uint8_t drift)
 	slave.sendData[1] = MSB(resdark);
 }
 
+void bigmagic(uint8_t drift)
+{
+	uint16_t resdark = 0;
+	resdark = bigdata[drift*(knf-1)];
+	slave.sendData[0] = LSB(resdark);
+	slave.sendData[1] = MSB(resdark);
+}
+
 static void slave_process(void)
 {
 	int averaged;
-	if (slave.receivedData[0] > 100)
+	if (slave.receivedData[0] > 150)
 	{
-		bladerunner(slave.receivedData[0]-100);
+		bladerunner(slave.receivedData[0]-150);
+		return;
 	}
-	else
+	if (slave.receivedData[0] > 50)
 	{
+		bigmagic(slave.receivedData[0]-50);
+		return;
+	}
 	switch(slave.receivedData[0])
 	{
 	case 0x00:
@@ -186,7 +203,6 @@ static void slave_process(void)
 		break;
 	default:
 		break;
-	}
 	}
 }
 
@@ -275,6 +291,16 @@ int main (void)
 		runflag++;
 		if (runflag > 100)
 			runflag = 0;
+
+		bigdata[bdp] = average()>>STEP;
+		bdp++;
+		if (bdp > 6000)
+		{
+			bdp = 0;
+			knf = 1;
+		}
+		if (bdp > 100*knf)
+			knf++;
 		delay_ms(1000);
 	} while (true);
 }

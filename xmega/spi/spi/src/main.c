@@ -32,12 +32,15 @@
 #include "stdio.h"
 #include "string.h"
 
-#define AVERAGING 32 // ????????? ??????????
-#define STEP 5 // ???????? ?????
+#define AVERAGING 64 // ????????? ??????????
+#define STEP 6 // ???????? ?????
 //#define REFRESH 1000 // ??????? ?????????? ??????? ? ?????????????
 #define EXPECTEDZERO 0x17CC // ?????????????? ????
 #define YSCALE 1
-#define DISPLAYUSE 64
+#define DISPLAYUSE 32
+#define AVEPOSITION 0
+#define RAWPOSITION 0
+
 
 void mediate(int income);
 long average(unsigned int *selekta);
@@ -45,13 +48,15 @@ void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
 void interrupt_init(void);
 void adc_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message);
-uint8_t i2c_read(TWI_t *twi, uint8_t addr);
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content);
+uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory);
 
 char string[20];
 unsigned int massive[AVERAGING];
 int counter = 0;
 unsigned int result = EXPECTEDZERO;
+uint8_t worda,wordb;
+int error = 0;
 
 unsigned int runner[200];
 int runflag = 0;
@@ -72,27 +77,25 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 	{
 		LED_Toggle(LED2); // ??????????? ????????? LED2
 		spi_gut(&SPIC,0x38); // ??????? ??????? ??????????
-		MSB(result) = spi_gut(&SPIC,0xFF); // ??????? ????
-		LSB(result) = spi_gut(&SPIC,0xFF); // ??????? ????
+		worda = spi_gut(&SPIC,0xFF); // ??????? ????
+		MSB(result) = worda;
+		wordb = spi_gut(&SPIC,0xFF); // ??????? ????
+		LSB(result) = wordb;
 		mediate(result); // ????????? ????????
 	}
+	else
+		error++;
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
 }
 
 ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 {
-	if (i2c_read(&TWIE, 0x18)>64)
-		i2c_send(&TWIE, 0x18, (uint8_t []){0x01,0x40}); // ?????????? ??????? mcp23017, ???????? 40
-	else
-		i2c_send(&TWIE, 0x18, (uint8_t []){0x01,0x80});
+	i2c_send(&TWIE, 0x18, 0x01, 0x40); // ?????????? ??????? mcp23017, ???????? 40
 }
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
-	/*if (i2c_read(&TWIE, 0x18)<64)
-		i2c_send(&TWIE, 0x18, (uint8_t []){0x01,0x80}); // ?????????? ??????? mcp23017, ???????? 80
-	else
-		i2c_send(&TWIE, 0x18, (uint8_t []){0x01,0x40});*/
+	i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -150,29 +153,39 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 	return spi_get(spi);
 }
 
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message) // ??????? i2c ??????
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
 {
+	status_code_t status;
+	uint8_t message[2];
 	twi_package_t packet = {
 		.chip         = addr,      // TWI slave bus address
-		.buffer       = (void *)message, // transfer data source buffer
-		.length       = sizeof(message)  // transfer data size (bytes)
+		.buffer       = message, // transfer data source buffer
+		.length       = 2  // transfer data size (bytes)
 	};
-	return twi_master_write(twi, &packet);
+	message[0] = memory;
+	message[1] = content;
+	status = twi_master_write(twi, &packet);
+	return status;
 }
 
-uint8_t i2c_read(TWI_t *twi, uint8_t addr)
+uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
 {
-	uint8_t data_received[1];
-	twi_package_t packet_read = {
-		.chip         = 0x18,      // TWI slave bus address
-		.buffer       = data_received,        // transfer data destination buffer
+	status_code_t status;
+	uint8_t message[1];
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = message,        // transfer data destination buffer
 		.length       = 1                    // transfer data size (bytes)
 	};
-	status_code_t status = twi_master_read(&TWIE, &packet_read);
+	message[0] = memory;
+	status = twi_master_write(twi, &packet);
 	if(status == TWI_SUCCESS)
-		return data_received[0];
-	else
-		return status;
+	{
+		status_code_t status = twi_master_read(twi, &packet);
+		if(status == TWI_SUCCESS)
+			return message[0];
+	}
+	return status;
 }
 
 sensor_t barometer;             /* Pressure sensor device descriptor */
@@ -194,13 +207,16 @@ static void refresh_callback(void)
 		gfx_mono_draw_string(string,60,10,&sysfont); // ?????????? ????????
 		snprintf(string, sizeof(string), "%5ld", (long)averaged-EXPECTEDZERO);
 		gfx_mono_draw_string(string,60,20,&sysfont); // ??????????? ????????
-		//snprintf(string, sizeof(string), "%3d", i2c_read(&TWIE, 0x18));
+		//snprintf(string, sizeof(string), "%2.2X%2.2X", worda, wordb);
 		//gfx_mono_draw_string(string,100,10,&sysfont);
+		snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
+		gfx_mono_draw_string(string,100,20,&sysfont);
+		//error = 0;
 		/*for (int i=0; i<AVERAGING; ++i)
 		{
-			gfx_mono_draw_pixel(i , ((massive[i]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			gfx_mono_draw_pixel(i+RAWPOSITION, ((massive[i]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
 			if (i == counter)
-			gfx_mono_draw_line(i, 0, i, 32, GFX_PIXEL_SET);
+				gfx_mono_draw_line(i+RAWPOSITION, 0, i, 32, GFX_PIXEL_SET);
 		}*/
 		//delay_ms(REFRESH); // ?????
 
@@ -216,9 +232,9 @@ static void refresh_callback(void)
 		for (int i=0; i<DISPLAYUSE; ++i)
 		{
 			if (i+runflag<DISPLAYUSE)
-				gfx_mono_draw_pixel(i, ((runner[i+runflag]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
 			else
-				gfx_mono_draw_pixel(i, ((runner[i+runflag-DISPLAYUSE]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag-DISPLAYUSE]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
 		}
 }
 
@@ -234,7 +250,7 @@ int main (void)
 	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, refresh_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
-	tc_write_period(&TCC0, 0x7fff);
+	tc_write_period(&TCC0, 31250);
 	interrupt_init(); // ????????????? ??????????
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	spi_master_init(&SPIC); // ????????????? SPI
@@ -242,9 +258,10 @@ int main (void)
 	spi_enable(&SPIC); // ????????? SPI
 	sensor_bus_init(&TWIE, 400000);
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
-	i2c_send(&TWIE, 0x18, (uint8_t []){0x03,0x3f}); // ????????? ????????? mcp23017
-	i2c_send(&TWIE, 0x1a, (uint8_t []){0x03,0x00});
-	i2c_send(&TWIE, 0x1a, (uint8_t []){0x01,0xff});
+	i2c_send(&TWIE, 0x18, 0x03, 0x3f); // ????????? ????????? mcp23017
+	//i2c_send(&TWIE, 0x18, 0x01, 0x40);
+	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
+	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
 	adc_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();
 	gfx_mono_init(); // ????????????? ???????

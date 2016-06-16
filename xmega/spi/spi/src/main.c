@@ -262,10 +262,15 @@ int main (void)
 	//i2c_send(&TWIE, 0x18, 0x01, 0x40);
 	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
 	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
+	//pca9557_set_pin_dir(0x02,PCA9557_IO0,PCA9557_DIR_INPUT);
+	//pca9557_set_pin_level(0x02,PCA9557_IO0,PCA9557_PIN_LEVEL_LOW);
+	//pca9557_get_pin_level(0x02,PCA9557_IO0);
+	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_INVERTED);
+	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_RETAINED);
 	adc_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();
 	gfx_mono_init(); // ????????????? ???????
-	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL); // ???????? ?????????
+	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL); // ???????? ?????????
 
 	/* Insert application code here, after the board has been initialized. */
 

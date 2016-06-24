@@ -301,6 +301,6 @@ int main (void)
 		}
 		if (bdp > 100*knf)
 			knf++;
-		delay_ms(1000);
+		delay_ms(REFRESH);
 	} while (true);
 }

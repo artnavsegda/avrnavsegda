@@ -30,16 +30,37 @@
  */
 #include <asf.h>
 
+struct pwm_config pwm_cfg;
+volatile uint8_t duty_cycle_percent = 0;
+bool rise = true;
+
+void pwm_callback(void)
+{
+	if (rise)
+	{
+		if (duty_cycle_percent++ >= 100)
+			rise = false;
+	}
+	else
+	{
+		if (duty_cycle_percent-- <= 1)
+			rise = true;
+	}
+	/* Set new duty cycle value */
+	pwm_set_duty_cycle_percent(&pwm_cfg, duty_cycle_percent);
+}
+
 int main (void)
 {
-	struct pwm_config pwm_cfg;
-
 	/* Insert system clock initialization code here (sysclk_init()). */
 
+	pmic_init();
 	sysclk_init();
 	board_init();
-	pwm_init(&pwm_cfg, PWM_TCE1, PWM_CH_A, 500);
-	pwm_start(&pwm_cfg, 10);
+	cpu_irq_enable();
+	pwm_init(&pwm_cfg, PWM_TCE1, PWM_CH_A, 75);
+	pwm_overflow_int_callback(&pwm_cfg, pwm_callback);
+	pwm_start(&pwm_cfg, duty_cycle_percent);
 
 	/* Insert application code here, after the board has been initialized. */
 	while(1) {

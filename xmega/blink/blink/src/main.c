@@ -45,7 +45,10 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 
+	ioport_set_pin_dir(LED0, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LCD_BACKLIGHT_ENABLE_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
@@ -61,7 +64,10 @@ int main (void)
 	{
 		//value = ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
 		//ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN,value);
+		ioport_toggle_pin(LED0);
+		ioport_toggle_pin(LED1);
 		ioport_toggle_pin(LED2);
+		ioport_toggle_pin(LED3);
 		delay_ms(500);
 	}
 }

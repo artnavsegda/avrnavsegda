@@ -30,9 +30,108 @@
  */
 #include <asf.h>
 
+#define PCA9557_IO0 0
+#define PCA9557_IO1 1
+#define PCA9557_IO2 2
+#define PCA9557_IO3 3
+#define PCA9557_IO4 4
+#define PCA9557_IO5 5
+#define PCA9557_IO6 6
+#define PCA9557_IO7 7
+
+enum pca9557_direction {
+	PCA9557_DIR_INPUT,
+	PCA9557_DIR_OUTPUT,
+};
+
+twi_master_options_t opt = {
+	.speed = 50000,
+};
+
 ISR(PORTF_INT0_vect)
 {
 	ioport_toggle_pin(LCD_BACKLIGHT_ENABLE_PIN);
+}
+
+uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
+{
+	status_code_t status;
+	uint8_t message[1];
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = message,        // transfer data destination buffer
+		.length       = 1                    // transfer data size (bytes)
+	};
+	message[0] = memory;
+	status = twi_master_write(twi, &packet);
+	if(status == TWI_SUCCESS)
+	{
+		status_code_t status = twi_master_read(twi, &packet);
+		if(status == TWI_SUCCESS)
+		return message[0];
+	}
+	return status;
+}
+
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
+{
+	status_code_t status;
+	uint8_t message[2];
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = message, // transfer data source buffer
+		.length       = 2  // transfer data size (bytes)
+	};
+	message[0] = memory;
+	message[1] = content;
+	status = twi_master_write(twi, &packet);
+	return status;
+}
+
+void pca9557_init(uint8_t addr)
+{
+	// polarity all bits retained
+	i2c_send(&TWIE, addr, 0x02, 0x00);
+}
+
+uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port)
+{
+	uint8_t state;
+	state = i2c_read(&TWIE,addr,0x00);
+	return state & _BV(port);
+}
+
+void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
+{
+	uint8_t state;
+	state = i2c_read(&TWIE,addr,0x01);
+	if (level)
+		state |= _BV(port);
+	else
+		state &= ~_BV(port);
+	i2c_send(&TWIE, addr, 0x01, state);
+};
+
+void pca9557_toggle_pin(uint8_t addr, uint8_t port)
+{
+	uint8_t state;
+	state = i2c_read(&TWIE,addr,0x01);
+	if (state & _BV(port))
+		state |= _BV(port);
+	else
+		state &= ~_BV(port);
+	i2c_send(&TWIE, addr, 0x01, state);
+}
+
+void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir)
+{
+	uint8_t state;
+	state = i2c_read(&TWIE,addr,0x03);
+	if (dir == PCA9557_DIR_INPUT)
+		state = state | port;
+	else if (dir == PCA9557_DIR_OUTPUT)
+		state &= ~_BV(port);
+	i2c_send(&TWIE, addr, 0x03, state);
 }
 
 int main (void)
@@ -42,6 +141,8 @@ int main (void)
 	sysclk_init();
 	ioport_init();
 	board_init();
+	twi_master_setup(&TWIE, &opt);
+	pca9557_init(0x18);
 
 	/* Insert application code here, after the board has been initialized. */
 
@@ -49,6 +150,14 @@ int main (void)
 	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO0, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO1, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO2, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO3, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO4, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO5, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO6, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, PCA9557_IO7, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LCD_BACKLIGHT_ENABLE_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
@@ -68,6 +177,14 @@ int main (void)
 		ioport_toggle_pin(LED1);
 		ioport_toggle_pin(LED2);
 		ioport_toggle_pin(LED3);
+		pca9557_toggle_pin(0x1a, PCA9557_IO0);
+		pca9557_toggle_pin(0x1a, PCA9557_IO1);
+		pca9557_toggle_pin(0x1a, PCA9557_IO2);
+		pca9557_toggle_pin(0x1a, PCA9557_IO3);
+		pca9557_toggle_pin(0x1a, PCA9557_IO4);
+		pca9557_toggle_pin(0x1a, PCA9557_IO5);
+		pca9557_toggle_pin(0x1a, PCA9557_IO6);
+		pca9557_toggle_pin(0x1a, PCA9557_IO7);
 		delay_ms(500);
 	}
 }

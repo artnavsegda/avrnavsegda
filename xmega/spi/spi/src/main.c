@@ -32,6 +32,11 @@
 #include "stdio.h"
 #include "string.h"
 
+enum pca9557_direction {
+	PCA9557_DIR_INPUT,
+	PCA9557_DIR_OUTPUT,
+};
+
 #define AVERAGING 64 // ????????? ??????????
 #define STEP 6 // ???????? ?????
 //#define REFRESH 1000 // ??????? ?????????? ??????? ? ?????????????
@@ -41,6 +46,26 @@
 #define AVEPOSITION 0
 #define RAWPOSITION 0
 
+#define U3_IGNIT 1
+#define SERVO_1_LEFT_OUT 7
+#define SERVO_1_RIGHT_OUT 6
+#define SERVO_1_LEFT_IN 5
+#define SERVO_1_RIGHT_IN 4
+
+#define SERVO_2_LEFT_OUT 3
+#define SERVO_2_RIGHT_OUT 2
+#define SERVO_2_LEFT_IN 1
+#define SERVO_2_RIGHT_IN 7
+
+#define SERVO_3_LEFT_OUT 6
+#define SERVO_3_RIGHT_OUT 5
+#define SERVO_3_LEFT_IN 4
+#define SERVO_3_RIGHT_IN 3
+
+#define SERVO_4_LEFT_OUT 2
+#define SERVO_4_RIGHT_OUT 1
+#define SERVO_4_LEFT_IN 7
+#define SERVO_4_RIGHT_IN 6
 
 void mediate(int income);
 long average(unsigned int *selekta);
@@ -50,6 +75,10 @@ void adc_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content);
 uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory);
+void pca9557_init(uint8_t addr);
+void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir);
+void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level);
+uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port);
 
 char string[20];
 unsigned int massive[AVERAGING];
@@ -90,12 +119,16 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 
 ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 {
-	i2c_send(&TWIE, 0x18, 0x01, 0x40); // ?????????? ??????? mcp23017, ???????? 40
+	//i2c_send(&TWIE, 0x18, 0x01, 0x40); // ?????????? ??????? mcp23017, ???????? 40
+	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
+	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
 }
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
-	i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
+	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
+	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
+	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -238,60 +271,39 @@ static void refresh_callback(void)
 		}
 }
 
-#define PCA9557_DIRECTION_REGISTER 0x03
-#define PCA9557_OUTPUT_REGISTER 0x01
-#define PCA9557_INPUT_REGISTER 0x00
-#define PCA9557_BASE_ADDRESS 0x18
-#define PCA9557_DIR_INPUT 0x01
-#define PCA9557_DIR_OUTPUT 0x00
-#define PCA9557_PIN_LEVEL_LOW 0x00
-#define PCA9557_PIN_LEVEL_HIGH 0x01
-#define PCA9557_IO0 0x1
-#define PCA9557_IO1 0x2
-#define PCA9557_IO2 0x4
-#define PCA9557_IO3 0x8
-#define PCA9557_IO4 0x10
-#define PCA9557_IO5 0x20
-#define PCA9557_IO6 0x40
-#define PCA9557_IO7 0x80
-
 void pca9557_init(uint8_t addr)
 {
-	// output all bits level low
-	i2c_send(&TWIE, PCA9557_BASE_ADDRESS+addr, 0x01, 0x00);
 	// polarity all bits retained
-	i2c_send(&TWIE, PCA9557_BASE_ADDRESS+addr, 0x02, 0x00);
-	// direction all bits input
-	i2c_send(&TWIE, PCA9557_BASE_ADDRESS+addr, PCA9557_DIRECTION_REGISTER, 0xFF);
+	i2c_send(&TWIE, addr, 0x02, 0x00);
 }
 
-void pca9557_set_pin_dir(uint8_t addr, uint8_t port, uint8_t direction)
+void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir)
 {
 	uint8_t state;
-	state = i2c_read(&TWIE,PCA9557_BASE_ADDRESS+addr,PCA9557_DIRECTION_REGISTER);
-	if (direction == PCA9557_DIR_INPUT)
+	state = i2c_read(&TWIE,addr,0x03);
+	if (dir == PCA9557_DIR_INPUT)
 		state = state | port;
-	else if (direction == PCA9557_DIR_OUTPUT)
-		state = state & port;
-	i2c_send(&TWIE, PCA9557_BASE_ADDRESS+addr, PCA9557_DIRECTION_REGISTER, state);
+	else if (dir == PCA9557_DIR_OUTPUT)
+		state &= ~_BV(port);
+	i2c_send(&TWIE, addr, 0x03, state);
 }
 
-void pca9557_set_pin_level(uint8_t addr, uint8_t port, uint8_t level)
+void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
 {
 	uint8_t state;
-	state = i2c_read(&TWIE,PCA9557_BASE_ADDRESS+addr,PCA9557_OUTPUT_REGISTER);
-	if (level == PCA9557_PIN_LEVEL_LOW)
-		state = state | port;
-	else if (level == PCA9557_PIN_LEVEL_HIGH)
-		state = state & port;
-	i2c_send(&TWIE, PCA9557_BASE_ADDRESS+addr, PCA9557_OUTPUT_REGISTER, state);
+	state = i2c_read(&TWIE,addr,0x01);
+	if (level)
+		state |= _BV(port);
+	else
+		state &= ~_BV(port);
+	i2c_send(&TWIE, addr, 0x01, state);
 };
 
 uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port)
 {
 	uint8_t state;
-	state = i2c_read(&TWIE,PCA9557_BASE_ADDRESS+addr,PCA9557_INPUT_REGISTER);
-	return state | ~port;
+	state = i2c_read(&TWIE,addr,0x00);
+	return state & _BV(port);
 }
 
 int main (void)
@@ -318,14 +330,32 @@ int main (void)
 	//i2c_send(&TWIE, 0x18, 0x01, 0x40);
 	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
 	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
-	pca9557_init(0x00);
-	pca9557_init(0x01);
-	pca9557_init(0x02);
+	pca9557_init(0x18);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_init(0x19);
+	pca9557_set_pin_dir(0x19, SERVO_2_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_init(0x1a);
+	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
 	//pca9557_set_pin_dir(0x02,PCA9557_IO0,PCA9557_DIR_INPUT);
 	//pca9557_set_pin_level(0x02,PCA9557_IO0,PCA9557_PIN_LEVEL_LOW);
 	//pca9557_get_pin_level(0x02,PCA9557_IO0);
 	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_INVERTED);
 	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_RETAINED);
+	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
 	adc_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();
 	gfx_mono_init(); // ????????????? ???????

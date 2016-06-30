@@ -117,9 +117,9 @@ void pca9557_toggle_pin(uint8_t addr, uint8_t port)
 	uint8_t state;
 	state = i2c_read(&TWIE,addr,0x01);
 	if (state & _BV(port))
-		state |= _BV(port);
-	else
 		state &= ~_BV(port);
+	else
+		state |= _BV(port);
 	i2c_send(&TWIE, addr, 0x01, state);
 }
 
@@ -179,19 +179,20 @@ int main (void)
 		//ioport_toggle_pin(LED1);
 		//ioport_toggle_pin(LED2);
 		//ioport_toggle_pin(LED3);
-		//pca9557_toggle_pin(0x1a, 0);
+		pca9557_toggle_pin(0x1a, 0);
 		pca9557_toggle_pin(0x1a, PCA9557_IO1);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO2);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO3);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO4);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO5);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO6);
-		//pca9557_toggle_pin(0x1a, PCA9557_IO7);
+		pca9557_toggle_pin(0x1a, PCA9557_IO2);
+		pca9557_toggle_pin(0x1a, PCA9557_IO3);
+		pca9557_toggle_pin(0x1a, PCA9557_IO4);
+		pca9557_toggle_pin(0x1a, PCA9557_IO5);
+		pca9557_toggle_pin(0x1a, PCA9557_IO6);
+		pca9557_toggle_pin(0x1a, PCA9557_IO7);
 		//i2c_send(&TWIE, 0x1a, 0x01, 0x00);
-		pca9557_set_pin_level(0x1a, 0, true);
-		delay_ms(500);
+		//delay_ms(500);
+		//pca9557_set_pin_level(0x1a, 0, false);
+		//delay_ms(500);
 		//i2c_send(&TWIE, 0x1a, 0x01, 0xff);
-		pca9557_set_pin_level(0x1a, 0, false);
+		//pca9557_set_pin_level(0x1a, 0, true);
 		delay_ms(500);
 	}
 }

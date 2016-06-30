@@ -142,7 +142,8 @@ int main (void)
 	ioport_init();
 	board_init();
 	twi_master_setup(&TWIE, &opt);
-	pca9557_init(0x18);
+	//i2c_send(&TWIE, 0x1a, 0x02, 0x00);
+	pca9557_init(0x1a);
 
 	/* Insert application code here, after the board has been initialized. */
 
@@ -150,7 +151,7 @@ int main (void)
 	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x1a, PCA9557_IO0, IOPORT_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 0, IOPORT_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, PCA9557_IO1, IOPORT_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, PCA9557_IO2, IOPORT_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, PCA9557_IO3, IOPORT_DIR_OUTPUT);
@@ -158,6 +159,7 @@ int main (void)
 	pca9557_set_pin_dir(0x1a, PCA9557_IO5, IOPORT_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, PCA9557_IO6, IOPORT_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, PCA9557_IO7, IOPORT_DIR_OUTPUT);
+	//i2c_send(&TWIE, 0x1a, 0x03, 0x00);
 	ioport_set_pin_dir(LCD_BACKLIGHT_ENABLE_PIN, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1,IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
@@ -173,18 +175,23 @@ int main (void)
 	{
 		//value = ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
 		//ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN,value);
-		ioport_toggle_pin(LED0);
-		ioport_toggle_pin(LED1);
-		ioport_toggle_pin(LED2);
-		ioport_toggle_pin(LED3);
-		pca9557_toggle_pin(0x1a, PCA9557_IO0);
+		//ioport_toggle_pin(LED0);
+		//ioport_toggle_pin(LED1);
+		//ioport_toggle_pin(LED2);
+		//ioport_toggle_pin(LED3);
+		//pca9557_toggle_pin(0x1a, 0);
 		pca9557_toggle_pin(0x1a, PCA9557_IO1);
-		pca9557_toggle_pin(0x1a, PCA9557_IO2);
-		pca9557_toggle_pin(0x1a, PCA9557_IO3);
-		pca9557_toggle_pin(0x1a, PCA9557_IO4);
-		pca9557_toggle_pin(0x1a, PCA9557_IO5);
-		pca9557_toggle_pin(0x1a, PCA9557_IO6);
-		pca9557_toggle_pin(0x1a, PCA9557_IO7);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO2);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO3);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO4);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO5);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO6);
+		//pca9557_toggle_pin(0x1a, PCA9557_IO7);
+		//i2c_send(&TWIE, 0x1a, 0x01, 0x00);
+		pca9557_set_pin_level(0x1a, 0, true);
+		delay_ms(500);
+		//i2c_send(&TWIE, 0x1a, 0x01, 0xff);
+		pca9557_set_pin_level(0x1a, 0, false);
 		delay_ms(500);
 	}
 }

@@ -31,7 +31,7 @@
 #include <asf.h>
 #include "stdio.h"
 
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message);
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content);
 
 char string[20];
 
@@ -39,14 +39,19 @@ twi_master_options_t opt = {
 	.speed = 50000,
 };
 
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t *message)
+status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
 {
+	status_code_t status;
+	uint8_t message[2];
 	twi_package_t packet = {
 		.chip         = addr,      // TWI slave bus address
-		.buffer       = (void *)message, // transfer data source buffer
-		.length       = sizeof(message)  // transfer data size (bytes)
+		.buffer       = message, // transfer data source buffer
+		.length       = 2  // transfer data size (bytes)
 	};
-	return twi_master_write(twi, &packet);
+	message[0] = memory;
+	message[1] = content;
+	status = twi_master_write(twi, &packet);
+	return status;
 }
 
 uint8_t i2c_read(TWI_t *twi, uint8_t addr)
@@ -63,12 +68,12 @@ uint8_t i2c_read(TWI_t *twi, uint8_t addr)
 
 ISR(PORTF_INT0_vect)
 {
-	i2c_send(&TWIE, 0x18, "\x01\x40");
+	i2c_send(&TWIE, 0x1a, 0x01, 0x00);
 }
 
 ISR(PORTF_INT1_vect)
 {
-	i2c_send(&TWIE, 0x18, "\x01\x80");
+	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
 }
 
 int main (void)
@@ -102,7 +107,7 @@ int main (void)
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	i2c_send(&TWIE, 0x18, "\x03\x3f"); // register 03, contents 3f
+	i2c_send(&TWIE, 0x1a, 0x03, 0x00); // register 03, contents 3f
 
 	while (true) {
 		snprintf(string,sizeof(string),"%3d",i2c_read(&TWIE, 0x18));

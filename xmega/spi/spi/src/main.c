@@ -29,66 +29,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "stdio.h"
-#include "string.h"
-
-enum pca9557_direction {
-	PCA9557_DIR_INPUT,
-	PCA9557_DIR_OUTPUT,
-};
-
-#define AVERAGING 64 // ????????? ??????????
-#define STEP 6 // ???????? ?????
-//#define REFRESH 1000 // ??????? ?????????? ??????? ? ?????????????
-#define EXPECTEDZERO 0x17CC // ?????????????? ????
-#define YSCALE 1
-#define DISPLAYUSE 32
-#define AVEPOSITION 0
-#define RAWPOSITION 0
-
-#define U3_IGNIT 1
-#define SERVO_1_LEFT_OUT 7
-#define SERVO_1_RIGHT_OUT 6
-#define SERVO_1_LEFT_IN 5
-#define SERVO_1_RIGHT_IN 4
-
-#define SERVO_2_LEFT_OUT 3
-#define SERVO_2_RIGHT_OUT 2
-#define SERVO_2_LEFT_IN 1
-#define SERVO_2_RIGHT_IN 7
-
-#define SERVO_3_LEFT_OUT 6
-#define SERVO_3_RIGHT_OUT 5
-#define SERVO_3_LEFT_IN 4
-#define SERVO_3_RIGHT_IN 3
-
-#define SERVO_4_LEFT_OUT 2
-#define SERVO_4_RIGHT_OUT 1
-#define SERVO_4_LEFT_IN 7
-#define SERVO_4_RIGHT_IN 6
-
-void mediate(int income);
-long average(unsigned int *selekta);
-void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
-void interrupt_init(void);
-void adc_init(void);
-uint8_t spi_gut(SPI_t *spi, uint8_t data);
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content);
-uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory);
-void pca9557_init(uint8_t addr);
-void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir);
-void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level);
-uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port);
-
-char string[20];
-unsigned int massive[AVERAGING];
-int counter = 0;
-unsigned int result = EXPECTEDZERO;
-uint8_t worda,wordb;
-int error = 0;
-
-unsigned int runner[200];
-int runflag = 0;
+#include "main.h"
 
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS // ??? CS AD7705
@@ -97,6 +38,20 @@ struct spi_device SPI_ADC = {
 twi_master_options_t opt = {
 	.speed = 50000, // ??????? ?????? i2c
 };
+
+sensor_t barometer;             /* Pressure sensor device descriptor */
+sensor_data_t press_data;       /* Pressure data */
+sensor_data_t temp_data;        /* Temperature data */
+
+unsigned int massive[AVERAGING];
+unsigned int runner[200];
+char string[20];
+
+int counter = 0;
+int error = 0;
+int runflag = 0;
+unsigned int result = EXPECTEDZERO;
+uint8_t worda,wordb;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -186,45 +141,6 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 	return spi_get(spi);
 }
 
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
-{
-	status_code_t status;
-	uint8_t message[2];
-	twi_package_t packet = {
-		.chip         = addr,      // TWI slave bus address
-		.buffer       = message, // transfer data source buffer
-		.length       = 2  // transfer data size (bytes)
-	};
-	message[0] = memory;
-	message[1] = content;
-	status = twi_master_write(twi, &packet);
-	return status;
-}
-
-uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
-{
-	status_code_t status;
-	uint8_t message[1];
-	twi_package_t packet = {
-		.chip         = addr,      // TWI slave bus address
-		.buffer       = message,        // transfer data destination buffer
-		.length       = 1                    // transfer data size (bytes)
-	};
-	message[0] = memory;
-	status = twi_master_write(twi, &packet);
-	if(status == TWI_SUCCESS)
-	{
-		status_code_t status = twi_master_read(twi, &packet);
-		if(status == TWI_SUCCESS)
-			return message[0];
-	}
-	return status;
-}
-
-sensor_t barometer;             /* Pressure sensor device descriptor */
-sensor_data_t press_data;       /* Pressure data */
-sensor_data_t temp_data;        /* Temperature data */
-
 static void refresh_callback(void)
 {
 		int averaged = average(massive)>>STEP;
@@ -271,39 +187,28 @@ static void refresh_callback(void)
 		}
 }
 
-void pca9557_init(uint8_t addr)
+void logic_init(void)
 {
-	// polarity all bits retained
-	i2c_send(&TWIE, addr, 0x02, 0x00);
-}
-
-void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir)
-{
-	uint8_t state;
-	state = i2c_read(&TWIE,addr,0x03);
-	if (dir == PCA9557_DIR_INPUT)
-		state = state | port;
-	else if (dir == PCA9557_DIR_OUTPUT)
-		state &= ~_BV(port);
-	i2c_send(&TWIE, addr, 0x03, state);
-}
-
-void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
-{
-	uint8_t state;
-	state = i2c_read(&TWIE,addr,0x01);
-	if (level)
-		state |= _BV(port);
-	else
-		state &= ~_BV(port);
-	i2c_send(&TWIE, addr, 0x01, state);
-};
-
-uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port)
-{
-	uint8_t state;
-	state = i2c_read(&TWIE,addr,0x00);
-	return state & _BV(port);
+	pca9557_init(0x18);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_init(0x19);
+	pca9557_set_pin_dir(0x19, SERVO_2_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_init(0x1a);
+	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
 }
 
 int main (void)
@@ -326,35 +231,7 @@ int main (void)
 	spi_enable(&SPIC); // ????????? SPI
 	sensor_bus_init(&TWIE, 400000);
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
-	i2c_send(&TWIE, 0x18, 0x03, 0x3f); // ????????? ????????? mcp23017
-	//i2c_send(&TWIE, 0x18, 0x01, 0x40);
-	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
-	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
-	pca9557_init(0x18);
-	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x18, SERVO_2_RIGHT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_IN, PCA9557_DIR_INPUT);
-	pca9557_init(0x19);
-	pca9557_set_pin_dir(0x19, SERVO_2_RIGHT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x19, SERVO_4_LEFT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x19, SERVO_4_RIGHT_OUT, PCA9557_DIR_OUTPUT);
-	pca9557_init(0x1a);
-	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
-	//pca9557_set_pin_dir(0x02,PCA9557_IO0,PCA9557_DIR_INPUT);
-	//pca9557_set_pin_level(0x02,PCA9557_IO0,PCA9557_PIN_LEVEL_LOW);
-	//pca9557_get_pin_level(0x02,PCA9557_IO0);
-	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_INVERTED);
-	//pca9557_set_pin_polarity(0x02,PCA9557_IO0,PCA9557_PIN_POLARITY_RETAINED);
+	logic_init();
 	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
 	adc_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();

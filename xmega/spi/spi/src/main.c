@@ -50,7 +50,7 @@ char string[20];
 int counter = 0;
 int error = 0;
 int runflag = 0;
-int displaymode = 0;
+int displaymode = 1;
 unsigned int result = EXPECTEDZERO;
 uint8_t worda,wordb;
 
@@ -191,6 +191,10 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 	return spi_get(spi);
 }
 
+//const float popugai = (3.27/1.6)/4095;
+const float popugai = 0.49487e-3;
+const int adczero = 178;
+
 static void refresh_callback(void)
 {
 	switch (displaymode)
@@ -240,30 +244,39 @@ static void refresh_callback(void)
 		break;
 	case 1:
 		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
-		gfx_mono_draw_string("ADC0",0,0,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH0));
-		gfx_mono_draw_string(string,30,0,&sysfont);
-		gfx_mono_draw_string("ADC1",0,8,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH1));
-		gfx_mono_draw_string(string,30,8,&sysfont);
-		gfx_mono_draw_string("ADC2",0,16,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH2));
-		gfx_mono_draw_string(string,30,16,&sysfont);
-		gfx_mono_draw_string("ADC3",0,24,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH3));
-		gfx_mono_draw_string(string,30,24,&sysfont);
-		gfx_mono_draw_string("ADC4",100,0,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH0));
-		gfx_mono_draw_string(string,60,0,&sysfont);
-		gfx_mono_draw_string("ADC5",100,8,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH1));
-		gfx_mono_draw_string(string,60,8,&sysfont);
-		gfx_mono_draw_string("ADC6",100,16,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH2));
-		gfx_mono_draw_string(string,60,16,&sysfont);
-		gfx_mono_draw_string("ADC7",100,24,&sysfont);
-		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH3));
-		gfx_mono_draw_string(string,60,24,&sysfont);
+		//gfx_mono_draw_string("ADC0",0,0,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH0)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
+		gfx_mono_draw_string(string,0,0,&sysfont);
+		//gfx_mono_draw_string("ADC1",0,8,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH1)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH1));
+		gfx_mono_draw_string(string,0,8,&sysfont);
+		//gfx_mono_draw_string("ADC2",0,16,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH2)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH2));
+		gfx_mono_draw_string(string,0,16,&sysfont);
+		//gfx_mono_draw_string("ADC3",0,24,&sysfont);
+		snprintf(string, sizeof(string), "%.5f C", (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
+		//snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH3)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH3));
+		gfx_mono_draw_string(string,0,24,&sysfont);
+		//gfx_mono_draw_string("ADC4",100,0,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH0)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH0));
+		gfx_mono_draw_string(string,64,0,&sysfont);
+		//gfx_mono_draw_string("ADC5",100,8,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH1)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH1));
+		gfx_mono_draw_string(string,64,8,&sysfont);
+		//gfx_mono_draw_string("ADC6",100,16,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH2)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH2));
+		gfx_mono_draw_string(string,64,16,&sysfont);
+		//gfx_mono_draw_string("ADC7",100,24,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH3)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
+		gfx_mono_draw_string(string,64,24,&sysfont);
 		break;
 	default:
 		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);

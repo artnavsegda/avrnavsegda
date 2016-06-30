@@ -121,14 +121,14 @@ ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 {
 	//i2c_send(&TWIE, 0x18, 0x01, 0x40); // ?????????? ??????? mcp23017, ???????? 40
 	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
-	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
+	pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, true);
 }
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
 	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
+	pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
 	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
-	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -230,20 +230,20 @@ static void refresh_callback(void)
 		int averaged = average(massive)>>STEP;
 		
 		gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
-		/*sensor_get_pressure(&barometer, &press_data);
+		sensor_get_pressure(&barometer, &press_data);
 		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
-		gfx_mono_draw_string(string, 10, 10, &sysfont);
+		gfx_mono_draw_string(string, 45, 10, &sysfont);
 		sensor_get_temperature(&barometer, &temp_data);
 		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
-		gfx_mono_draw_string(string, 10, 20, &sysfont);*/
+		gfx_mono_draw_string(string, 45, 20, &sysfont);
 		snprintf(string, sizeof(string), "%5ld", (long)result-EXPECTEDZERO);
-		gfx_mono_draw_string(string,60,10,&sysfont); // ?????????? ????????
+		gfx_mono_draw_string(string,90,10,&sysfont); // ?????????? ????????
 		snprintf(string, sizeof(string), "%5ld", (long)averaged-EXPECTEDZERO);
-		gfx_mono_draw_string(string,60,20,&sysfont); // ??????????? ????????
+		gfx_mono_draw_string(string,90,20,&sysfont); // ??????????? ????????
 		//snprintf(string, sizeof(string), "%2.2X%2.2X", worda, wordb);
 		//gfx_mono_draw_string(string,100,10,&sysfont);
-		snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
-		gfx_mono_draw_string(string,100,20,&sysfont);
+		//snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
+		//gfx_mono_draw_string(string,100,20,&sysfont);
 		//error = 0;
 		/*for (int i=0; i<AVERAGING; ++i)
 		{

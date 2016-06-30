@@ -50,6 +50,7 @@ char string[20];
 int counter = 0;
 int error = 0;
 int runflag = 0;
+int displaymode = 0;
 unsigned int result = EXPECTEDZERO;
 uint8_t worda,wordb;
 
@@ -70,6 +71,12 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 	else
 		error++;
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
+}
+
+ISR(PORTE_INT0_vect) // sw0
+{
+	if (displaymode++ >= 2)
+		displaymode = 0;
 }
 
 ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
@@ -112,15 +119,25 @@ void interrupt_init(void)
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT); // ?????????? ??? ?????????? ?? ????
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP); // ??????? ???????? ?? ???? ??????????
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ???? ??????????
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_0, IOPORT_SENSE_FALLING); // sw0
 	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 1
 	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 2
 	PORTC.INT0MASK = PIN1_bm; // ?????????? 0 ????? C ?? ???? 1, drdy ad7705
+	PORTE.INT0MASK = PIN5_bm; // sw0
 	PORTF.INT0MASK = PIN1_bm; // ?????????? 0 ????? F ?? ???? 1, button sw1
 	PORTF.INT1MASK = PIN2_bm; // ?????????? 1 ????? F ?? ???? 2, button sw2
 	PORTC.INTCTRL = PORT_INT0LVL_MED_gc; // ?????? ????????? ?????????? 0 ?? ????? ?
+	PORTE.INTCTRL = PORT_INT0LVL_LO_gc;
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc; // ?????? ????????? ?????????? 0 ? 1 ?? ????? F
 	//irq_initialize_vectors();
 	//cpu_irq_enable(); // ???????? ??????????
+}
+
+uint16_t analogRead(ADC_t *adc, uint8_t ch_mask)
+{
+	adc_start_conversion(adc, ch_mask);
+	adc_wait_for_interrupt_flag(adc, ch_mask);
+	return adc_get_result(adc, ch_mask);
 }
 
 void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos)
@@ -176,9 +193,11 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 
 static void refresh_callback(void)
 {
-		int averaged = average(massive)>>STEP;
-		
+	switch (displaymode)
+	{
+	case 0:
 		gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
+		int averaged = average(massive)>>STEP;
 		sensor_get_pressure(&barometer, &press_data);
 		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
 		gfx_mono_draw_string(string, 45, 10, &sysfont);
@@ -218,6 +237,40 @@ static void refresh_callback(void)
 			else
 				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag-DISPLAYUSE]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
 		}
+		break;
+	case 1:
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		gfx_mono_draw_string("ADC0",0,0,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH0));
+		gfx_mono_draw_string(string,30,0,&sysfont);
+		gfx_mono_draw_string("ADC1",0,8,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH1));
+		gfx_mono_draw_string(string,30,8,&sysfont);
+		gfx_mono_draw_string("ADC2",0,16,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH2));
+		gfx_mono_draw_string(string,30,16,&sysfont);
+		gfx_mono_draw_string("ADC3",0,24,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCB, ADC_CH3));
+		gfx_mono_draw_string(string,30,24,&sysfont);
+		gfx_mono_draw_string("ADC4",100,0,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH0));
+		gfx_mono_draw_string(string,60,0,&sysfont);
+		gfx_mono_draw_string("ADC5",100,8,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH1));
+		gfx_mono_draw_string(string,60,8,&sysfont);
+		gfx_mono_draw_string("ADC6",100,16,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH2));
+		gfx_mono_draw_string(string,60,16,&sysfont);
+		gfx_mono_draw_string("ADC7",100,24,&sysfont);
+		snprintf(string, sizeof(string), "%4d", analogRead(&ADCA, ADC_CH3));
+		gfx_mono_draw_string(string,60,24,&sysfont);
+		break;
+	default:
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		snprintf(string, sizeof(string), "%d", displaymode);
+		gfx_mono_draw_string(string,10,10,&sysfont);
+		break;
+	}
 }
 
 void logic_init(void)

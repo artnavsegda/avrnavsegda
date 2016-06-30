@@ -20,9 +20,9 @@
 	 uint8_t state;
 	 state = i2c_read(&TWIE,addr,0x03);
 	 if (dir == PCA9557_DIR_INPUT)
-	 state = state | port;
+		state |= _BV(port);
 	 else if (dir == PCA9557_DIR_OUTPUT)
-	 state &= ~_BV(port);
+		state &= ~_BV(port);
 	 i2c_send(&TWIE, addr, 0x03, state);
  }
 
@@ -31,9 +31,9 @@
 	 uint8_t state;
 	 state = i2c_read(&TWIE,addr,0x01);
 	 if (level)
-	 state |= _BV(port);
+		state |= _BV(port);
 	 else
-	 state &= ~_BV(port);
+		state &= ~_BV(port);
 	 i2c_send(&TWIE, addr, 0x01, state);
  };
 

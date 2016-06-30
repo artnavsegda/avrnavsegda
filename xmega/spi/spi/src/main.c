@@ -123,7 +123,40 @@ void interrupt_init(void)
 	//cpu_irq_enable(); // ???????? ??????????
 }
 
-void adc_init(void) // ????????? ????????? AD7705
+void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos)
+{
+	struct adc_channel_config adcch_conf;
+	adcch_read_configuration(adc, ch_mask, &adcch_conf);
+	adcch_set_input(&adcch_conf, pos, ADCCH_NEG_NONE, 1);
+	adcch_write_configuration(adc, ch_mask, &adcch_conf);
+}
+
+void adc_init(void)
+{
+	struct adc_config adca_conf, adcb_conf;
+	adc_read_configuration(&ADCA, &adca_conf);
+	adc_read_configuration(&ADCB, &adcb_conf);
+	adc_set_conversion_parameters(&adca_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
+	adc_set_conversion_parameters(&adcb_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
+	adc_set_conversion_trigger(&adca_conf, ADC_TRIG_MANUAL, 1, 0);
+	adc_set_conversion_trigger(&adcb_conf, ADC_TRIG_MANUAL, 1, 0);
+	adc_set_clock_rate(&adca_conf, 200000UL);
+	adc_set_clock_rate(&adcb_conf, 200000UL);
+	analogInput(&ADCB, ADC_CH0, ADCCH_POS_PIN0);
+	analogInput(&ADCB, ADC_CH1, ADCCH_POS_PIN1);
+	analogInput(&ADCB, ADC_CH2, ADCCH_POS_PIN2);
+	analogInput(&ADCB, ADC_CH3, ADCCH_POS_PIN3);
+	analogInput(&ADCA, ADC_CH0, ADCCH_POS_PIN4);
+	analogInput(&ADCA, ADC_CH1, ADCCH_POS_PIN5);
+	analogInput(&ADCA, ADC_CH2, ADCCH_POS_PIN6);
+	analogInput(&ADCA, ADC_CH3, ADCCH_POS_PIN7);
+	adc_write_configuration(&ADCA, &adca_conf);
+	adc_write_configuration(&ADCB, &adcb_conf);
+	adc_enable(&ADCA);
+	adc_enable(&ADCB);
+}
+
+void ad7705_init(void) // ????????? ????????? AD7705
 {
 	spi_select_device(&SPIC, &SPI_ADC); // ???????????? CS
 	spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5); // ??????? ??????????? ?????
@@ -233,7 +266,8 @@ int main (void)
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
 	logic_init();
 	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
-	adc_init(); // ????????? ????????? AD7705
+	adc_init();
+	ad7705_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();
 	gfx_mono_init(); // ????????????? ???????
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL); // ???????? ?????????

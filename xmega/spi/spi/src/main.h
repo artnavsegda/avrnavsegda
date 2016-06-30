@@ -41,6 +41,8 @@ long average(unsigned int *selekta);
 void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
 void interrupt_init(void);
 void adc_init(void);
+void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
+void ad7705_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void logic_init(void);
 

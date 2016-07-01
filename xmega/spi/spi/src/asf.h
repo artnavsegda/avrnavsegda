@@ -89,6 +89,9 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: RTC32 - Real Time Counter 32
+#include <rtc32.h>
+
 // From module: SPI - Serial Peripheral Interface
 #include <spi.h>
 
@@ -124,6 +127,9 @@
 // From module: TWI - Two-wire Master and Slave Interface
 #include <twim.h>
 #include <twis.h>
+
+// From module: Timeout Service XMEGA
+#include <timeout.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

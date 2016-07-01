@@ -50,8 +50,9 @@ char string[20];
 int counter = 0;
 int error = 0;
 int runflag = 0;
-int displaymode = 1;
+int displaymode = 0;
 unsigned int result = EXPECTEDZERO;
+int expectedzero = EXPECTEDZERO;
 uint8_t worda,wordb;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
@@ -75,22 +76,29 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 
 ISR(PORTE_INT0_vect) // sw0
 {
-	if (displaymode++ >= 2)
-		displaymode = 0;
+	if (timeout_test_and_clear_expired(0))
+	{
+		if (displaymode++ >= 3)
+			displaymode = 0;
+		timeout_start_singleshot(0,2);
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+	}
 }
 
 ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 {
+	expectedzero = EXPECTEDZERO;
 	//i2c_send(&TWIE, 0x18, 0x01, 0x40); // ?????????? ??????? mcp23017, ???????? 40
-	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
-	pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, true);
+	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, false);
+	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, true);
 }
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
+	expectedzero = average(runner)>>STEP;
 	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
-	pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
-	pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
+	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
+	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -197,53 +205,40 @@ const int adczero = 178;
 
 static void refresh_callback(void)
 {
+	int averaged;
 	switch (displaymode)
 	{
 	case 0:
 		gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
-		int averaged = average(massive)>>STEP;
-		sensor_get_pressure(&barometer, &press_data);
-		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
-		gfx_mono_draw_string(string, 45, 10, &sysfont);
-		sensor_get_temperature(&barometer, &temp_data);
-		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
-		gfx_mono_draw_string(string, 45, 20, &sysfont);
-		snprintf(string, sizeof(string), "%5ld", (long)result-EXPECTEDZERO);
-		gfx_mono_draw_string(string,90,10,&sysfont); // ?????????? ????????
-		snprintf(string, sizeof(string), "%5ld", (long)averaged-EXPECTEDZERO);
-		gfx_mono_draw_string(string,90,20,&sysfont); // ??????????? ????????
+		averaged = average(massive)>>STEP;
+		int runaveraged = average(runner)>>STEP;
+		snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
+		gfx_mono_draw_string(string,80,0,&sysfont); // ?????????? ????????
+		snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
+		gfx_mono_draw_string(string,80,12,&sysfont); // ??????????? ????????
+		snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-expectedzero);
+		gfx_mono_draw_string(string,80,24,&sysfont); // ??????????? ????????
 		//snprintf(string, sizeof(string), "%2.2X%2.2X", worda, wordb);
 		//gfx_mono_draw_string(string,100,10,&sysfont);
 		//snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
 		//gfx_mono_draw_string(string,100,20,&sysfont);
 		//error = 0;
-		/*for (int i=0; i<AVERAGING; ++i)
-		{
-			gfx_mono_draw_pixel(i+RAWPOSITION, ((massive[i]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
-			if (i == counter)
-				gfx_mono_draw_line(i+RAWPOSITION, 0, i, 32, GFX_PIXEL_SET);
-		}*/
+
 		//delay_ms(REFRESH); // ?????
-
-		runner[runflag] = averaged;
-		runflag++;
-		if (runflag > DISPLAYUSE)
-			runflag = 0;
-
-		//int runaveraged = average(runner)>>STEP;
+		
 		//int runaveraged = EXPECTEDZERO+130;
-		int runaveraged = averaged;
-
+		//int runaveraged = averaged;
+		//int runaveraged = runner[runflag];
 		for (int i=0; i<DISPLAYUSE; ++i)
 		{
 			if (i+runflag<DISPLAYUSE)
-				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
 			else
-				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag-DISPLAYUSE]-runaveraged)/YSCALE)+16, GFX_PIXEL_SET);
+				gfx_mono_draw_pixel(i+AVEPOSITION, ((runner[i+runflag-DISPLAYUSE]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
 		}
 		break;
 	case 1:
-		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		//gfx_mono_draw_string("ADC0",0,0,&sysfont);
 		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH0)-adczero)*popugai);
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
@@ -277,6 +272,34 @@ static void refresh_callback(void)
 		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH3)-adczero)*popugai);
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
 		gfx_mono_draw_string(string,64,24,&sysfont);
+		break;
+	case 2:
+		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
+		averaged = average(massive)>>STEP;
+		sensor_get_pressure(&barometer, &press_data);
+		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
+		gfx_mono_draw_string(string, 75, 10, &sysfont);
+		sensor_get_temperature(&barometer, &temp_data);
+		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
+		gfx_mono_draw_string(string, 75, 20, &sysfont);
+		int nowcount = counter;
+		for (int i=0; i<AVERAGING; ++i)
+		{
+			if (i+nowcount<AVERAGING)
+				gfx_mono_draw_pixel(i, ((massive[i+nowcount]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			else
+				gfx_mono_draw_pixel(i, ((massive[i+nowcount-AVERAGING]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			//if (i == nowcount)
+			//	gfx_mono_draw_line(i, 0, i, 32, GFX_PIXEL_SET);
+		}
+		break;
+	case 3:
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x18, 0), pca9557_get_pin_level(0x18, 1), pca9557_get_pin_level(0x18, 2), pca9557_get_pin_level(0x18, 3), pca9557_get_pin_level(0x18, 4), pca9557_get_pin_level(0x18, 5), pca9557_get_pin_level(0x18, 6), pca9557_get_pin_level(0x18, 7));
+		gfx_mono_draw_string(string,10,0,&sysfont);
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x19, 0), pca9557_get_pin_level(0x19, 1), pca9557_get_pin_level(0x19, 2), pca9557_get_pin_level(0x19, 3), pca9557_get_pin_level(0x19, 4), pca9557_get_pin_level(0x19, 5), pca9557_get_pin_level(0x19, 6), pca9557_get_pin_level(0x19, 7));
+		gfx_mono_draw_string(string,10,10,&sysfont);
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x1a, 0), pca9557_get_pin_level(0x1a, 1), pca9557_get_pin_level(0x1a, 2), pca9557_get_pin_level(0x1a, 3), pca9557_get_pin_level(0x1a, 4), pca9557_get_pin_level(0x1a, 5), pca9557_get_pin_level(0x1a, 6), pca9557_get_pin_level(0x1a, 7));
+		gfx_mono_draw_string(string,10,20,&sysfont);
 		break;
 	default:
 		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
@@ -315,10 +338,11 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	fillmemory(massive,result,AVERAGING); // ??????? ??????
-	fillmemory(runner,result+130,128);
+	fillmemory(runner,result,128);
 	board_init(); // ????????????? ?????
-	pmic_init();
 	sysclk_init(); // ????????????? ?????????? ???????? ???????
+	pmic_init();
+	timeout_init();
 	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, refresh_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
@@ -353,9 +377,14 @@ int main (void)
 	temp_data.scaled = true;
 
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
+	timeout_start_singleshot(0,1);
 
 	while (1)
 	{
-
+		delay_ms(250);
+		runner[runflag] = average(massive)>>STEP;
+		runflag++;
+		if (runflag > DISPLAYUSE)
+			runflag = 0;
 	}
 }

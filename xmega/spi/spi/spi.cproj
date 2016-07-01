@@ -36,9 +36,10 @@
     <option id="common.services.sensors" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.spi_master" value="Add" config="usart_and_standard_spi" content-id="Atmel.ASF" />
     <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.services.timeout" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -189,6 +190,12 @@
     <file path="src/ASF/xmega/drivers/adc/adc.c" framework="" version="3.31.0" source="xmega\drivers\adc\adc.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/adc/adc.h" framework="" version="3.31.0" source="xmega\drivers\adc\adc.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/Config/conf_adc.h" framework="" version="3.31.0" source="xmega\drivers\adc\module_config\conf_adc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/rtc32/rtc32.c" framework="" version="3.31.0" source="xmega\drivers\rtc32\rtc32.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/rtc32/rtc32.h" framework="" version="3.31.0" source="xmega\drivers\rtc32\rtc32.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_rtc32.h" framework="" version="3.31.0" source="xmega\drivers\rtc32\module_config\conf_rtc32.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/services/timeout/timeout.c" framework="" version="3.31.0" source="xmega\services\timeout\timeout.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/services/timeout/timeout.h" framework="" version="3.31.0" source="xmega\services\timeout\timeout.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_timeout.h" framework="" version="3.31.0" source="xmega\services\timeout\module_config_rtc32\conf_timeout.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.31.0/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -265,6 +272,8 @@
       <Value>../src/ASF/xmega/drivers/tc</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
+      <Value>../src/ASF/xmega/drivers/rtc32</Value>
+      <Value>../src/ASF/xmega/services/timeout</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -315,6 +324,8 @@
       <Value>../src/ASF/xmega/drivers/tc</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
+      <Value>../src/ASF/xmega/drivers/rtc32</Value>
+      <Value>../src/ASF/xmega/services/timeout</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -371,6 +382,8 @@
       <Value>../src/ASF/xmega/drivers/tc</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
+      <Value>../src/ASF/xmega/drivers/rtc32</Value>
+      <Value>../src/ASF/xmega/services/timeout</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -420,6 +433,8 @@
       <Value>../src/ASF/xmega/drivers/tc</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
+      <Value>../src/ASF/xmega/drivers/rtc32</Value>
+      <Value>../src/ASF/xmega/services/timeout</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -475,11 +490,14 @@
     <Folder Include="src\ASF\xmega\drivers\cpu\" />
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
     <Folder Include="src\ASF\xmega\drivers\pmic\" />
+    <Folder Include="src\ASF\xmega\drivers\rtc32\" />
     <Folder Include="src\ASF\xmega\drivers\sleep\" />
     <Folder Include="src\ASF\xmega\drivers\spi\" />
     <Folder Include="src\ASF\xmega\drivers\tc\" />
     <Folder Include="src\ASF\xmega\drivers\twi\" />
     <Folder Include="src\ASF\xmega\drivers\usart\" />
+    <Folder Include="src\ASF\xmega\services\" />
+    <Folder Include="src\ASF\xmega\services\timeout\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
     <Folder Include="src\ASF\xmega\utils\bit_handling\" />
@@ -496,10 +514,28 @@
     <Compile Include="src\ASF\xmega\drivers\adc\xmega_aau\adc_aau.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\xmega\drivers\rtc32\rtc32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\drivers\rtc32\rtc32.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\xmega\services\timeout\timeout.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\services\timeout\timeout.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\config.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\config\conf_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_rtc32.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_timeout.h">
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\main.h">

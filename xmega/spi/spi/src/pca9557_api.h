@@ -17,7 +17,7 @@ enum pca9557_direction {
 void pca9557_init(uint8_t addr);
 void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir);
 void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level);
-uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port);
+bool pca9557_get_pin_level(uint8_t addr, uint8_t port);
 
 
 

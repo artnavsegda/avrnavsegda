@@ -26,7 +26,7 @@
 	 i2c_send(&TWIE, addr, 0x03, state);
  }
 
- void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
+void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
  {
 	 uint8_t state;
 	 state = i2c_read(&TWIE,addr,0x01);
@@ -37,9 +37,10 @@
 	 i2c_send(&TWIE, addr, 0x01, state);
  };
 
- uint8_t pca9557_get_pin_level(uint8_t addr, uint8_t port)
+bool pca9557_get_pin_level(uint8_t addr, uint8_t port)
  {
 	 uint8_t state;
+	 i2c_send(&TWIE, addr, 0x02, 0x00);
 	 state = i2c_read(&TWIE,addr,0x00);
 	 return state & _BV(port);
  }

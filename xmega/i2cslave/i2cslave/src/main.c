@@ -29,6 +29,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include "stdio.h"
+#include "string.h"
 
 #define TWI_SPEED 50000
 #define AVERAGING 64 // ????????? ??????????
@@ -38,20 +40,23 @@
 #define YSCALE 1
 
 void mediate(uint8_t hibyte, uint8_t lobyte);
-long average(void);
+long average(unsigned int *selekta);
 void fillmemory(void);
 void adc_init(void);
 void ad7705_init(void);
-void analogRead(ADC_t *adc, uint8_t ch_mask);
+uint16_t analogRead(ADC_t *adc, uint8_t ch_mask);
 void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
 void interrupt_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void bladerunner(uint8_t drift);
 void bigmagic(uint8_t drift);
+static void refresh_callback(void);
 
 char string[20];
 unsigned int massive[AVERAGING+1];
 int counter = 0;
+int displaymode = 0;
+int expectedzero = EXPECTEDZERO;
 unsigned int result = EXPECTEDZERO;
 uint8_t lobyte, hibyte;
 
@@ -91,11 +96,23 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
 }
 
+ISR(PORTE_INT0_vect) // sw0
+{
+	if (timeout_test_and_clear_expired(0))
+	{
+		if (displaymode++ >= 3)
+		displaymode = 0;
+		timeout_start_singleshot(0,2);
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+	}
+}
+
 void mediate(uint8_t hibyte, uint8_t lobyte) // ?????????? ??????? ?????????? ??????????
 {
 	int current;
 	MSB(current) = hibyte;
 	LSB(current) = lobyte;
+	result = current;
 	massive[counter] = current;
 	if (counter >= AVERAGING)
 		counter = 0;
@@ -103,11 +120,11 @@ void mediate(uint8_t hibyte, uint8_t lobyte) // ?????????? ??????? ?????????? ??
 		counter = counter + 1;
 }
 
-long average(void) // ??????????
+long average(unsigned int *selekta) // ??????????
 {
 	long x = 0;
 	for(int i=0; i<AVERAGING; i++)
-	x=x+massive[i];
+	x=x+selekta[i];
 	return x;
 }
 
@@ -125,13 +142,14 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 	return spi_get(spi);
 }
 
-void analogRead(ADC_t *adc, uint8_t ch_mask)
+uint16_t analogRead(ADC_t *adc, uint8_t ch_mask)
 {
 	adc_start_conversion(adc, ch_mask);
 	adc_wait_for_interrupt_flag(adc, ch_mask);
 	uint16_t resist = adc_get_result(adc, ch_mask);
 	slave.sendData[0] = LSB(resist);
 	slave.sendData[1] = MSB(resist);
+	return resist;
 }
 
 void bladerunner(uint8_t drift)
@@ -197,7 +215,7 @@ static void slave_process(void)
 		slave.sendData[1] = hibyte;
 		break;
 	case 0x09:
-		averaged = average()>>STEP;
+		averaged = average(massive)>>STEP;
 		slave.sendData[0] = LSB(averaged);
 		slave.sendData[1] = MSB(averaged);
 		break;
@@ -259,18 +277,102 @@ void interrupt_init(void)
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT); // ?????????? ??? ?????????? ?? ????
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP); // ??????? ???????? ?? ???? ??????????
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ???? ??????????
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_0, IOPORT_SENSE_FALLING); // sw0
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 1
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 2
 	PORTC.INT0MASK = PIN1_bm; // ?????????? 0 ????? C ?? ???? 1, drdy ad7705
+	PORTE.INT0MASK = PIN5_bm; // sw0
+	PORTF.INT0MASK = PIN1_bm; // ?????????? 0 ????? F ?? ???? 1, button sw1
+	PORTF.INT1MASK = PIN2_bm; // ?????????? 1 ????? F ?? ???? 2, button sw2
 	PORTC.INTCTRL = PORT_INT0LVL_HI_gc; // ?????? ????????? ?????????? 0 ?? ????? ?
+	PORTE.INTCTRL = PORT_INT0LVL_LO_gc;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc; // ?????? ????????? ?????????? 0 ? 1 ?? ????? F
+}
+
+const float popugai = 0.49487e-3;
+const int adczero = 178;
+int averaged;
+
+static void refresh_callback(void)
+{
+	switch (displaymode)
+	{
+		case 0:
+		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
+		averaged = average(massive)>>STEP;
+		snprintf(string, sizeof(string), "R  %2.2X%2.2X", hibyte, lobyte);
+		gfx_mono_draw_string(string,80,0,&sysfont);
+		snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
+		gfx_mono_draw_string(string,80,8,&sysfont); // ?????????? ????????
+		snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
+		gfx_mono_draw_string(string,80,16,&sysfont); // ??????????? ????????
+		int nowcount = counter;
+		for (int i=0; i<AVERAGING; ++i)
+		{
+			if (i+nowcount<AVERAGING)
+				gfx_mono_draw_pixel(i, ((massive[i+nowcount]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			else
+				gfx_mono_draw_pixel(i, ((massive[i+nowcount-AVERAGING]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+		}
+		break;
+	case 1:
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		//gfx_mono_draw_string("ADC0",0,0,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH0)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
+		gfx_mono_draw_string(string,0,0,&sysfont);
+		//gfx_mono_draw_string("ADC1",0,8,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH1)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH1));
+		gfx_mono_draw_string(string,0,8,&sysfont);
+		//gfx_mono_draw_string("ADC2",0,16,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH2)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH2));
+		gfx_mono_draw_string(string,0,16,&sysfont);
+		//gfx_mono_draw_string("ADC3",0,24,&sysfont);
+		snprintf(string, sizeof(string), "%.5f C", (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
+		//snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH3)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH3));
+		gfx_mono_draw_string(string,0,24,&sysfont);
+		//gfx_mono_draw_string("ADC4",100,0,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH0)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH0));
+		gfx_mono_draw_string(string,64,0,&sysfont);
+		//gfx_mono_draw_string("ADC5",100,8,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH1)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH1));
+		gfx_mono_draw_string(string,64,8,&sysfont);
+		//gfx_mono_draw_string("ADC6",100,16,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH2)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH2));
+		gfx_mono_draw_string(string,64,16,&sysfont);
+		//gfx_mono_draw_string("ADC7",100,24,&sysfont);
+		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH3)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
+		gfx_mono_draw_string(string,64,24,&sysfont);
+		break;
+	default:
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		snprintf(string, sizeof(string), "%d", displaymode);
+		gfx_mono_draw_string(string,10,10,&sysfont);
+		break;
+	}
 }
 
 int main (void)
 {
 	uint8_t i;
 	/* Insert system clock initialization code here (sysclk_init()). */
-	sysclk_init();
 	board_init();
-	pmic_enable_level(PMIC_LVL_LOW | PMIC_LVL_MEDIUM | PMIC_LVL_HIGH);
+	pmic_init();
+	sysclk_init();
+	tc_enable(&TCC0);
+	tc_set_overflow_interrupt_callback(&TCC0, refresh_callback);
+	tc_set_wgm(&TCC0, TC_WG_NORMAL);
+	tc_write_period(&TCC0, 31250);
 	interrupt_init();
+	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
+	timeout_init();
 	spi_master_init(&SPIC); // ????????????? SPI
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0); // ???????????? SPI
 	spi_enable(&SPIC); // ????????? SPI
@@ -284,15 +386,20 @@ int main (void)
 	}
 	pmic_set_scheduling(PMIC_SCH_ROUND_ROBIN);
 	cpu_irq_enable();
+	gfx_mono_init();
+	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	//gfx_mono_draw_string("hello",10,10,&sysfont);
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
+	timeout_start_singleshot(0,1);
 
 	/* Insert application code here, after the board has been initialized. */
 	do {
-		runner[runflag] = average()>>STEP;
+		runner[runflag] = average(massive)>>STEP;
 		runflag++;
 		if (runflag > 100)
 			runflag = 0;
 
-		bigdata[bdp] = average()>>STEP;
+		bigdata[bdp] = average(massive)>>STEP;
 		bdp++;
 		if (bdp > 6000)
 		{

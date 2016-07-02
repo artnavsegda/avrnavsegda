@@ -95,7 +95,7 @@ ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
-	expectedzero = average(runner)>>STEP;
+	expectedzero = average(runner,DISPLAYUSE)>>STEP;
 	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
 	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
 	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
@@ -108,10 +108,10 @@ void mediate(int income) // ?????????? ??????? ?????????? ??????????
 		counter = 0;
 }
 
-long average(unsigned int *selekta) // ??????????
+long average(unsigned int *selekta,int amount) // ??????????
 {
 	long x = 0;
-	for(int i=0; i<AVERAGING; i++)
+	for(int i=0; i<amount; i++)
 		x=x+selekta[i];
 	return x;
 }
@@ -134,11 +134,9 @@ void interrupt_init(void)
 	PORTE.INT0MASK = PIN5_bm; // sw0
 	PORTF.INT0MASK = PIN1_bm; // ?????????? 0 ????? F ?? ???? 1, button sw1
 	PORTF.INT1MASK = PIN2_bm; // ?????????? 1 ????? F ?? ???? 2, button sw2
-	PORTC.INTCTRL = PORT_INT0LVL_MED_gc; // ?????? ????????? ?????????? 0 ?? ????? ?
+	PORTC.INTCTRL = PORT_INT0LVL_HI_gc; // ?????? ????????? ?????????? 0 ?? ????? ?
 	PORTE.INTCTRL = PORT_INT0LVL_LO_gc;
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc; // ?????? ????????? ?????????? 0 ? 1 ?? ????? F
-	//irq_initialize_vectors();
-	//cpu_irq_enable(); // ???????? ??????????
 }
 
 uint16_t analogRead(ADC_t *adc, uint8_t ch_mask)
@@ -202,24 +200,24 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 //const float popugai = (3.27/1.6)/4095;
 const float popugai = 0.49487e-3;
 const int adczero = 178;
+int averaged;
 
 static void refresh_callback(void)
 {
-	int averaged;
 	switch (displaymode)
 	{
 	case 0:
 		gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
-		averaged = average(massive)>>STEP;
-		int runaveraged = average(runner)>>STEP;
+		averaged = average(massive,AVERAGING)>>STEP;
+		int runaveraged = average(runner,DISPLAYUSE)>>STEP;
+		snprintf(string, sizeof(string), "R  %2.2X%2.2X", worda, wordb);
+		gfx_mono_draw_string(string,80,0,&sysfont);
 		snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
-		gfx_mono_draw_string(string,80,0,&sysfont); // ?????????? ????????
+		gfx_mono_draw_string(string,80,8,&sysfont); // ?????????? ????????
 		snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
-		gfx_mono_draw_string(string,80,12,&sysfont); // ??????????? ????????
+		gfx_mono_draw_string(string,80,16,&sysfont); // ??????????? ????????
 		snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-expectedzero);
 		gfx_mono_draw_string(string,80,24,&sysfont); // ??????????? ????????
-		//snprintf(string, sizeof(string), "%2.2X%2.2X", worda, wordb);
-		//gfx_mono_draw_string(string,100,10,&sysfont);
 		//snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
 		//gfx_mono_draw_string(string,100,20,&sysfont);
 		//error = 0;
@@ -275,12 +273,12 @@ static void refresh_callback(void)
 		break;
 	case 2:
 		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
-		averaged = average(massive)>>STEP;
+		averaged = average(massive,AVERAGING)>>STEP;
 		sensor_get_pressure(&barometer, &press_data);
-		snprintf(string, sizeof(string), "%7.2f", (press_data.pressure.value / 100.0));
+		snprintf(string, sizeof(string), "%7.2f P", (press_data.pressure.value / 100.0));
 		gfx_mono_draw_string(string, 75, 10, &sysfont);
 		sensor_get_temperature(&barometer, &temp_data);
-		snprintf(string, sizeof(string), "%7.1f", (temp_data.temperature.value / 10.0));
+		snprintf(string, sizeof(string), "%7.1f C", (temp_data.temperature.value / 10.0));
 		gfx_mono_draw_string(string, 75, 20, &sysfont);
 		int nowcount = counter;
 		for (int i=0; i<AVERAGING; ++i)
@@ -294,15 +292,15 @@ static void refresh_callback(void)
 		}
 		break;
 	case 3:
-		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x18, 0), pca9557_get_pin_level(0x18, 1), pca9557_get_pin_level(0x18, 2), pca9557_get_pin_level(0x18, 3), pca9557_get_pin_level(0x18, 4), pca9557_get_pin_level(0x18, 5), pca9557_get_pin_level(0x18, 6), pca9557_get_pin_level(0x18, 7));
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 18h", pca9557_get_pin_level(0x18, 0), pca9557_get_pin_level(0x18, 1), pca9557_get_pin_level(0x18, 2), pca9557_get_pin_level(0x18, 3), pca9557_get_pin_level(0x18, 4), pca9557_get_pin_level(0x18, 5), pca9557_get_pin_level(0x18, 6), pca9557_get_pin_level(0x18, 7));
 		gfx_mono_draw_string(string,10,0,&sysfont);
-		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x19, 0), pca9557_get_pin_level(0x19, 1), pca9557_get_pin_level(0x19, 2), pca9557_get_pin_level(0x19, 3), pca9557_get_pin_level(0x19, 4), pca9557_get_pin_level(0x19, 5), pca9557_get_pin_level(0x19, 6), pca9557_get_pin_level(0x19, 7));
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 19h", pca9557_get_pin_level(0x19, 0), pca9557_get_pin_level(0x19, 1), pca9557_get_pin_level(0x19, 2), pca9557_get_pin_level(0x19, 3), pca9557_get_pin_level(0x19, 4), pca9557_get_pin_level(0x19, 5), pca9557_get_pin_level(0x19, 6), pca9557_get_pin_level(0x19, 7));
 		gfx_mono_draw_string(string,10,10,&sysfont);
-		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d", pca9557_get_pin_level(0x1a, 0), pca9557_get_pin_level(0x1a, 1), pca9557_get_pin_level(0x1a, 2), pca9557_get_pin_level(0x1a, 3), pca9557_get_pin_level(0x1a, 4), pca9557_get_pin_level(0x1a, 5), pca9557_get_pin_level(0x1a, 6), pca9557_get_pin_level(0x1a, 7));
+		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 1Ah", pca9557_get_pin_level(0x1a, 0), pca9557_get_pin_level(0x1a, 1), pca9557_get_pin_level(0x1a, 2), pca9557_get_pin_level(0x1a, 3), pca9557_get_pin_level(0x1a, 4), pca9557_get_pin_level(0x1a, 5), pca9557_get_pin_level(0x1a, 6), pca9557_get_pin_level(0x1a, 7));
 		gfx_mono_draw_string(string,10,20,&sysfont);
 		break;
 	default:
-		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		snprintf(string, sizeof(string), "%d", displaymode);
 		gfx_mono_draw_string(string,10,10,&sysfont);
 		break;
@@ -382,7 +380,7 @@ int main (void)
 	while (1)
 	{
 		delay_ms(250);
-		runner[runflag] = average(massive)>>STEP;
+		runner[runflag] = average(massive,AVERAGING)>>STEP;
 		runflag++;
 		if (runflag > DISPLAYUSE)
 			runflag = 0;

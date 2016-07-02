@@ -404,10 +404,18 @@
 
 /**
  * \def CONF_BOARD_ENABLE_SPIC
- * \brief Initialize IO pins for USART 0 on port E
+ * \brief Initialize IO pins for SPI on port C
  */
 #  if !defined(CONF_BOARD_ENABLE_SPIC)
 #    define CONF_BOARD_ENABLE_SPIC
+#  endif
+
+/**
+ * \def CONF_BOARD_ENABLE_SPID
+ * \brief Initialize IO pins for SPI on port D
+ */
+#  if !defined(CONF_BOARD_ENABLE_SPID)
+#    define CONF_BOARD_ENABLE_SPID
 #  endif
 
 //@}

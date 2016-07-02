@@ -37,7 +37,7 @@
 #define SERVO_4_RIGHT_IN 6
 
 void mediate(int income);
-long average(unsigned int *selekta);
+long average(unsigned int *selekta,int amount);
 void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
 void interrupt_init(void);
 void adc_init(void);

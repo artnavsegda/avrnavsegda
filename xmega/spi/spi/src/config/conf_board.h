@@ -32,6 +32,9 @@
 // Initialize IO pins for use with SPI on port C
 #define CONF_BOARD_ENABLE_SPIC
 
+// Initialize IO pins for use with SPI on port D
+//#define CONF_BOARD_ENABLE_SPID
+
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD
 

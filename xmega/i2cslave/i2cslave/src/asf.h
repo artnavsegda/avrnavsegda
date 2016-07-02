@@ -62,6 +62,12 @@
 // From module: Delay routines
 #include <delay.h>
 
+// From module: GFX Monochrome - Monochrome Graphic Library
+#include <gfx_mono.h>
+
+// From module: GFX Monochrome - System Font
+#include <sysfont.h>
+
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
 
@@ -83,12 +89,18 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: RTC32 - Real Time Counter 32
+#include <rtc32.h>
+
 // From module: SPI - Serial Peripheral Interface
 #include <spi.h>
 
 // From module: SPI - XMEGA implementation
 #include <spi_master.h>
 #include <spi_master.h>
+
+// From module: ST7565R LCD controller
+#include <st7565r.h>
 
 // From module: Sleep Controller driver
 #include <sleep.h>
@@ -100,6 +112,9 @@
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
 
+// From module: TC - Timer Counter
+#include <tc.h>
+
 // From module: TWI - Two-Wire Interface - XMEGA implementation
 #include <twi_master.h>
 #include <twi_slave.h>
@@ -109,6 +124,9 @@
 // From module: TWI - Two-wire Master and Slave Interface
 #include <twim.h>
 #include <twis.h>
+
+// From module: Timeout Service XMEGA
+#include <timeout.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

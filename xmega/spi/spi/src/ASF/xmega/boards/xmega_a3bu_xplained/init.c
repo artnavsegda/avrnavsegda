@@ -146,6 +146,16 @@ void board_init(void)
 			| IOPORT_INIT_HIGH);
 #endif
 
+#ifdef CONF_BOARD_ENABLE_SPID
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 5), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 6), IOPORT_DIR_INPUT);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 7), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+#endif
+
 #if defined (SENSORS_XPLAINED_BOARD)
 	/* Configure the Xplained Sensor extension board, if any, after
 	 * the platform Xplained board has configured basic clock settings,

@@ -64,6 +64,9 @@ uint8_t lobyte, hibyte;
 unsigned int runner[200];
 int runflag = 0;
 
+unsigned int adcrunner[200];
+int adcrunflag = 0;
+
 unsigned int bigdata[6000];
 int knf = 1;
 int bdp = 0;
@@ -104,7 +107,7 @@ ISR(PORTE_INT0_vect) // sw0
 	if (timeout_test_and_clear_expired(0))
 	{
 		if (displaymode++ >= 3)
-		displaymode = 0;
+			displaymode = 0;
 		timeout_start_singleshot(0,2);
 		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 	}
@@ -379,7 +382,7 @@ static void refresh_callback(void)
 				gfx_mono_draw_pixel(i, ((runner[i+runflag-100]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
 		}
 		break;
-	case 3:
+	case 33:
 		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		gfx_mono_draw_string("ADC0",0,0,&sysfont);
 		snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
@@ -405,6 +408,23 @@ static void refresh_callback(void)
 		gfx_mono_draw_string("ADC7",100,24,&sysfont);
 		snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
 		gfx_mono_draw_string(string,64,24,&sysfont);
+		break;
+	case 3:
+		gfx_mono_draw_filled_rect(0, 0, 100, 32, GFX_PIXEL_CLR);
+		averaged = analogRead(&ADCB, ADC_CH3);
+		for (int i=0; i<100; ++i)
+		{
+			if (i+adcrunflag<100)
+				gfx_mono_draw_pixel(i, ((adcrunner[i+adcrunflag]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			else
+				gfx_mono_draw_pixel(i, ((adcrunner[i+adcrunflag-100]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+		}
+		snprintf(string, sizeof(string), "%d", averaged);
+		gfx_mono_draw_string(string,102,0,&sysfont);
+		snprintf(string, sizeof(string), "%1.2f", ((averaged-adczero)*popugai));
+		gfx_mono_draw_string(string,102,12,&sysfont);
+		snprintf(string, sizeof(string), "%2.1f", ((((averaged-adczero)*popugai)-0.5)*100));
+		gfx_mono_draw_string(string,102,24,&sysfont);
 		break;
 	default:
 		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
@@ -461,6 +481,11 @@ int main (void)
 		runflag++;
 		if (runflag > 100)
 			runflag = 0;
+
+		adcrunner[runflag] = analogRead(&ADCB, ADC_CH3);
+			adcrunflag++;
+		if (adcrunflag > 100)
+			adcrunflag = 0;
 
 		bigdata[bdp] = average(massive,AVERAGING)>>STEP;
 		bdp++;

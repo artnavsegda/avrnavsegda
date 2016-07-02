@@ -214,6 +214,12 @@ static void slave_process(void)
 	case 0x09:
 		sendword(average(massive,AVERAGING)>>STEP);
 		break;
+	case 0x0a:
+		sendword(average(runner,100)/100);
+		break;
+	case 0x0b:
+		sendword(expectedzero);
+		break;
 	default:
 		break;
 	}

@@ -39,7 +39,7 @@
 #define EXPECTEDZERO 0x17CC // ?????????????? ????
 #define YSCALE 1
 
-void mediate(uint8_t hibyte, uint8_t lobyte);
+void mediate(int current);
 long average(unsigned int *selekta,int amount);
 void adc_init(void);
 void ad7705_init(void);
@@ -51,6 +51,7 @@ void bladerunner(uint8_t drift);
 void bigmagic(uint8_t drift);
 static void refresh_callback(void);
 void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
+void sendword(int twobyte);
 
 char string[20];
 unsigned int massive[AVERAGING+1];
@@ -91,7 +92,9 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 		spi_gut(&SPIC,0x38); // ??????? ??????? ??????????
 		hibyte = spi_gut(&SPIC,0xFF); // ??????? ????
 		lobyte = spi_gut(&SPIC,0xFF); // ??????? ????
-		mediate(hibyte,lobyte); // ????????? ????????
+		MSB(result) = hibyte;
+		LSB(result) = lobyte;
+		mediate(result); // ????????? ????????
 	}
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
 }
@@ -117,12 +120,8 @@ ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 	expectedzero = average(runner,100)/100;
 }
 
-void mediate(uint8_t hibyte, uint8_t lobyte) // ?????????? ??????? ?????????? ??????????
+void mediate(int current) // ?????????? ??????? ?????????? ??????????
 {
-	int current;
-	MSB(current) = hibyte;
-	LSB(current) = lobyte;
-	result = current;
 	massive[counter] = current;
 	if (counter >= AVERAGING)
 		counter = 0;
@@ -150,10 +149,7 @@ uint16_t analogRead(ADC_t *adc, uint8_t ch_mask)
 {
 	adc_start_conversion(adc, ch_mask);
 	adc_wait_for_interrupt_flag(adc, ch_mask);
-	uint16_t resist = adc_get_result(adc, ch_mask);
-	slave.sendData[0] = LSB(resist);
-	slave.sendData[1] = MSB(resist);
-	return resist;
+	return adc_get_result(adc, ch_mask);
 }
 
 void bladerunner(uint8_t drift)
@@ -163,21 +159,18 @@ void bladerunner(uint8_t drift)
 		resdark = runner[runflag-drift+100];
 	else
 		resdark = runner[runflag-drift];
-	slave.sendData[0] = LSB(resdark);
-	slave.sendData[1] = MSB(resdark);
+	sendword(resdark);
 }
 
 void bigmagic(uint8_t drift)
 {
 	uint16_t resdark = 0;
 	resdark = bigdata[drift*(knf-1)];
-	slave.sendData[0] = LSB(resdark);
-	slave.sendData[1] = MSB(resdark);
+	sendword(resdark);
 }
 
 static void slave_process(void)
 {
-	int averaged;
 	if (slave.receivedData[0] > 150)
 	{
 		bladerunner(slave.receivedData[0]-150);
@@ -191,41 +184,45 @@ static void slave_process(void)
 	switch(slave.receivedData[0])
 	{
 	case 0x00:
-		analogRead(&ADCB, ADC_CH0);
+		sendword(analogRead(&ADCB, ADC_CH0));
 		break;
 	case 0x01:
-		analogRead(&ADCB, ADC_CH1);
+		sendword(analogRead(&ADCB, ADC_CH1));
 		break;
 	case 0x02:
-		analogRead(&ADCB, ADC_CH2);
+		sendword(analogRead(&ADCB, ADC_CH2));
 		break;
 	case 0x03:
-		analogRead(&ADCB, ADC_CH3);
+		sendword(analogRead(&ADCB, ADC_CH3));
 		break;
 	case 0x04:
-		analogRead(&ADCA, ADC_CH0);
+		sendword(analogRead(&ADCA, ADC_CH0));
 		break;
 	case 0x05:
-		analogRead(&ADCA, ADC_CH1);
+		sendword(analogRead(&ADCA, ADC_CH1));
 		break;
 	case 0x06:
-		analogRead(&ADCA, ADC_CH2);
+		sendword(analogRead(&ADCA, ADC_CH2));
 		break;
 	case 0x07:
-		analogRead(&ADCA, ADC_CH3);
+		sendword(analogRead(&ADCA, ADC_CH3));
 		break;
 	case 0x08:
 		slave.sendData[0] = lobyte;
 		slave.sendData[1] = hibyte;
 		break;
 	case 0x09:
-		averaged = average(massive,AVERAGING)>>STEP;
-		slave.sendData[0] = LSB(averaged);
-		slave.sendData[1] = MSB(averaged);
+		sendword(average(massive,AVERAGING)>>STEP);
 		break;
 	default:
 		break;
 	}
+}
+
+void sendword(int twobyte)
+{
+	slave.sendData[0] = LSB(twobyte);
+	slave.sendData[1] = MSB(twobyte);
 }
 
 twi_slave_options_t opt = {

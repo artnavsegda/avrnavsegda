@@ -40,8 +40,7 @@
 #define YSCALE 1
 
 void mediate(uint8_t hibyte, uint8_t lobyte);
-long average(unsigned int *selekta);
-void fillmemory(void);
+long average(unsigned int *selekta,int amount);
 void adc_init(void);
 void ad7705_init(void);
 uint16_t analogRead(ADC_t *adc, uint8_t ch_mask);
@@ -51,6 +50,7 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void bladerunner(uint8_t drift);
 void bigmagic(uint8_t drift);
 static void refresh_callback(void);
+void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
 
 char string[20];
 unsigned int massive[AVERAGING+1];
@@ -107,6 +107,16 @@ ISR(PORTE_INT0_vect) // sw0
 	}
 }
 
+ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
+{
+	expectedzero = EXPECTEDZERO;
+}
+
+ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
+{
+	expectedzero = average(runner,100)/100;
+}
+
 void mediate(uint8_t hibyte, uint8_t lobyte) // ?????????? ??????? ?????????? ??????????
 {
 	int current;
@@ -120,18 +130,12 @@ void mediate(uint8_t hibyte, uint8_t lobyte) // ?????????? ??????? ?????????? ??
 		counter = counter + 1;
 }
 
-long average(unsigned int *selekta) // ??????????
+long average(unsigned int *selekta,int amount) // ??????????
 {
 	long x = 0;
-	for(int i=0; i<AVERAGING; i++)
+	for(int i=0; i<amount; i++)
 	x=x+selekta[i];
 	return x;
-}
-
-void fillmemory(void) // ??????? ??????
-{
-	for (int i=0; i<AVERAGING; ++i)
-	massive[i] = result;
 }
 
 uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
@@ -215,7 +219,7 @@ static void slave_process(void)
 		slave.sendData[1] = hibyte;
 		break;
 	case 0x09:
-		averaged = average(massive)>>STEP;
+		averaged = average(massive,AVERAGING)>>STEP;
 		slave.sendData[0] = LSB(averaged);
 		slave.sendData[1] = MSB(averaged);
 		break;
@@ -299,13 +303,15 @@ static void refresh_callback(void)
 	{
 		case 0:
 		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
-		averaged = average(massive)>>STEP;
+		averaged = average(massive,AVERAGING)>>STEP;
 		snprintf(string, sizeof(string), "R  %2.2X%2.2X", hibyte, lobyte);
 		gfx_mono_draw_string(string,80,0,&sysfont);
 		snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
 		gfx_mono_draw_string(string,80,8,&sysfont); // ?????????? ????????
 		snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
 		gfx_mono_draw_string(string,80,16,&sysfont); // ??????????? ????????
+		snprintf(string, sizeof(string), "Z %5ld", (long)(average(runner,100)/100)-expectedzero);
+		gfx_mono_draw_string(string,80,24,&sysfont); // ??????????? ????????
 		int nowcount = counter;
 		for (int i=0; i<AVERAGING; ++i)
 		{
@@ -351,6 +357,52 @@ static void refresh_callback(void)
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
 		gfx_mono_draw_string(string,64,24,&sysfont);
 		break;
+	case 2:
+		gfx_mono_draw_filled_rect(0, 0, 100, 32, GFX_PIXEL_CLR);
+		averaged = average(massive,AVERAGING)>>STEP;
+		snprintf(string, sizeof(string), "%2.2X%2.2X", hibyte, lobyte);
+		gfx_mono_draw_string(string,100,0,&sysfont);
+		snprintf(string, sizeof(string), "%5ld", (long)result-expectedzero);
+		gfx_mono_draw_string(string,99,8,&sysfont); // ?????????? ????????
+		snprintf(string, sizeof(string), "%5ld", (long)averaged-expectedzero);
+		gfx_mono_draw_string(string,99,16,&sysfont); // ??????????? ????????
+		snprintf(string, sizeof(string), "%5ld", (long)(average(runner,100)/100)-expectedzero);
+		gfx_mono_draw_string(string,99,24,&sysfont); // ??????????? ????????
+		for (int i=0; i<100; ++i)
+		{
+			if (i+runflag<100)
+				gfx_mono_draw_pixel(i, ((runner[i+runflag]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+			else
+				gfx_mono_draw_pixel(i, ((runner[i+runflag-100]-averaged)/YSCALE)+16, GFX_PIXEL_SET);
+		}
+		break;
+	case 3:
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		gfx_mono_draw_string("ADC0",0,0,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
+		gfx_mono_draw_string(string,32,0,&sysfont);
+		gfx_mono_draw_string("ADC1",0,8,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH1));
+		gfx_mono_draw_string(string,32,8,&sysfont);
+		gfx_mono_draw_string("ADC2",0,16,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH2));
+		gfx_mono_draw_string(string,32,16,&sysfont);
+		gfx_mono_draw_string("ADC3",0,24,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH3));
+		gfx_mono_draw_string(string,32,24,&sysfont);
+		gfx_mono_draw_string("ADC4",100,0,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH0));
+		gfx_mono_draw_string(string,64,0,&sysfont);
+		gfx_mono_draw_string("ADC5",100,8,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH1));
+		gfx_mono_draw_string(string,64,8,&sysfont);
+		gfx_mono_draw_string("ADC6",100,16,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH2));
+		gfx_mono_draw_string(string,64,16,&sysfont);
+		gfx_mono_draw_string("ADC7",100,24,&sysfont);
+		snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
+		gfx_mono_draw_string(string,64,24,&sysfont);
+		break;
 	default:
 		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		snprintf(string, sizeof(string), "%d", displaymode);
@@ -359,10 +411,18 @@ static void refresh_callback(void)
 	}
 }
 
+void fillmemory(unsigned int *selekta, unsigned int snip, int amount) // ??????? ??????
+{
+	for (int i=0; i<amount; ++i)
+	selekta[i] = snip;
+}
+
 int main (void)
 {
 	uint8_t i;
 	/* Insert system clock initialization code here (sysclk_init()). */
+	fillmemory(massive,0x17CC,AVERAGING); // ??????? ??????
+	fillmemory(runner,0x17CC,100);
 	board_init();
 	pmic_init();
 	sysclk_init();
@@ -394,12 +454,12 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	do {
-		runner[runflag] = average(massive)>>STEP;
+		runner[runflag] = average(massive,AVERAGING)>>STEP;
 		runflag++;
 		if (runflag > 100)
 			runflag = 0;
 
-		bigdata[bdp] = average(massive)>>STEP;
+		bigdata[bdp] = average(massive,AVERAGING)>>STEP;
 		bdp++;
 		if (bdp > 6000)
 		{

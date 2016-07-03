@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief Common gpio data/structure for all AVR XMEGA implementations.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,41 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#ifndef _XMEGA_GPIO_H_
+#define _XMEGA_GPIO_H_
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+#include "compiler.h"
+#include "ioport.h"
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+#define gpio_pin_is_low(io_id) \
+	ioport_pin_is_low(io_id)
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
+#define gpio_pin_is_high(io_id) \
+	ioport_pin_is_high(io_id)
 
-#endif /* CONF_TIMEOUT_H */
+#define gpio_set_pin_high(io_id) \
+	ioport_set_value(io_id,1)
+
+#define gpio_set_pin_low(io_id) \
+	ioport_set_value(io_id,0)
+
+#define gpio_toggle_pin(io_id) \
+	ioport_toggle_pin(io_id)
+
+#define gpio_configure_pin(io_id,io_flags) \
+	ioport_configure_pin(io_id,io_flags)
+
+#define gpio_configure_group(port_id,port_mask,io_flags) \
+	ioport_configure_group(port_id,port_mask,io_flags)
+
+#define gpio_set_pin_group_high(port_id,mask) \
+	ioport_set_group_high(port_id,mask)
+
+#define gpio_set_pin_group_low(port_id,mask) \
+	ioport_set_group_low(port_id,mask)
+
+#define gpio_toggle_pin_group(port_id,mask) \
+	ioport_tgl_group(port_id,mask)
+
+#endif  // _XMEGA_GPIO_H_

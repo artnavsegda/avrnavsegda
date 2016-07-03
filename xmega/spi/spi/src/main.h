@@ -15,7 +15,6 @@
 #include "pca9557_api.h"
 #include "config.h"
 
-#define U3_IGNIT 1
 #define SERVO_1_LEFT_OUT 7
 #define SERVO_1_RIGHT_OUT 6
 #define SERVO_1_LEFT_IN 5
@@ -36,6 +35,15 @@
 #define SERVO_4_LEFT_IN 7
 #define SERVO_4_RIGHT_IN 6
 
+#define RELAY_1 0 // u1
+#define RELAY_2 0 // u2
+#define VALVE_1 2 // u3
+#define VALVE_2 3 // u3
+#define VALVE_3 4 // u3
+#define VALVE_4 5 // u3
+
+#define U3_IGNIT 1
+
 void mediate(int income);
 long average(unsigned int *selekta,int amount);
 void fillmemory(unsigned int *selekta, unsigned int snip, int amount);
@@ -46,6 +54,7 @@ void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos);
 void ad7705_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void logic_init(void);
+static void alarm(uint32_t time);
 
 
 

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief RTC32 configuration
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,10 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#ifndef CONF_RTC32_H
+#define CONF_RTC32_H
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#define CONFIG_RTC32_COMPARE_INT_LEVEL RTC32_COMPINTLVL_LO_gc
+#define CONFIG_RTC32_CLOCK_1024HZ
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
-
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
-
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
-
-#endif /* CONF_TIMEOUT_H */
+#endif /* CONF_RTC32_H */

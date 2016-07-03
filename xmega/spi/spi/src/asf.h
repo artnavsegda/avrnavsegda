@@ -131,9 +131,6 @@
 // From module: Timeout Service XMEGA
 #include <timeout.h>
 
-// From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
-#include <usart.h>
-
 // From module: XMEGA compiler driver
 #include <compiler.h>
 #include <status_codes.h>

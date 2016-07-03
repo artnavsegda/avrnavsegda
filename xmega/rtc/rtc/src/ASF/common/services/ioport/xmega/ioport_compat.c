@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief XMEGA legacy IOPORT software compatibility driver interface.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,31 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#include "ioport_compat.h"
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#if defined(IOPORT_XMEGA_COMPAT)
+void ioport_configure_port_pin(void *port, pin_mask_t pin_mask,
+		port_pin_flags_t flags)
+{
+	uint8_t pin;
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+	for (pin = 0; pin < 8; pin++) {
+		if (pin_mask & (1 << pin)) {
+			*((uint8_t *)port + PORT_PIN0CTRL + pin) = flags >> 8;
+		}
+	}
+	/* Select direction and initial pin state */
+	if (flags & IOPORT_DIR_OUTPUT) {
+		if (flags & IOPORT_INIT_HIGH) {
+			*((uint8_t *)port + PORT_OUTSET) = pin_mask;
+		} else {
+			*((uint8_t *)port + PORT_OUTCLR) = pin_mask;
+		}
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+		*((uint8_t *)port + PORT_DIRSET) = pin_mask;
+	} else {
+		*((uint8_t *)port + PORT_DIRCLR) = pin_mask;
+	}
+}
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
-
-#endif /* CONF_TIMEOUT_H */
+#endif

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief Sleep manager
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,19 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#include <compiler.h>
+#include <sleepmgr.h>
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+uint8_t sleepmgr_locks[SLEEPMGR_NR_OF_MODES];
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+enum SLEEP_SMODE_enum sleepmgr_configs[SLEEPMGR_NR_OF_MODES] = {
+	SLEEP_SMODE_IDLE_gc,
+	SLEEP_SMODE_ESTDBY_gc,
+	SLEEP_SMODE_PSAVE_gc,
+	SLEEP_SMODE_STDBY_gc,
+	SLEEP_SMODE_PDOWN_gc,
+};
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
-
-#endif /* CONF_TIMEOUT_H */
+#endif /* CONFIG_SLEEPMGR_ENABLE */

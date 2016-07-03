@@ -1,9 +1,14 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief XMEGA-A3BU board LEDs support package.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * This file contains definitions and services related to the LED features of
+ * the XMEGA-A3BU Xplained board.
+ *
+ * To use this board, define BOARD=XMEGA_A3BU_XPLAINED.
+ *
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +48,36 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#ifndef _LED_H_
+#define _LED_H_
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#include "gpio.h"
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
 
-#endif /* CONF_TIMEOUT_H */
+#endif /* _LED_H_ */

@@ -54,6 +54,7 @@ int displaymode = 0;
 unsigned int result = EXPECTEDZERO;
 int expectedzero = EXPECTEDZERO;
 uint8_t worda,wordb;
+bool bounce = true;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -76,11 +77,13 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 
 ISR(PORTE_INT0_vect) // sw0
 {
-	if (timeout_test_and_clear_expired(0))
+	if (bounce)
+//	if (timeout_test_and_clear_expired(1))
 	{
 		if (displaymode++ >= 3)
 			displaymode = 0;
-		timeout_start_singleshot(0,2);
+//		timeout_start_singleshot(1,2);
+		bounce = false;
 		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 	}
 }
@@ -95,10 +98,20 @@ ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
-	expectedzero = average(runner,DISPLAYUSE)>>STEP;
+	rtc_set_alarm_relative(16*1024);
+	ioport_set_pin_level(LED0,false);
+	//expectedzero = average(runner,DISPLAYUSE)>>STEP;
 	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
 	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
 	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
+}
+
+static void alarm(uint32_t time)
+{
+	ioport_set_pin_level(LED0,true);
+	expectedzero = average(runner,DISPLAYUSE)>>STEP;
+	//rtc_set_alarm(2);
+	//expectedzero = 0;
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -274,12 +287,18 @@ static void refresh_callback(void)
 	case 2:
 		gfx_mono_draw_filled_rect(0, 0, AVERAGING, 32, GFX_PIXEL_CLR);
 		averaged = average(massive,AVERAGING)>>STEP;
-		sensor_get_pressure(&barometer, &press_data);
-		snprintf(string, sizeof(string), "%7.2f P", (press_data.pressure.value / 100.0));
-		gfx_mono_draw_string(string, 75, 10, &sysfont);
-		sensor_get_temperature(&barometer, &temp_data);
-		snprintf(string, sizeof(string), "%7.1f C", (temp_data.temperature.value / 10.0));
-		gfx_mono_draw_string(string, 75, 20, &sysfont);
+		if (barometer.err) {
+			gfx_mono_draw_string("No sensor", 75, 10, &sysfont);
+		}
+		else
+		{
+			sensor_get_pressure(&barometer, &press_data);
+			snprintf(string, sizeof(string), "%7.2f P", (press_data.pressure.value / 100.0));
+			gfx_mono_draw_string(string, 75, 10, &sysfont);
+			sensor_get_temperature(&barometer, &temp_data);
+			snprintf(string, sizeof(string), "%7.1f C", (temp_data.temperature.value / 10.0));
+			gfx_mono_draw_string(string, 75, 20, &sysfont);
+		}
 		int nowcount = counter;
 		for (int i=0; i<AVERAGING; ++i)
 		{
@@ -317,6 +336,7 @@ void logic_init(void)
 	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_OUT, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x18, SERVO_2_RIGHT_OUT, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, RELAY_1, PCA9557_DIR_OUTPUT);
 	pca9557_init(0x19);
 	pca9557_set_pin_dir(0x19, SERVO_2_RIGHT_IN, PCA9557_DIR_INPUT);
 	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_OUT, PCA9557_DIR_OUTPUT);
@@ -325,9 +345,14 @@ void logic_init(void)
 	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_IN, PCA9557_DIR_INPUT);
 	pca9557_set_pin_dir(0x19, SERVO_4_LEFT_OUT, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x19, SERVO_4_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, RELAY_2, PCA9557_DIR_OUTPUT);
 	pca9557_init(0x1a);
 	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
 	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_1, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_2, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_3, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_4, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
 }
 
@@ -337,14 +362,16 @@ int main (void)
 
 	fillmemory(massive,result,AVERAGING); // ??????? ??????
 	fillmemory(runner,result,128);
+	pmic_init();
 	board_init(); // ????????????? ?????
 	sysclk_init(); // ????????????? ?????????? ???????? ???????
-	pmic_init();
-	timeout_init();
 	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, refresh_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
+	rtc_init(); 
+	//timeout_init();
+	rtc_set_callback(alarm);
 	interrupt_init(); // ????????????? ??????????
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	spi_master_init(&SPIC); // ????????????? SPI
@@ -358,27 +385,24 @@ int main (void)
 	ad7705_init(); // ????????? ????????? AD7705
 	cpu_irq_enable();
 	gfx_mono_init(); // ????????????? ???????
+	ioport_set_pin_dir(LED0, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL); // ???????? ?????????
 
 	/* Insert application code here, after the board has been initialized. */
-
-	if (barometer.err) {
-		gfx_mono_draw_string("No sensor", 10, 10, &sysfont);
-
-		while (true) {
-			/* Error occurred, loop forever */
-		}
-	}
 
 	/* Initialize sensor data structure flags for scaled vs. raw data */
 	press_data.scaled = true;
 	temp_data.scaled = true;
 
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
-	timeout_start_singleshot(0,1);
+	//timeout_start_singleshot(1,2);
 
 	while (1)
 	{
+		bounce = true;
 		delay_ms(250);
 		runner[runflag] = average(massive,AVERAGING)>>STEP;
 		runflag++;

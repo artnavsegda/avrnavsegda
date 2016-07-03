@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief Preprocessor stringizing utils.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,42 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#ifndef _STRINGZ_H_
+#define _STRINGZ_H_
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+/**
+ * \defgroup group_xmega_utils_stringz Stringize
+ *
+ * \ingroup group_xmega_utils
+ *
+ * \{
+ */
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+/*! \brief Stringize.
+ *
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
+ *
+ * May be used only within macros with the token passed as an argument if the token is \#defined.
+ *
+ * For example, writing STRINGZ(PIN) within a macro \#defined by PIN_NAME(PIN)
+ * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
+ * writing "A0".
+ */
+#define STRINGZ(x)                                #x
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+/*! \brief Absolute stringize.
+ *
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
+ *
+ * No restriction of use if the token is \#defined.
+ *
+ * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
+ * equivalent to writing "A0".
+ */
+#define ASTRINGZ(x)                               STRINGZ(x)
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
+/**
+ * \}
+ */
 
-#endif /* CONF_TIMEOUT_H */
+#endif  // _STRINGZ_H_

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief Preprocessor utils.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#ifndef _PREPROCESSOR_H_
+#define _PREPROCESSOR_H_
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#include "tpaste.h"
+#include "stringz.h"
+#include "mrepeat.h"
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
-
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
-
-#endif /* CONF_TIMEOUT_H */
+#endif  // _PREPROCESSOR_H_

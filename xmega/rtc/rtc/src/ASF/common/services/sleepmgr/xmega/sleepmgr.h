@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration file for timeout service
+ * \brief AVR XMEGA Sleep manager implementation
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,19 +43,75 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMEOUT_H
-#define CONF_TIMEOUT_H
+#ifndef XMEGA_SLEEPMGR_H
+#define XMEGA_SLEEPMGR_H
 
-// For A3B devices with RTC32 module
-#define CLOCK_SOURCE_RTC32
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-//! Define clock frequency
-#define TIMEOUT_CLOCK_SOURCE_HZ  1024
+#include <compiler.h>
+#include <conf_sleepmgr.h>
+#include <sleep.h>
 
-//! Configure timeout channels
-#define TIMEOUT_COUNT               8
+/**
+ * \weakgroup sleepmgr_group
+ * @{
+ */
 
-//! Tick frequency
-#define TIMEOUT_TICK_HZ             1
+enum sleepmgr_mode {
+	//! Active mode.
+	SLEEPMGR_ACTIVE = 0,
+	//! Idle mode.
+	SLEEPMGR_IDLE,
+	//! Extended Standby mode.
+	SLEEPMGR_ESTDBY,
+	//! Power Save mode.
+	SLEEPMGR_PSAVE,
+	//! Standby mode.
+	SLEEPMGR_STDBY,
+	//! Power Down mode.
+	SLEEPMGR_PDOWN,
+	SLEEPMGR_NR_OF_MODES,
+};
 
-#endif /* CONF_TIMEOUT_H */
+/**
+ * \internal
+ * \name Internal arrays
+ * @{
+ */
+#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
+//! Sleep mode lock counters
+extern uint8_t sleepmgr_locks[];
+/**
+ * \brief Look-up table with sleep mode configurations
+ * \note This is located in program memory (Flash) as it is constant.
+ */
+extern enum SLEEP_SMODE_enum sleepmgr_configs[];
+#endif /* CONFIG_SLEEPMGR_ENABLE */
+//! @}
+
+static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
+{
+	Assert(sleep_mode != SLEEPMGR_ACTIVE);
+#ifdef CONFIG_SLEEPMGR_ENABLE
+	sleep_set_mode(sleepmgr_configs[sleep_mode-1]);
+	sleep_enable();
+
+	cpu_irq_enable();
+	sleep_enter();
+
+	sleep_disable();
+#else
+	cpu_irq_enable();
+#endif /* CONFIG_SLEEPMGR_ENABLE */
+
+}
+
+//! @}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* XMEGA_SLEEPMGR_H */

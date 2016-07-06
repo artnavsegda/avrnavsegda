@@ -225,7 +225,7 @@ static void refresh_callback(void)
 	runflag++;
 	if (runflag > DISPLAYUSE)
 		runflag = 0;
-	modbus_float(100, (averaged-expectedzero)/10.0);
+	modbus_float(10, (averaged-expectedzero)/10.0);
 	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
 	//i2c_send_word(&TWIE, 0x08, 0x65, result);
 }

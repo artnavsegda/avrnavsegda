@@ -54,7 +54,7 @@ uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
 	 {
 		 status_code_t status = twi_master_read(twi, &packet);
 		 if(status == TWI_SUCCESS)
-		 return message[0];
+			return message[0];
 	 }
 	 return status;
 }

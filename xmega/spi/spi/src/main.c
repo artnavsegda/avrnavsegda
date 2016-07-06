@@ -50,7 +50,7 @@ char string[20];
 int counter = 0;
 int error = 0;
 int runflag = 0;
-int displaymode = 0;
+int displaymode = 4;
 unsigned int result = EXPECTEDZERO;
 int expectedzero = EXPECTEDZERO;
 uint8_t worda,wordb;
@@ -80,7 +80,7 @@ ISR(PORTE_INT0_vect) // sw0
 	if (bounce)
 //	if (timeout_test_and_clear_expired(1))
 	{
-		if (displaymode++ >= 3)
+		if (displaymode++ >= 4)
 			displaymode = 0;
 //		timeout_start_singleshot(1,2);
 		bounce = false;
@@ -218,6 +218,10 @@ void modbus_float(int address, float content)
 	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
 }
 
+//const float popugai = (3.27/1.6)/4095;
+const float popugai = 0.49487e-3;
+const int adczero = 178;
+
 static void refresh_callback(void)
 {
 	averaged = average(massive,AVERAGING)>>STEP;
@@ -226,13 +230,10 @@ static void refresh_callback(void)
 	if (runflag > DISPLAYUSE)
 		runflag = 0;
 	modbus_float(10, (averaged-expectedzero)/10.0);
+	modbus_float(22, (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
 	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
 	//i2c_send_word(&TWIE, 0x08, 0x65, result);
 }
-
-//const float popugai = (3.27/1.6)/4095;
-const float popugai = 0.49487e-3;
-const int adczero = 178;
 
 static void display_callback(void)
 {
@@ -334,6 +335,32 @@ static void display_callback(void)
 		snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 1Ah", pca9557_get_pin_level(0x1a, 0), pca9557_get_pin_level(0x1a, 1), pca9557_get_pin_level(0x1a, 2), pca9557_get_pin_level(0x1a, 3), pca9557_get_pin_level(0x1a, 4), pca9557_get_pin_level(0x1a, 5), pca9557_get_pin_level(0x1a, 6), pca9557_get_pin_level(0x1a, 7));
 		gfx_mono_draw_string(string,10,20,&sysfont);
 		break;
+	case 4:
+		snprintf(string, sizeof(string), "1: %d ", i2c_read(&TWIE,0x08,1));
+		gfx_mono_draw_string(string,0,0,&sysfont);
+		snprintf(string, sizeof(string), "2: %d ", i2c_read(&TWIE,0x08,2));
+		gfx_mono_draw_string(string,0,8,&sysfont);
+		snprintf(string, sizeof(string), "3: %d ", i2c_read(&TWIE,0x08,3));
+		gfx_mono_draw_string(string,0,16,&sysfont);
+		snprintf(string, sizeof(string), "4: %d ", i2c_read(&TWIE,0x08,4));
+		gfx_mono_draw_string(string,0,24,&sysfont);
+		snprintf(string, sizeof(string), "5:     %d", i2c_read(&TWIE,0x08,5));
+		gfx_mono_draw_string(string,30,0,&sysfont);
+		snprintf(string, sizeof(string), "8: %5d", i2c_read_word(&TWIE,0x08,8));
+		gfx_mono_draw_string(string,30,8,&sysfont);
+		snprintf(string, sizeof(string), "24: %4d", i2c_read_word(&TWIE,0x08,24));
+		gfx_mono_draw_string(string,30,16,&sysfont);
+		snprintf(string, sizeof(string), "99:    %d", i2c_read(&TWIE,0x08,100));
+		gfx_mono_draw_string(string,30,24,&sysfont);
+		snprintf(string, sizeof(string), "100: %d  ", i2c_read(&TWIE,0x08,100));
+		gfx_mono_draw_string(string,80,0,&sysfont);
+		snprintf(string, sizeof(string), "101: %d  ", i2c_read(&TWIE,0x08,101));
+		gfx_mono_draw_string(string,80,8,&sysfont);
+		snprintf(string, sizeof(string), "102: %d  ", i2c_read(&TWIE,0x08,102));
+		gfx_mono_draw_string(string,80,16,&sysfont);
+		snprintf(string, sizeof(string), "103: %d  ", i2c_read(&TWIE,0x08,103));
+		gfx_mono_draw_string(string,80,25,&sysfont);
+		break;
 	default:
 		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		snprintf(string, sizeof(string), "%d", displaymode);
@@ -398,7 +425,7 @@ int main (void)
 	spi_master_init(&SPIC); // ????????????? SPI
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0); // ???????????? SPI
 	spi_enable(&SPIC); // ????????? SPI
-	sensor_bus_init(&TWIE, 400000);
+	sensor_bus_init(&TWIE, 50000);
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
 	logic_init();
 	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
@@ -421,9 +448,13 @@ int main (void)
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV256_gc);
 	tc_write_clock_source(&TCC1, TC_CLKSEL_DIV1024_gc);
 	//timeout_start_singleshot(1,2);
+	i2c_send(&TWIE, 0x08, 1, true);
+	i2c_send(&TWIE, 0x08, 2, true);
+	i2c_send(&TWIE, 0x08, 3, true);
+	i2c_send_word(&TWIE, 0x08, 8, 22);
+	i2c_send_word(&TWIE, 0x08, 28, 0);
 
-	while (1)
-	{
-		// here go
+	while (true) {
+		// do
 	}
 }

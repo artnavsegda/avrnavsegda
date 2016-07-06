@@ -149,10 +149,10 @@ int main (void)
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	i2c_send_word(&TWIE, 0x08, 0x03, 0x1234); // register 03, contents 3f
+	//i2c_send_word(&TWIE, 0x08, 0x03, 0x1234); // register 03, contents 3f
 
 	while (true) {
-		snprintf(string,sizeof(string),"%3x",i2c_read_word(&TWIE, 0x8, 0x03));
+		snprintf(string,sizeof(string),"%3x",i2c_read(&TWIE, 0x8, 100));
 		gfx_mono_draw_string(string,10,10,&sysfont);
 		delay_ms(500);
 	}

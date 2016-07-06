@@ -224,6 +224,7 @@ const int adczero = 178;
 
 static void refresh_callback(void)
 {
+	uint16_t statusword = 0;
 	averaged = average(massive,AVERAGING)>>STEP;
 	runner[runflag] = averaged;
 	runflag++;
@@ -233,6 +234,23 @@ static void refresh_callback(void)
 	modbus_float(22, (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
 	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
 	//i2c_send_word(&TWIE, 0x08, 0x65, result);
+
+	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))
+		statusword|=CONVERTER;
+
+	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))
+		statusword|=WATLOW1;
+
+	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN))
+		statusword|=WATLOW2;
+
+	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))
+		statusword|=WATLOW3;
+
+	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN))
+		statusword|=WATLOW4;
+
+	//i2c_send_word(&TWIE, 0x08, 28, statusword);
 }
 
 static void display_callback(void)
@@ -348,7 +366,7 @@ static void display_callback(void)
 		gfx_mono_draw_string(string,30,0,&sysfont);
 		snprintf(string, sizeof(string), "8: %5d", i2c_read_word(&TWIE,0x08,8));
 		gfx_mono_draw_string(string,30,8,&sysfont);
-		snprintf(string, sizeof(string), "24: %4d", i2c_read_word(&TWIE,0x08,24));
+		snprintf(string, sizeof(string), "28: %4d", i2c_read_word(&TWIE,0x08,28));
 		gfx_mono_draw_string(string,30,16,&sysfont);
 		snprintf(string, sizeof(string), "99:    %d", i2c_read(&TWIE,0x08,100));
 		gfx_mono_draw_string(string,30,24,&sysfont);
@@ -452,7 +470,7 @@ int main (void)
 	i2c_send(&TWIE, 0x08, 2, true);
 	i2c_send(&TWIE, 0x08, 3, true);
 	i2c_send_word(&TWIE, 0x08, 8, 22);
-	i2c_send_word(&TWIE, 0x08, 28, 0);
+	i2c_send_word(&TWIE, 0x08, 28, ALLOK);
 
 	while (true) {
 		// do

@@ -15,6 +15,8 @@
 #include "pca9557_api.h"
 #include "config.h"
 
+//u1
+#define U1 0x18
 #define SERVO_1_LEFT_OUT 7
 #define SERVO_1_RIGHT_OUT 6
 #define SERVO_1_LEFT_IN 5
@@ -23,6 +25,9 @@
 #define SERVO_2_LEFT_OUT 3
 #define SERVO_2_RIGHT_OUT 2
 #define SERVO_2_LEFT_IN 1
+#define RELAY_1 0
+//u2
+#define U2 0x19
 #define SERVO_2_RIGHT_IN 7
 
 #define SERVO_3_LEFT_OUT 6
@@ -32,15 +37,25 @@
 
 #define SERVO_4_LEFT_OUT 2
 #define SERVO_4_RIGHT_OUT 1
+#define RELAY_2 0
+//u3
+#define U3 0x1a
 #define SERVO_4_LEFT_IN 7
 #define SERVO_4_RIGHT_IN 6
+#define VALVE_1 2
+#define VALVE_2 3
+#define VALVE_3 4
+#define VALVE_4 5
 
-#define RELAY_1 0 // u1
-#define RELAY_2 0 // u2
-#define VALVE_1 2 // u3
-#define VALVE_2 3 // u3
-#define VALVE_3 4 // u3
-#define VALVE_4 5 // u3
+#define ALLOK 0
+#define NO_DATA 1
+#define LOW_LIGHT 2
+#define LOW_FLOW 4
+#define CONVERTER 8
+#define WATLOW1 16
+#define WATLOW2 32
+#define WATLOW3 64
+#define WATLOW4 128
 
 #define U3_IGNIT 1
 

@@ -212,6 +212,12 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 
 int averaged;
 
+void modbus_float(int address, float content)
+{
+	i2c_send_word(&TWIE, 0x08, address, LSW(content));
+	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
+}
+
 static void refresh_callback(void)
 {
 	averaged = average(massive,AVERAGING)>>STEP;
@@ -219,8 +225,9 @@ static void refresh_callback(void)
 	runflag++;
 	if (runflag > DISPLAYUSE)
 		runflag = 0;
-	i2c_send_word(&TWIE, 0x08, 0x64, averaged);
-	i2c_send_word(&TWIE, 0x08, 0x65, result);
+	modbus_float(100, (averaged-expectedzero)/10.0);
+	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
+	//i2c_send_word(&TWIE, 0x08, 0x65, result);
 }
 
 //const float popugai = (3.27/1.6)/4095;
@@ -244,11 +251,7 @@ static void display_callback(void)
 		gfx_mono_draw_string(string,80,16,&sysfont); // ??????????? ????????
 		snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-expectedzero);
 		gfx_mono_draw_string(string,80,24,&sysfont); // ??????????? ????????
-		//snprintf(string, sizeof(string), "%d", i2c_read(&TWIE,0x18,0x00));
-		//gfx_mono_draw_string(string,100,20,&sysfont);
 		//error = 0;
-
-		//delay_ms(REFRESH); // ?????
 		
 		//int runaveraged = EXPECTEDZERO+130;
 		//int runaveraged = averaged;

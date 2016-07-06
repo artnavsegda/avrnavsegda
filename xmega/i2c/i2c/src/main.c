@@ -31,8 +31,6 @@
 #include <asf.h>
 #include "stdio.h"
 
-status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content);
-
 char string[20];
 
 twi_master_options_t opt = {
@@ -128,12 +126,6 @@ ISR(PORTF_INT1_vect)
 
 int main (void)
 {
-	uint8_t data_received[1];
-	twi_package_t packet_read = {
-		.chip         = 0x18,      // TWI slave bus address
-		.buffer       = data_received,        // transfer data destination buffer
-		.length       = 1                    // transfer data size (bytes)
-	};
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
@@ -157,10 +149,10 @@ int main (void)
 	cpu_irq_enable();
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-	i2c_send(&TWIE, 0x1a, 0x03, 0x00); // register 03, contents 3f
+	i2c_send_word(&TWIE, 0x08, 0x03, 0x1234); // register 03, contents 3f
 
 	while (true) {
-		snprintf(string,sizeof(string),"%3d",i2c_read(&TWIE, 0x18));
+		snprintf(string,sizeof(string),"%3x",i2c_read_word(&TWIE, 0x8, 0x03));
 		gfx_mono_draw_string(string,10,10,&sysfont);
 		delay_ms(500);
 	}

@@ -88,8 +88,8 @@ uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
    return status;
 }
  
- uint16_t i2c_read_word(TWI_t *twi, uint8_t addr, uint8_t memory)
- {
+uint16_t i2c_read_word(TWI_t *twi, uint8_t addr, uint8_t memory)
+{
    status_code_t status;
    uint16_t recievedword;
    uint8_t message[2];

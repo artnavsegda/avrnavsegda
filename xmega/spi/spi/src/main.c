@@ -404,7 +404,9 @@ int main (void)
 	{
 		bounce = true;
 		delay_ms(250);
-		runner[runflag] = average(massive,AVERAGING)>>STEP;
+		averaged = average(massive,AVERAGING)>>STEP;
+		i2c_send_word(&TWIE, 0x08, 0x64, averaged);
+		runner[runflag] = averaged;
 		runflag++;
 		if (runflag > DISPLAYUSE)
 			runflag = 0;

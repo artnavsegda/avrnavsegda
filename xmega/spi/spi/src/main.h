@@ -55,7 +55,8 @@ void ad7705_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void logic_init(void);
 static void alarm(uint32_t time);
-
+static void display_callback(void);
+static void refresh_callback(void);
 
 
 #endif /* MAIN_H_ */

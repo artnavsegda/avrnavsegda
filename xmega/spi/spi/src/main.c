@@ -210,13 +210,26 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 	return spi_get(spi);
 }
 
-//const float popugai = (3.27/1.6)/4095;
-const float popugai = 0.49487e-3;
-const int adczero = 178;
 int averaged;
 
 static void refresh_callback(void)
 {
+	averaged = average(massive,AVERAGING)>>STEP;
+	runner[runflag] = averaged;
+	runflag++;
+	if (runflag > DISPLAYUSE)
+		runflag = 0;
+	i2c_send_word(&TWIE, 0x08, 0x64, averaged);
+	i2c_send_word(&TWIE, 0x08, 0x65, result);
+}
+
+//const float popugai = (3.27/1.6)/4095;
+const float popugai = 0.49487e-3;
+const int adczero = 178;
+
+static void display_callback(void)
+{
+	bounce = true;
 	switch (displaymode)
 	{
 	case 0:
@@ -366,14 +379,19 @@ int main (void)
 	board_init(); // ????????????? ?????
 	sysclk_init(); // ????????????? ?????????? ???????? ???????
 	tc_enable(&TCC0);
+	tc_enable(&TCC1);
 	tc_set_overflow_interrupt_callback(&TCC0, refresh_callback);
+	tc_set_overflow_interrupt_callback(&TCC1, display_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
+	tc_set_wgm(&TCC1, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
+	tc_write_period(&TCC1, 31250);
 	rtc_init(); 
 	//timeout_init();
 	rtc_set_callback(alarm);
 	interrupt_init(); // ????????????? ??????????
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
+	tc_set_overflow_interrupt_level(&TCC1, TC_INT_LVL_LO);
 	spi_master_init(&SPIC); // ????????????? SPI
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0); // ???????????? SPI
 	spi_enable(&SPIC); // ????????? SPI
@@ -397,19 +415,12 @@ int main (void)
 	press_data.scaled = true;
 	temp_data.scaled = true;
 
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV256_gc);
+	tc_write_clock_source(&TCC1, TC_CLKSEL_DIV1024_gc);
 	//timeout_start_singleshot(1,2);
 
 	while (1)
 	{
-		bounce = true;
-		delay_ms(250);
-		averaged = average(massive,AVERAGING)>>STEP;
-		runner[runflag] = averaged;
-		runflag++;
-		if (runflag > DISPLAYUSE)
-			runflag = 0;
-		i2c_send_word(&TWIE, 0x08, 0x64, averaged);
-		i2c_send_word(&TWIE, 0x08, 0x65, result);
+		// here go
 	}
 }

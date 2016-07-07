@@ -47,14 +47,35 @@ unsigned int massive[AVERAGING];
 unsigned int runner[200];
 char string[20];
 
+int modenumber = 5;
 int counter = 0;
 int error = 0;
 int runflag = 0;
 int displaymode = 4;
 unsigned int result = EXPECTEDZERO;
 int expectedzero = EXPECTEDZERO;
+
+int startlevelseconds = STARTLEVELSECONDS;
+int celldelayseconds = CELLDELAYSECONDS;
+int celllevelseconds = CELLLEVELSECONDS;
+int zerodelayseconds = ZERODELAYSECONDS;
+int zerotestseconds = ZEROTESTSECONDS;
+int totalmercurydelayseconds = TOTALMERCURYDELAYSECONDS;
+int totalmercuryseconds = TOTALMERCURYSECONDS;
+int elementalmercurydelayseconds = ELEMENTALMERCURYDELAYSECONDS;
+int elementalmercuryseconds = ELEMENTALMERCURYSECONDS;
+int precalibrationdelayseconds = PRECALIBRATIONDELAYSECONDS;
+int calibraionseconds = CALIBRATIONSECONDS;
+int postcalibrationdelayseconds = POSTCALIBRATIONDELAYSECONDS;
+int purgeseconds = PURGESECONDS;
+
 uint8_t worda,wordb;
 bool bounce = true;
+bool runzerotest = false;
+bool runcalibration = false;
+bool runelemental = false;
+bool startpurge = false;
+bool endpurge = false;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -62,7 +83,7 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 	spi_gut(&SPIC,0x08); // ??????? ??????? ????????
 	if (spi_gut(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
 	{
-		LED_Toggle(LED2); // ??????????? ????????? LED2
+		LED_Toggle(LED3); // ??????????? ????????? LED2
 		spi_gut(&SPIC,0x38); // ??????? ??????? ??????????
 		worda = spi_gut(&SPIC,0xFF); // ??????? ????
 		MSB(result) = worda;
@@ -96,10 +117,117 @@ ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, true);
 }
 
+void startlevel(void)
+{
+	modenumber = 5;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(STARTLEVELSECONDS*1024);
+}
+
+void celldelay(void)
+{
+	modenumber = 7;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(CELLDELAYSECONDS*1024);
+}
+
+void celllevel(void)
+{
+	modenumber = 8;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(CELLLEVELSECONDS*1024);
+}
+
+void zerodelay(void)
+{
+	modenumber = 11;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	i2c_send(&TWIE, 0x08, 4, true);
+	rtc_set_alarm_relative(4*1024);
+	pca9557_set_pin_level(0x1a, VALVE_ZM, true);
+	ioport_set_pin_level(LED0,false);
+}
+
+void zerotest(void)
+{
+	modenumber = 12;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	i2c_send(&TWIE, 0x08, 4, true);
+	rtc_set_alarm_relative(16*1024);
+	pca9557_set_pin_level(0x1a, VALVE_ZM, true);
+	ioport_set_pin_level(LED0,false);
+}
+
+void purge(void)
+{
+	modenumber = 13;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+}
+
+void total_delay(void)
+{
+	modenumber = 21;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(TOTALMERCURYDELAYSECONDS*1024);
+}
+
+void total_mercury(void)
+{
+	modenumber = 21;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+}
+
+void elemental_delay(void)
+{
+	modenumber = 26;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(4*1024);
+	pca9557_set_pin_level(U3, VALVE_TE, true);
+	ioport_set_pin_level(LED3,false);
+}
+
+void elemental(void)
+{
+	modenumber = 27;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	rtc_set_alarm_relative(16*1024);
+	pca9557_set_pin_level(U3, VALVE_TE, true);
+	ioport_set_pin_level(LED3,false);
+}
+
+void pre_calibration_delay(void)
+{
+	modenumber = 31;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	i2c_send(&TWIE, 0x08, 5, true);
+	rtc_set_alarm_relative(4*1024);
+	pca9557_set_pin_level(U3, VALVE_CM, true);
+	ioport_set_pin_level(LED1,false);
+}
+
+void calibration(void)
+{
+	modenumber = 32;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	i2c_send(&TWIE, 0x08, 5, true);
+	rtc_set_alarm_relative(16*1024);
+	pca9557_set_pin_level(U3, VALVE_CM, true);
+	ioport_set_pin_level(LED1,false);
+}
+
+void post_calibration_delay(void)
+{
+	modenumber = 33;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	i2c_send(&TWIE, 0x08, 5, true);
+	rtc_set_alarm_relative(4*1024);
+	pca9557_set_pin_level(U3, VALVE_CM, false);
+	ioport_set_pin_level(LED1,false);
+}
+
 ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 {
-	rtc_set_alarm_relative(16*1024);
-	ioport_set_pin_level(LED0,false);
+	zerotest();
 	//expectedzero = average(runner,DISPLAYUSE)>>STEP;
 	//i2c_send(&TWIE, 0x18, 0x01, 0x80); // ?????????? ??????? mcp23017, ???????? 80
 	//pca9557_set_pin_level(0x18, SERVO_1_RIGHT_OUT, false);
@@ -108,8 +236,95 @@ ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 
 static void alarm(uint32_t time)
 {
-	ioport_set_pin_level(LED0,true);
-	expectedzero = average(runner,DISPLAYUSE)>>STEP;
+	switch(modenumber)
+	{
+	case 5:
+		break;
+	case 7:
+		celllevel();
+		return;
+		break;
+	case 8:
+		break;
+	case 11:
+		zerotest();
+		return;
+		break;
+	case 12:
+		ioport_set_pin_level(LED0,true);
+		pca9557_set_pin_level(U3, VALVE_ZM, false);
+		expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		i2c_send(&TWIE, 0x08, 4, false);
+		break;
+	case 13:
+		break;
+	case 21:
+		total_mercury();
+		break;
+	case 22:
+		break;
+	case 26:
+		elemental();
+		return;
+		break;
+	case 27:
+		ioport_set_pin_level(LED2,true);
+		pca9557_set_pin_level(U3, VALVE_TE, false);
+		//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		//i2c_send(&TWIE, 0x08, 5, false);
+		break;
+	case 31:
+		calibration();
+		return;
+		break;
+	case 32:
+		ioport_set_pin_level(LED1,true);
+		pca9557_set_pin_level(U3, VALVE_CM, false);
+		//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		i2c_send(&TWIE, 0x08, 5, false);
+		//post_calibration_delay();
+		//return;
+		break;
+	case 33:
+		ioport_set_pin_level(LED1,true);
+		pca9557_set_pin_level(U3, VALVE_CM, false);
+		//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		i2c_send(&TWIE, 0x08, 5, false);
+		break;
+	default:
+		total_mercury();
+		break;
+	}
+
+	/*if (modenumber == 11)
+	{
+		zerotest();
+		return;
+	}*/
+	/*if (modenumber == 12)
+	{
+		ioport_set_pin_level(LED0,true);
+		pca9557_set_pin_level(U3, VALVE_ZM, false);
+		expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		i2c_send(&TWIE, 0x08, 4, false);
+	}*/
+	/*if (modenumber == 32)
+	{
+		ioport_set_pin_level(LED1,true);
+		pca9557_set_pin_level(U3, VALVE_CM, false);
+		//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		i2c_send(&TWIE, 0x08, 5, false);
+	}*/
+	/*if (modenumber == 27)
+	{
+		ioport_set_pin_level(LED2,true);
+		pca9557_set_pin_level(U3, VALVE_TE, false);
+		//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+		//i2c_send(&TWIE, 0x08, 5, false);
+	}*/
+	total_mercury();
+	modenumber = 22;
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
 	//rtc_set_alarm(2);
 	//expectedzero = 0;
 }
@@ -232,8 +447,12 @@ static void refresh_callback(void)
 		runflag = 0;
 	modbus_float(10, (averaged-expectedzero)/10.0);
 	modbus_float(22, (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
+
 	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
 	//i2c_send_word(&TWIE, 0x08, 0x65, result);
+
+	if ((analogRead(&ADCB, ADC_CH0)-adczero)*popugai < 1.0)
+		statusword|=LOW_LIGHT;
 
 	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))
 		statusword|=CONVERTER;
@@ -250,7 +469,26 @@ static void refresh_callback(void)
 	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN))
 		statusword|=WATLOW4;
 
-	//i2c_send_word(&TWIE, 0x08, 28, statusword);
+	i2c_send(&TWIE, 0x08, 1, true);
+	i2c_send_word(&TWIE, 0x08, 28, statusword);
+
+	if (statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))
+		i2c_send(&TWIE, 0x08, 2, false);
+	else
+		i2c_send(&TWIE, 0x08, 2, true);
+
+	if (statusword & (LOW_LIGHT|LOW_FLOW))
+		i2c_send(&TWIE, 0x08, 1, false);
+	else
+		i2c_send(&TWIE, 0x08, 1, true);
+
+	i2c_send(&TWIE, 0x08, 3, true);
+	i2c_send_word(&TWIE, 0x08, 8, modenumber);
+	runcalibration = i2c_read(&TWIE,0x08,99);
+	runzerotest = i2c_read(&TWIE,0x08,100);
+	runelemental = i2c_read(&TWIE,0x08,101);
+	startpurge = i2c_read(&TWIE,0x08,102);
+	endpurge = i2c_read(&TWIE,0x08,103);
 }
 
 static void display_callback(void)
@@ -368,7 +606,7 @@ static void display_callback(void)
 		gfx_mono_draw_string(string,30,8,&sysfont);
 		snprintf(string, sizeof(string), "28: %4d", i2c_read_word(&TWIE,0x08,28));
 		gfx_mono_draw_string(string,30,16,&sysfont);
-		snprintf(string, sizeof(string), "99:    %d", i2c_read(&TWIE,0x08,100));
+		snprintf(string, sizeof(string), "99:    %d", i2c_read(&TWIE,0x08,99));
 		gfx_mono_draw_string(string,30,24,&sysfont);
 		snprintf(string, sizeof(string), "100: %d  ", i2c_read(&TWIE,0x08,100));
 		gfx_mono_draw_string(string,80,0,&sysfont);
@@ -410,10 +648,10 @@ void logic_init(void)
 	pca9557_init(0x1a);
 	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
 	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
-	pca9557_set_pin_dir(0x1a, VALVE_1, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x1a, VALVE_2, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x1a, VALVE_3, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_dir(0x1a, VALVE_4, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_ZM, PCA9557_DIR_OUTPUT); //x10:3
+	pca9557_set_pin_dir(0x1a, VALVE_CM, PCA9557_DIR_OUTPUT); //x10:4
+	pca9557_set_pin_dir(0x1a, VALVE_TE, PCA9557_DIR_OUTPUT); //x10:5
+	pca9557_set_pin_dir(0x1a, VALVE_RE, PCA9557_DIR_OUTPUT); //x10:6
 	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
 }
 
@@ -463,16 +701,40 @@ int main (void)
 	press_data.scaled = true;
 	temp_data.scaled = true;
 
+	modenumber = 22;
+
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV256_gc);
 	tc_write_clock_source(&TCC1, TC_CLKSEL_DIV1024_gc);
 	//timeout_start_singleshot(1,2);
-	i2c_send(&TWIE, 0x08, 1, true);
-	i2c_send(&TWIE, 0x08, 2, true);
-	i2c_send(&TWIE, 0x08, 3, true);
-	i2c_send_word(&TWIE, 0x08, 8, 22);
-	i2c_send_word(&TWIE, 0x08, 28, ALLOK);
 
 	while (true) {
 		// do
+		delay_ms(100);
+		if (runzerotest)
+		{
+			i2c_send(&TWIE, 0x08, 100, false);
+			//zerotest();
+			zerodelay();
+		}
+		if (runcalibration)
+		{
+			i2c_send(&TWIE, 0x08, 99, false);
+			calibration();
+		}
+		if (runelemental)
+		{
+			i2c_send(&TWIE, 0x08, 101, false);
+			elemental();
+		}
+		if (startpurge)
+		{
+			i2c_send(&TWIE, 0x08, 101, false);
+			purge();
+		}
+		if (endpurge)
+		{
+			i2c_send(&TWIE, 0x08, 101, false);
+			total_mercury();
+		}
 	}
 }

@@ -42,10 +42,10 @@
 #define U3 0x1a
 #define SERVO_4_LEFT_IN 7
 #define SERVO_4_RIGHT_IN 6
-#define VALVE_1 2
-#define VALVE_2 3
-#define VALVE_3 4
-#define VALVE_4 5
+#define VALVE_ZM 2 //x10:3
+#define VALVE_CM 3 //x10:4
+#define VALVE_TE 4 //x10:5
+#define VALVE_RE 5 //x10:6
 
 #define ALLOK 0
 #define NO_DATA 1

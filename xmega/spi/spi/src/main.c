@@ -336,6 +336,22 @@ void mediate(int income) // ?????????? ??????? ?????????? ??????????
 		counter = 0;
 }
 
+expectedzero = average(runner,DISPLAYUSE)>>STEP;
+
+int averagevalue(int secondstoaverage)
+{
+	long x = 0;
+	int i;
+	for (i=0;i<secondstoaverage;i++)
+	{
+		if (runflag-i>0)
+			x = x + runner[runflag-i];
+		else
+			x = x + runner[sizeof(runner)-i-runflag];
+	}
+	return x/secondstoaverage;
+}
+
 long average(unsigned int *selekta,int amount) // ??????????
 {
 	long x = 0;
@@ -817,11 +833,6 @@ void entermode(int modetoenter)
 	exitmode(modetoenter);
 }
 
-int averagevalue(int secondstoaverage)
-{
-	
-}
-
 int expectednominal;
 
 void exitmode(int modetoexit)
@@ -839,8 +850,8 @@ void exitmode(int modetoexit)
 		case ZEROTEST:
 				ioport_set_pin_level(LED0,true);
 				pca9557_set_pin_level(U3, VALVE_ZM, false);
-				expectedzero = average(runner,DISPLAYUSE)>>STEP;
-				//expectedzero = averagevalue(modeseconds[modetoexit]);
+				//expectedzero = average(runner,DISPLAYUSE)>>STEP;
+				expectedzero = averagevalue(modeseconds[modetoexit]);
 				i2c_send(&TWIE, 0x08, 4, false);
 		break;
 		case PURGE:
@@ -863,8 +874,8 @@ void exitmode(int modetoexit)
 				ioport_set_pin_level(LED1,true);
 				pca9557_set_pin_level(U3, VALVE_CM, false);
 				//expectedzero = average(runner,DISPLAYUSE)>>STEP;
-				expectednominal = average(runner,DISPLAYUSE)>>STEP;
-				//expectednominal = averagevalue(modeseconds[modetoexit]);
+				//expectednominal = average(runner,DISPLAYUSE)>>STEP;
+				expectednominal = averagevalue(modeseconds[modetoexit]);
 				i2c_send(&TWIE, 0x08, 5, false);
 		break;
 		case POSTCALIBRATIONDELAY:

@@ -60,6 +60,7 @@ int displaymode = 0;
 int expectedzero = EXPECTEDZERO;
 unsigned int result = EXPECTEDZERO;
 uint8_t lobyte, hibyte;
+uint8_t expectedu1, expectedu2, expectedu3;
 
 unsigned int runner[200];
 int runflag = 0;
@@ -222,6 +223,21 @@ static void slave_process(void)
 		break;
 	case 0x0b:
 		sendword(expectedzero);
+		break;
+	case 0x0c:
+		slave.sendData[0] = expectedu1;
+		if (slave.bytesReceived > 1)
+			expectedu1 = slave.sendData[1];
+		break;
+	case 0x0d:
+		slave.sendData[0] = expectedu2;
+		if (slave.bytesReceived > 1)
+			expectedu2 = slave.sendData[1];
+		break;
+	case 0x0e:
+		slave.sendData[0] = expectedu3;
+		if (slave.bytesReceived > 1)
+			expectedu3 = slave.sendData[1];
 		break;
 	default:
 		break;

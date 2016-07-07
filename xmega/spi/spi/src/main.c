@@ -831,6 +831,7 @@ void entermode(int modetoenter)
 	}
 	delay_s(modeseconds[modetoenter])
 	exitmode(modetoenter);
+  //rtc_set_alarm_relative(modeseconds[modetoenter]*1024);
 }
 
 int expectednominal;

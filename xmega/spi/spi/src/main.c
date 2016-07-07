@@ -43,6 +43,8 @@ sensor_t barometer;             /* Pressure sensor device descriptor */
 sensor_data_t press_data;       /* Pressure data */
 sensor_data_t temp_data;        /* Temperature data */
 
+int modbusregisters[50];
+uint8_t modbuscoils[120];
 unsigned int massive[AVERAGING];
 unsigned int runner[200];
 char string[20];
@@ -234,6 +236,12 @@ ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
 }
 
+int writecoil(uint8_t memory, uint8_t content)
+{
+	modbuscoils[memory] = content;
+	return i2c_send(&TWIE, 0x08, memory, content);
+}
+
 static void alarm(uint32_t time)
 {
 	switch(modenumber)
@@ -335,8 +343,6 @@ void mediate(int income) // ?????????? ??????? ?????????? ??????????
 	if (counter++ > AVERAGING)
 		counter = 0;
 }
-
-expectedzero = average(runner,DISPLAYUSE)>>STEP;
 
 int averagevalue(int secondstoaverage)
 {
@@ -447,6 +453,12 @@ void modbus_float(int address, float content)
 {
 	i2c_send_word(&TWIE, 0x08, address, LSW(content));
 	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
+}
+
+int writeregister(uint8_t memory, uint16_t content)
+{
+	modbusregisters[memory] = content;
+	return i2c_send_word(&TWIE, 0x08, memory, content);
 }
 
 //const float popugai = (3.27/1.6)/4095;
@@ -760,7 +772,7 @@ int main (void)
 	}
 }
 
-int modeseconds[30];
+int modeseconds[40];
 
 void setupseconds(void)
 {
@@ -778,6 +790,8 @@ void setupseconds(void)
 	modeseconds[CALIBRATION] = CALIBRATIONSECONDS;
 	modeseconds[POSTCALIBRATIONDELAY] = POSTCALIBRATIONDELAYSECONDS;
 }
+
+void exitmode(int modetoexit);
 
 void entermode(int modetoenter)
 {
@@ -829,10 +843,12 @@ void entermode(int modetoenter)
 		default:
 		break;
 	}
-	delay_s(modeseconds[modetoenter])
+	delay_s(modeseconds[modetoenter]);
 	exitmode(modetoenter);
   //rtc_set_alarm_relative(modeseconds[modetoenter]*1024);
 }
+
+int sequence(int modetosequence);
 
 int expectednominal;
 

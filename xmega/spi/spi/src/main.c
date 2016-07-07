@@ -121,7 +121,7 @@ ISR(PORTF_INT1_vect) // ?????????? 1 ????? F, button sw1
 
 void startlevel(void)
 {
-	modenumber = 5;
+	modenumber = STARTLEVEL;
 	i2c_send_word(&TWIE, 0x08, 8, modenumber);
 	rtc_set_alarm_relative(STARTLEVELSECONDS*1024);
 }
@@ -240,6 +240,13 @@ int writecoil(uint8_t memory, uint8_t content)
 {
 	modbuscoils[memory] = content;
 	return i2c_send(&TWIE, 0x08, memory, content);
+}
+
+uint8_t readcoil(uint8_t memory)
+{
+	uint8_t result = i2c_read(&TWIE,0x08,memory);
+	modbuscoils[memory] = result;
+	return result;
 }
 
 static void alarm(uint32_t time)
@@ -449,7 +456,15 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 
 int averaged;
 
-void modbus_float(int address, float content)
+float read_float(uint8_t address)
+{
+	float result = 0.0;
+	LSW(result) = i2c_read_word(&TWIE,0x08,address);
+	MSW(result) = i2c_read_word(&TWIE,0x08,address+1);
+	return result;
+}
+
+void modbus_float(uint8_t address, float content)
 {
 	i2c_send_word(&TWIE, 0x08, address, LSW(content));
 	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
@@ -459,6 +474,13 @@ int writeregister(uint8_t memory, uint16_t content)
 {
 	modbusregisters[memory] = content;
 	return i2c_send_word(&TWIE, 0x08, memory, content);
+}
+
+uint16_t readregister(uint8_t memory)
+{
+	uint16_t result = i2c_read_word(&TWIE,0x08,memory);
+	modbusregisters[memory] = result;
+	return result;
 }
 
 //const float popugai = (3.27/1.6)/4095;

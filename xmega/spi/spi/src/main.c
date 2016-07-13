@@ -519,20 +519,20 @@ static void refresh_callback(void)
 	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN))
 		statusword|=WATLOW4;
 
-	i2c_send(&TWIE, 0x08, 1, true);
+	//i2c_send(&TWIE, 0x08, 1, true);
 	i2c_send_word(&TWIE, 0x08, 28, statusword);
 
 	if (statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))
-		i2c_send(&TWIE, 0x08, 2, false);
-	else
-		i2c_send(&TWIE, 0x08, 2, true);
-
-	if (statusword & (LOW_LIGHT|LOW_FLOW))
 		i2c_send(&TWIE, 0x08, 1, false);
 	else
 		i2c_send(&TWIE, 0x08, 1, true);
 
-	i2c_send(&TWIE, 0x08, 3, true);
+	if (statusword & (LOW_LIGHT|LOW_FLOW))
+		i2c_send(&TWIE, 0x08, 0, false);
+	else
+		i2c_send(&TWIE, 0x08, 0, true);
+
+	i2c_send(&TWIE, 0x08, 2, true);
 	i2c_send_word(&TWIE, 0x08, 8, modenumber);
 	runcalibration = i2c_read(&TWIE,0x08,99);
 	runzerotest = i2c_read(&TWIE,0x08,100);

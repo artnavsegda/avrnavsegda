@@ -65,8 +65,6 @@ int main (void)
 
 	board_init();
 	twi_master_setup(&TWIE, &opt);
-
-	/* Insert application code here, after the board has been initialized. */
 	writecoil(0,true);//status of spectrometer
 	writecoil(1,true);//status of thermocontrollers
 	writecoil(2,true);//availability for external request
@@ -90,4 +88,9 @@ int main (void)
 	writecoil(101,false);//run elemental
 	writecoil(102,false);//start purge
 	writecoil(103,false);//end purge
+
+	/* Insert application code here, after the board has been initialized. */
+	while (true) {
+		delay_ms(100);
+	}
 }

@@ -30,6 +30,20 @@
  */
 #include <asf.h>
 
+#define STARTLEVELSECONDS 18
+#define CELLDELAYSECONDS 120
+#define CELLLEVELSECONDS 5
+#define ZERODELAYSECONDS 12
+#define ZEROTESTSECONDS 30
+#define PURGESECONDS 32768
+#define TOTALMERCURYDELAYSECONDS 15
+#define TOTALMERCURYSECONDS 720
+#define ELEMENTALMERCURYDELAYSECONDS 5
+#define ELEMENTALMERCURYSECONDS 100
+#define PRECALIBRATIONDELAYSECONDS 360
+#define CALIBRATIONSECONDS 600
+#define POSTCALIBRATIONDELAYSECONDS 900
+
 PROGMEM_DECLARE(char const, spinnertitle[]) = "Start time:";
 PROGMEM_DECLARE(char const, spinnertitle2[]) = "Cell delay:";
 PROGMEM_DECLARE(char const, spinnertitle3[]) = "Cell time:";
@@ -231,15 +245,15 @@ int main (void)
 	gfx_mono_spinctrl_init(&spinner1, SPINTYPE_STRING, spinnertitle, spinner_choicestrings, 0, 3, 0);
 	gfx_mono_spinctrl_init(&spinner2, SPINTYPE_INTEGER,	spinnertitle2, NULL, -60, -41, 0);
 	gfx_mono_spinctrl_init(&spinner3, SPINTYPE_INTEGER,	spinnertitle3, NULL, 19999, 20200, 0);
-	gfx_mono_spinctrl_init(&spinner4, SPINTYPE_INTEGER,	spinnertitle4, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner5, SPINTYPE_INTEGER,	spinnertitle5, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner6, SPINTYPE_INTEGER,	spinnertitle6, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner7, SPINTYPE_INTEGER,	spinnertitle7, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner8, SPINTYPE_INTEGER,	spinnertitle8, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner9, SPINTYPE_INTEGER,	spinnertitle9, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner10, SPINTYPE_INTEGER, spinnertitle10, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner11, SPINTYPE_INTEGER, spinnertitle11, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner12, SPINTYPE_INTEGER, spinnertitle12, NULL, -60, -41, 0);
+	gfx_mono_spinctrl_init(&spinner4, SPINTYPE_INTEGER,	spinnertitle4, NULL, ZERODELAYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner5, SPINTYPE_INTEGER,	spinnertitle5, NULL, ZEROTESTSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner6, SPINTYPE_INTEGER,	spinnertitle6, NULL, TOTALMERCURYDELAYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner7, SPINTYPE_INTEGER,	spinnertitle7, NULL, TOTALMERCURYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner8, SPINTYPE_INTEGER,	spinnertitle8, NULL, ELEMENTALMERCURYDELAYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner9, SPINTYPE_INTEGER,	spinnertitle9, NULL, ELEMENTALMERCURYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner10, SPINTYPE_INTEGER, spinnertitle10, NULL, PRECALIBRATIONDELAYSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner11, SPINTYPE_INTEGER, spinnertitle11, NULL, CALIBRATIONSECONDS, 0, 600);
+	gfx_mono_spinctrl_init(&spinner12, SPINTYPE_INTEGER, spinnertitle12, NULL, POSTCALIBRATIONDELAYSECONDS, 0, 600);
 	gfx_mono_spinctrl_init(&spinner13, SPINTYPE_INTEGER, spinnertitle13, NULL, -60, -41, 0);
 
 	// Initialize spincollection

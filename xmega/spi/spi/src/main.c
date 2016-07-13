@@ -403,6 +403,15 @@ uint16_t analogRead(ADC_t *adc, uint8_t ch_mask)
 	return adc_get_result(adc, ch_mask);
 }
 
+//const float popugai = (3.27/1.6)/4095;
+const float popugai = 0.49487e-3;
+const int adczero = 178;
+
+float analogVoltage(ADC_t *adc, uint8_t ch_mask)
+{
+	return (analogRead(adc, ch_mask)-adczero)*popugai;
+}
+
 void analogInput(ADC_t *adc, uint8_t ch_mask, enum adcch_positive_input pos)
 {
 	struct adc_channel_config adcch_conf;
@@ -483,10 +492,6 @@ uint16_t readregister(uint8_t memory)
 	return result;
 }
 
-//const float popugai = (3.27/1.6)/4095;
-const float popugai = 0.49487e-3;
-const int adczero = 178;
-
 static void refresh_callback(void)
 {
 	uint16_t statusword = 0;
@@ -541,6 +546,10 @@ static void refresh_callback(void)
 	endpurge = i2c_read(&TWIE,0x08,103);
 }
 
+#define FLOW_SENSOR_SPAN 10
+#define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
+#define RESISTOR_DIVIDER 0.319
+
 static void display_callback(void)
 {
 	bounce = true;
@@ -574,36 +583,37 @@ static void display_callback(void)
 	case 1:
 		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
 		//gfx_mono_draw_string("ADC0",0,0,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH0)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCB, ADC_CH0));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH0));
 		gfx_mono_draw_string(string,0,0,&sysfont);
 		//gfx_mono_draw_string("ADC1",0,8,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH1)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCB, ADC_CH1));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH1));
 		gfx_mono_draw_string(string,0,8,&sysfont);
 		//gfx_mono_draw_string("ADC2",0,16,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH2)-adczero)*popugai);
+		//snprintf(string, sizeof(string), "%.6f LPM", ((analogVoltage(&ADCB, ADC_CH2)/9.0)-0.1)*(10/0.4));
+		snprintf(string, sizeof(string), "%.6f LPM", (((analogVoltage(&ADCB, ADC_CH2)/0.319)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH2));
 		gfx_mono_draw_string(string,0,16,&sysfont);
 		//gfx_mono_draw_string("ADC3",0,24,&sysfont);
-		snprintf(string, sizeof(string), "%.5f C", (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
+		snprintf(string, sizeof(string), "%.5f C", (analogVoltage(&ADCB, ADC_CH3)-0.5)*100);
 		//snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCB, ADC_CH3)-adczero)*popugai);
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH3));
 		gfx_mono_draw_string(string,0,24,&sysfont);
 		//gfx_mono_draw_string("ADC4",100,0,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH0)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCA, ADC_CH0));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH0));
 		gfx_mono_draw_string(string,64,0,&sysfont);
 		//gfx_mono_draw_string("ADC5",100,8,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH1)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCA, ADC_CH1));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH1));
 		gfx_mono_draw_string(string,64,8,&sysfont);
 		//gfx_mono_draw_string("ADC6",100,16,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH2)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCA, ADC_CH2));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH2));
 		gfx_mono_draw_string(string,64,16,&sysfont);
 		//gfx_mono_draw_string("ADC7",100,24,&sysfont);
-		snprintf(string, sizeof(string), "%.6f v", (analogRead(&ADCA, ADC_CH3)-adczero)*popugai);
+		snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCA, ADC_CH3));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCA, ADC_CH3));
 		gfx_mono_draw_string(string,64,24,&sysfont);
 		break;

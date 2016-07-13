@@ -30,6 +30,7 @@
  */
 #include <asf.h>
 #include "i2c_api.h"
+#include "pca9557_api.h"
 
 #define STARTLEVEL 5
 #define CELLDELAY 7
@@ -58,6 +59,39 @@
 #define PRECALIBRATIONDELAYSECONDS 360
 #define CALIBRATIONSECONDS 600
 #define POSTCALIBRATIONDELAYSECONDS 900
+
+//u1
+#define U1 0x18
+#define SERVO_1_LEFT_OUT 7
+#define SERVO_1_RIGHT_OUT 6
+#define SERVO_1_LEFT_IN 5
+#define SERVO_1_RIGHT_IN 4
+
+#define SERVO_2_LEFT_OUT 3
+#define SERVO_2_RIGHT_OUT 2
+#define SERVO_2_LEFT_IN 1
+#define RELAY_1 0
+//u2
+#define U2 0x19
+#define SERVO_2_RIGHT_IN 7
+
+#define SERVO_3_LEFT_OUT 6
+#define SERVO_3_RIGHT_OUT 5
+#define SERVO_3_LEFT_IN 4
+#define SERVO_3_RIGHT_IN 3
+
+#define SERVO_4_LEFT_OUT 2
+#define SERVO_4_RIGHT_OUT 1
+#define RELAY_2 0
+//u3
+#define U3 0x1a
+#define SERVO_4_LEFT_IN 7
+#define SERVO_4_RIGHT_IN 6
+#define VALVE_ZM 2 //x10:3
+#define VALVE_CM 3 //x10:4
+#define VALVE_TE 4 //x10:5
+#define VALVE_RE 5 //x10:6
+#define U3_IGNIT 1
 
 void entermode(int modetoenter);
 void exitmode(int modetoexit);
@@ -189,13 +223,13 @@ void entermode(int modetoenter)
 		break;
 		case ZERODELAY:
 			i2c_send(&TWIE, 0x08, 4, true);
-			//pca9557_set_pin_level(0x1a, VALVE_ZM, true);
+			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		return;
 		break;
 		case ZEROTEST:
 			i2c_send(&TWIE, 0x08, 4, true);
-			//pca9557_set_pin_level(0x1a, VALVE_ZM, true);
+			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		break;
 		case PURGE:
@@ -205,21 +239,21 @@ void entermode(int modetoenter)
 		case TOTALMERCURY:
 		break;
 		case ELEMENTALMERCURYDELAY:
-			//pca9557_set_pin_level(U3, VALVE_TE, true);
+			pca9557_set_pin_level(U3, VALVE_TE, true);
 			ioport_set_pin_level(LED3,false);
 		break;
 		case ELEMENTALMERCURY:
-			//pca9557_set_pin_level(U3, VALVE_TE, true);
+			pca9557_set_pin_level(U3, VALVE_TE, true);
 			ioport_set_pin_level(LED3,false);
 		break;
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
-			//pca9557_set_pin_level(U3, VALVE_CM, true);
+			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
 		case POSTCALIBRATIONDELAY:
-			//pca9557_set_pin_level(U3, VALVE_CM, true);
+			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
 		default:
@@ -227,6 +261,36 @@ void entermode(int modetoenter)
 	}
 	delay_s(modeseconds[modetoenter]);
 	exitmode(modetoenter);
+}
+
+void logic_init(void)
+{
+	pca9557_init(0x18);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_1_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, SERVO_2_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x18, RELAY_1, PCA9557_DIR_OUTPUT);
+	pca9557_init(0x19);
+	pca9557_set_pin_dir(0x19, SERVO_2_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_3_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_LEFT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x19, SERVO_4_RIGHT_OUT, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x18, RELAY_2, PCA9557_DIR_OUTPUT);
+	pca9557_init(0x1a);
+	pca9557_set_pin_dir(0x1a, SERVO_4_LEFT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, SERVO_4_RIGHT_IN, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(0x1a, VALVE_ZM, PCA9557_DIR_OUTPUT); //x10:3
+	pca9557_set_pin_dir(0x1a, VALVE_CM, PCA9557_DIR_OUTPUT); //x10:4
+	pca9557_set_pin_dir(0x1a, VALVE_TE, PCA9557_DIR_OUTPUT); //x10:5
+	pca9557_set_pin_dir(0x1a, VALVE_RE, PCA9557_DIR_OUTPUT); //x10:6
+	pca9557_set_pin_dir(0x1a, U3_IGNIT, PCA9557_DIR_OUTPUT);
 }
 
 void exitmode(int modetoexit)
@@ -243,7 +307,7 @@ void exitmode(int modetoexit)
 		break;
 		case ZEROTEST:
 				ioport_set_pin_level(LED0,true);
-				//pca9557_set_pin_level(U3, VALVE_ZM, false);
+				pca9557_set_pin_level(U3, VALVE_ZM, false);
 				i2c_send(&TWIE, 0x08, 4, false);
 		break;
 		case PURGE:
@@ -256,19 +320,19 @@ void exitmode(int modetoexit)
 		break;
 		case ELEMENTALMERCURY:
 				ioport_set_pin_level(LED2,true);
-				//pca9557_set_pin_level(U3, VALVE_TE, false);
+				pca9557_set_pin_level(U3, VALVE_TE, false);
 				i2c_send(&TWIE, 0x08, 5, false);
 		break;
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
 				ioport_set_pin_level(LED1,true);
-				//pca9557_set_pin_level(U3, VALVE_CM, false);
+				pca9557_set_pin_level(U3, VALVE_CM, false);
 				i2c_send(&TWIE, 0x08, 5, false);
 		break;
 		case POSTCALIBRATIONDELAY:
 				ioport_set_pin_level(LED1,true);
-				//pca9557_set_pin_level(U3, VALVE_CM, false);
+				pca9557_set_pin_level(U3, VALVE_CM, false);
 				i2c_send(&TWIE, 0x08, 5, false);
 		break;
 		default:
@@ -315,8 +379,7 @@ int sequence(int modetosequence)
 			return CALIBRATION;
 		break;
 		case CALIBRATION:
-			//return POSTCALIBRATIONDELAY;
-			return TOTALMERCURY;
+			return POSTCALIBRATIONDELAY;
 		break;
 		case POSTCALIBRATIONDELAY:
 			return TOTALMERCURY;

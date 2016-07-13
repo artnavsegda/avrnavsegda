@@ -46,6 +46,7 @@
 #define VALVE_CM 3 //x10:4
 #define VALVE_TE 4 //x10:5
 #define VALVE_RE 5 //x10:6
+#define U3_IGNIT 1
 
 #define ALLOK 0
 #define NO_DATA 1
@@ -70,8 +71,6 @@
 #define PRECALIBRATIONDELAY 31
 #define CALIBRATION 32
 #define POSTCALIBRATIONDELAY 33
-
-#define U3_IGNIT 1
 
 void mediate(int income);
 long average(unsigned int *selekta,int amount);

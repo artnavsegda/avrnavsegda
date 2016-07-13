@@ -104,6 +104,30 @@ PROGMEM_STRING_T spinner_choicestrings[] = {
 	spinner_choice4,
 };
 
+PROGMEM_DECLARE(char const, menu_title[]) = "Menu";
+PROGMEM_DECLARE(char const, menu_1[]) = "One";
+PROGMEM_DECLARE(char const, menu_2[]) = "Two";
+PROGMEM_DECLARE(char const, menu_3[]) = "Three";
+PROGMEM_DECLARE(char const, menu_4[]) = "Four";
+
+PROGMEM_STRING_T menu_strings[] = {
+	menu_1,
+	menu_2,
+	menu_3,
+	menu_4,
+};
+
+struct gfx_mono_menu mymenu = {
+	// Title
+	menu_title,
+	// Array with menu strings
+	menu_strings,
+	// Number of menu elements
+	4,
+	// Initial selection
+	0
+};
+
 #define GPIO_PUSH_BUTTON_3              IOPORT_CREATE_PIN(PORTF, 3)
 
 typedef uint8_t keycode_t;
@@ -196,6 +220,7 @@ int main(void)
 {
 	uint8_t spinner_status;
 	int16_t spinner_results[3];
+	uint8_t menu_status;
 	struct keyboard_event input;
 	struct gfx_mono_spinctrl spinner1;
 	struct gfx_mono_spinctrl spinner2;
@@ -211,13 +236,12 @@ int main(void)
 	sysclk_init();
 	gfx_mono_init();
 
+	gfx_mono_menu_init(&mymenu);
+
 	// Initialize spinners
-	gfx_mono_spinctrl_init(&spinner1, SPINTYPE_STRING, spinnertitle,
-			spinner_choicestrings, 0, 3, 0);
-	gfx_mono_spinctrl_init(&spinner2, SPINTYPE_INTEGER,
-			spinnertitle2, NULL, -60, -41, 0);
-	gfx_mono_spinctrl_init(&spinner3, SPINTYPE_INTEGER,
-			spinnertitle3, NULL, 19999, 20200, 0);
+	gfx_mono_spinctrl_init(&spinner1, SPINTYPE_STRING, spinnertitle, spinner_choicestrings, 0, 3, 0);
+	gfx_mono_spinctrl_init(&spinner2, SPINTYPE_INTEGER,	spinnertitle2, NULL, -60, -41, 0);
+	gfx_mono_spinctrl_init(&spinner3, SPINTYPE_INTEGER,	spinnertitle3, NULL, 19999, 20200, 0);
 
 	// Initialize spincollection
 	gfx_mono_spinctrl_spincollection_init(&spinners);
@@ -228,7 +252,7 @@ int main(void)
 	gfx_mono_spinctrl_spincollection_add_spinner(&spinner3, &spinners);
 
 	// Show spincollection on screen
-	gfx_mono_spinctrl_spincollection_show(&spinners);
+	//gfx_mono_spinctrl_spincollection_show(&spinners);
 
 	// Spincollection is now ready to process input from user
 
@@ -238,6 +262,31 @@ int main(void)
 			keyboard_get_key_state(&input);
 			// Wait for key release
 		} while (input.type != KEYBOARD_RELEASE);
-		spinner_status = gfx_mono_spinctrl_spincollection_process_key(&spinners, input.keycode, spinner_results);
-	} while (spinner_status != GFX_MONO_SPINCTRL_EVENT_FINISH);
+		//spinner_status = gfx_mono_spinctrl_spincollection_process_key(&spinners, input.keycode, spinner_results);
+		menu_status = gfx_mono_menu_process_key(&mymenu, input.keycode);
+	//} while (spinner_status != GFX_MONO_SPINCTRL_EVENT_FINISH);
+	} while (menu_status == GFX_MONO_MENU_EVENT_IDLE);
+
+	switch(menu_status) {
+		case 0:
+			gfx_mono_spinctrl_spincollection_show(&spinners);
+			do {
+				// Intentionally left empty.
+				do {
+					keyboard_get_key_state(&input);
+					// Wait for key release
+				} while (input.type != KEYBOARD_RELEASE);
+				spinner_status = gfx_mono_spinctrl_spincollection_process_key(&spinners, input.keycode, spinner_results);
+				} while (spinner_status != GFX_MONO_SPINCTRL_EVENT_FINISH);
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			// Return to the main menu on unknown element or back key
+			return;
+		}
 }

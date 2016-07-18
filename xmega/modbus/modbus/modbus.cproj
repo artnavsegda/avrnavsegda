@@ -291,6 +291,15 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\main.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\modesequence.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\modesequence.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\pca9557_api.c">
       <SubType>compile</SubType>
     </Compile>

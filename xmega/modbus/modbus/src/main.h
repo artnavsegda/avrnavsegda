@@ -64,5 +64,7 @@ void ad7705_init(void);
 void interrupt_init(void);
 uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void mediate(int income);
+long average(unsigned int *selekta,int amount, int startpos);
+int getstatus(void);
 
 #endif /* MAIN_H_ */

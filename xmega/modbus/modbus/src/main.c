@@ -48,14 +48,17 @@ twi_master_options_t opt = {
 #define STEP 6
 #define AVERAGING 64
 #define EXPECTEDZERO 0x17CC
+#define MEMORYUSE 200
 
 unsigned int massive[AVERAGING];
+unsigned int runner[MEMORYUSE];
 unsigned int result = EXPECTEDZERO;
 uint16_t statusword = 0;
 int expectedzero = EXPECTEDZERO;
-int counter = 0;
+int counter = 0, runflag = 0;
 int averaged;
 uint8_t worda,wordb;
+float coefficent = 1.0;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -81,7 +84,7 @@ void mediate(int income) // ?????????? ??????? ?????????? ??????????
 	counter = 0;
 }
 
-long average(unsigned int *selekta,int amount) // ??????????
+long average(unsigned int *selekta,int amount, int startpos) // ??????????
 {
 	long x = 0;
 	for(int i=0; i<amount; i++)
@@ -211,7 +214,7 @@ void ad7705_init(void) // ????????? ????????? AD7705
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
 }
 
-int getstatus()
+int getstatus(void)
 {
 	int genstatus = 0;
 	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
@@ -259,9 +262,13 @@ int main (void)
 		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
 		writecoil(3, (modenumber == ZEROTEST)); // Status of zero test
 		writecoil(4, (modenumber == CALIBRATION)); // Status of calibration
-		averaged = average(massive,AVERAGING)>>STEP;
-		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0); // elemental mercury
-		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0); // total mercury
+		averaged = average(massive,AVERAGING,counter)>>STEP;
+		runner[runflag] = averaged;
+		runflag++;
+		if (runflag > MEMORYUSE)
+			runflag = 0;
+		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
+		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
 		writefloat(14, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // monitor flow
 		writefloat(16, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // vacuum
 		writefloat(18, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // dilution pressure
@@ -269,12 +276,13 @@ int main (void)
 		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
 		writecoil(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
+		writefloat(30, coefficent); // Total mercury coefficent
 
 		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{
-			if (readcoil(99))
+			if (readcoil(99)) // Request to start calibration
 				entermode(PRECALIBRATIONDELAY);
-			if (readcoil(100))
+			if (readcoil(100)) // Request to start zero test
 				entermode(ZERODELAY);
 			if (readcoil(101))
 				entermode(ELEMENTALMERCURYDELAY);

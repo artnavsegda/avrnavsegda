@@ -30,14 +30,14 @@ void adc_init(void)
 	 adc_set_conversion_trigger(&adcb_conf, ADC_TRIG_MANUAL, 1, 0);
 	 adc_set_clock_rate(&adca_conf, 200000UL);
 	 adc_set_clock_rate(&adcb_conf, 200000UL);
-	 analogInput(&ADCB, ADC_CH0, ADCCH_POS_PIN0);
-	 analogInput(&ADCB, ADC_CH1, ADCCH_POS_PIN1);
-	 analogInput(&ADCB, ADC_CH2, ADCCH_POS_PIN2);
-	 analogInput(&ADCB, ADC_CH3, ADCCH_POS_PIN3);
-	 analogInput(&ADCA, ADC_CH0, ADCCH_POS_PIN4);
-	 analogInput(&ADCA, ADC_CH1, ADCCH_POS_PIN5);
-	 analogInput(&ADCA, ADC_CH2, ADCCH_POS_PIN6);
-	 analogInput(&ADCA, ADC_CH3, ADCCH_POS_PIN7);
+	 analogInput(&ADCB, ADC_CH0, ADCCH_POS_PIN0); // lamp voltage
+	 analogInput(&ADCB, ADC_CH1, ADCCH_POS_PIN1); // lamp current
+	 analogInput(&ADCB, ADC_CH2, ADCCH_POS_PIN2); // flow
+	 analogInput(&ADCB, ADC_CH3, ADCCH_POS_PIN3); // temperature
+	 analogInput(&ADCA, ADC_CH0, ADCCH_POS_PIN4); // p1 x14
+	 analogInput(&ADCA, ADC_CH1, ADCCH_POS_PIN5); // p2 x15
+	 analogInput(&ADCA, ADC_CH2, ADCCH_POS_PIN6); // p3 x16
+	 analogInput(&ADCA, ADC_CH3, ADCCH_POS_PIN7); // p4 x17
 	 adc_write_configuration(&ADCA, &adca_conf);
 	 adc_write_configuration(&ADCB, &adcb_conf);
 	 adc_enable(&ADCA);

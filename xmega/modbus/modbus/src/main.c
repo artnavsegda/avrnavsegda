@@ -164,7 +164,7 @@ void logic_init(void)
 void defaults(void)
 {
 	writecoil(0,true);//status of spectrometer
-	writecoil(1,true);//status of thermocontrollers
+	writecoil(1,true);//status of thermo controllers
 	writecoil(2,true);//availability for external request
 	writecoil(3,false);//status of zero test
 	writecoil(4,false);//status of calibration
@@ -277,9 +277,9 @@ int main (void)
 		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
 		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
 		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
-		writefloat(16, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // vacuum
-		writefloat(18, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // dilution pressure
-		writefloat(20, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // bypass pressure
+		writefloat(16, (analogVoltage(&ADCA, ADC_CH0)-0.4)*12); // vacuum
+		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
+		writefloat(20, (analogVoltage(&ADCA, ADC_CH2)-0.4)*12); // bypass pressure
 		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
 		writecoil(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
@@ -291,11 +291,11 @@ int main (void)
 				entermode(PRECALIBRATIONDELAY);
 			if (readcoil(100)) // Request to start zero test
 				entermode(ZERODELAY);
-			if (readcoil(101))
+			if (readcoil(101)) // Request to start measurement of elemental mercury
 				entermode(ELEMENTALMERCURYDELAY);
-			if (readcoil(102))
+			if (readcoil(102)) // Request to start purge
 				entermode(PURGE);
-			if (readcoil(103))
+			if (readcoil(103)) // Request to end purge
 				exitmode(PURGE);
 		}
 	}

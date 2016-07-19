@@ -629,7 +629,7 @@ static void display_callback(void)
 		gfx_mono_draw_string(string,0,8,&sysfont);
 		//gfx_mono_draw_string("ADC2",0,16,&sysfont);
 		//snprintf(string, sizeof(string), "%.6f LPM", ((analogVoltage(&ADCB, ADC_CH2)/9.0)-0.1)*(10/0.4));
-		snprintf(string, sizeof(string), "%.6f LPM", (((analogVoltage(&ADCB, ADC_CH2)/0.319)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
+		snprintf(string, sizeof(string), "%.6f LPM", (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
 		//snprintf(string, sizeof(string), "%d", analogRead(&ADCB, ADC_CH2));
 		gfx_mono_draw_string(string,0,16,&sysfont);
 		//gfx_mono_draw_string("ADC3",0,24,&sysfont);

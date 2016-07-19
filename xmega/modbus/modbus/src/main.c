@@ -50,6 +50,10 @@ twi_master_options_t opt = {
 #define EXPECTEDZERO 0x17CC
 #define MEMORYUSE 200
 
+#define FLOW_SENSOR_SPAN 10
+#define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
+#define RESISTOR_DIVIDER 0.319
+
 unsigned int massive[AVERAGING];
 unsigned int runner[MEMORYUSE];
 unsigned int result = EXPECTEDZERO;
@@ -269,7 +273,7 @@ int main (void)
 			runflag = 0;
 		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
 		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
-		writefloat(14, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // monitor flow
+		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
 		writefloat(16, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // vacuum
 		writefloat(18, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // dilution pressure
 		writefloat(20, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // bypass pressure

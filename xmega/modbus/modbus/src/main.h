@@ -10,6 +10,7 @@
 #define MAIN_H_
 
 #include <asf.h>
+#include "modesequence.h"
 
 //u1
 #define U1 0x18
@@ -66,5 +67,14 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data);
 void mediate(int income);
 long average(unsigned int *selekta,int amount, int startpos);
 int getstatus(void);
+
+#define AVERAGING 64
+#define MEMORYUSE ZEROTESTSECONDS+CALIBRATIONSECONDS
+
+float coefficent;
+int expectedzero;
+unsigned int massive[AVERAGING];
+unsigned int runner[MEMORYUSE];
+int counter, runflag;
 
 #endif /* MAIN_H_ */

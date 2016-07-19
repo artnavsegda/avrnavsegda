@@ -48,7 +48,7 @@ twi_master_options_t opt = {
 #define STEP 6
 #define AVERAGING 64
 #define EXPECTEDZERO 0x17CC
-#define MEMORYUSE 200
+#define MEMORYUSE ZEROTESTSECONDS+CALIBRATIONSECONDS
 
 #define FLOW_SENSOR_SPAN 10
 #define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
@@ -92,7 +92,12 @@ long average(unsigned int *selekta,int amount, int startpos) // ??????????
 {
 	long x = 0;
 	for(int i=0; i<amount; i++)
-	x=x+selekta[i];
+	{
+		if (startpos-i>0)
+			x=x+selekta[startpos-i];
+		else
+			x=x+selekta[sizeof(selekta)+(startpos-i)];
+	}
 	return x;
 }
 

@@ -62,9 +62,8 @@
 
 char string[20];
 int modenumber;
-
- int modeseconds[40];
- int timetoexitmode = 0;
+int modeseconds[40];
+int timetoexitmode = 0;
 
 void setupseconds(void)
 {

@@ -30,13 +30,72 @@
  */
 #include <asf.h>
 #include "i2c_api.h"
+#include "adc_api.h"
 #include "pca9557_api.h"
 #include "main.h"
 #include "modesequence.h"
 
+static void sequence_callback(void);
+
+struct spi_device SPI_ADC = {
+	.id = SPIC_SS // ??? CS AD7705
+};
+
 twi_master_options_t opt = {
 	.speed = 50000,
 };
+
+#define STEP 6
+#define AVERAGING 64
+#define EXPECTEDZERO 0x17CC
+
+unsigned int massive[AVERAGING];
+unsigned int result = EXPECTEDZERO;
+uint16_t statusword = 0;
+int expectedzero = EXPECTEDZERO;
+int counter = 0;
+int averaged;
+uint8_t worda,wordb;
+
+ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
+{
+	spi_select_device(&SPIC, &SPI_ADC); // ???????????? CS
+	spi_gut(&SPIC,0x08); // ??????? ??????? ????????
+	if (spi_gut(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
+	{
+		LED_Toggle(LED3); // ??????????? ????????? LED2
+		spi_gut(&SPIC,0x38); // ??????? ??????? ??????????
+		worda = spi_gut(&SPIC,0xFF); // ??????? ????
+		MSB(result) = worda;
+		wordb = spi_gut(&SPIC,0xFF); // ??????? ????
+		LSB(result) = wordb;
+		mediate(result); // ????????? ????????
+	}
+	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
+}
+
+void mediate(int income) // ?????????? ??????? ?????????? ??????????
+{
+	massive[counter] = income;
+	if (counter++ > AVERAGING)
+	counter = 0;
+}
+
+long average(unsigned int *selekta,int amount) // ??????????
+{
+	long x = 0;
+	for(int i=0; i<amount; i++)
+	x=x+selekta[i];
+	return x;
+}
+
+uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
+{
+	spi_put(spi,data);
+	while (!spi_is_rx_full(spi)) {
+	}
+	return spi_get(spi);
+}
 
 void writefloat(uint8_t address, float content)
 {
@@ -119,43 +178,110 @@ void defaults(void)
 	writecoil(103,false);//end purge
 }
 
+static void sequence_callback(void)
+{
+	if (timetoexitmode-- <= 0)
+		exitmode(modenumber);
+}
+
+void interrupt_init(void)
+{
+	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT); // ?????????? ??? ?????????? ?? ????
+	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP); // ??????? ???????? ?? ???? ??????????
+	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ???? ??????????
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_0, IOPORT_SENSE_FALLING); // sw0
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_1, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 1
+	ioport_set_pin_sense_mode(GPIO_PUSH_BUTTON_2, IOPORT_SENSE_FALLING); // ???????????? ???????? ????? ?? ?????? 2
+	PORTC.INT0MASK = PIN1_bm; // ?????????? 0 ????? C ?? ???? 1, drdy ad7705
+	PORTE.INT0MASK = PIN5_bm; // sw0
+	PORTF.INT0MASK = PIN1_bm; // ?????????? 0 ????? F ?? ???? 1, button sw1
+	PORTF.INT1MASK = PIN2_bm; // ?????????? 1 ????? F ?? ???? 2, button sw2
+	PORTC.INTCTRL = PORT_INT0LVL_HI_gc; // ?????? ????????? ?????????? 0 ?? ????? ?
+	PORTE.INTCTRL = PORT_INT0LVL_LO_gc;
+	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc; // ?????? ????????? ?????????? 0 ? 1 ?? ????? F
+}
+
+void ad7705_init(void) // ????????? ????????? AD7705
+{
+	spi_select_device(&SPIC, &SPI_ADC); // ???????????? CS
+	spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5); // ??????? ??????????? ?????
+	spi_write_packet(&SPIC, (uint8_t[]){0x20,0x0C,0x10,0x04}, 4); // ?????????? clock ? setup ???????
+	spi_write_packet(&SPIC, (uint8_t[]){0x60,0x18,0x3A,0x00}, 4); // ????????? ??????? ??????
+	spi_write_packet(&SPIC, (uint8_t[]){0x70,0x89,0x78,0xD7}, 4); // ?????????? ??????? ????????
+	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
+}
+
+int getstatus()
+{
+	int genstatus = 0;
+	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
+	if (analogVoltage(&ADCB, ADC_CH2) < 1.0) genstatus|=LOW_FLOW;
+	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
+	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
+	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
+	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
+	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
+	return genstatus;
+}
+
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
+	pmic_init();
 	sysclk_init();
-	setupseconds();
 	board_init();
+	tc_enable(&TCC0);
+	tc_set_overflow_interrupt_callback(&TCC0, sequence_callback);
+	tc_set_wgm(&TCC0, TC_WG_NORMAL);
+	tc_write_period(&TCC0, 31250);
+	interrupt_init();
+	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
+	spi_master_init(&SPIC);
+	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0);
+	spi_enable(&SPIC);
 	twi_master_setup(&TWIE, &opt);
 	logic_init();
+	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
+	adc_init();
+	ad7705_init();
 	defaults();
+	setupseconds();
+	entermode(STARTLEVEL);
+	cpu_irq_enable();
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
 		delay_ms(100);
-		if (readcoil(99))
+		statusword = getstatus();
+		writecoil(0, (statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
+		writecoil(1, (statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
+		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
+		writecoil(3, (modenumber == ZEROTEST)); // Status of zero test
+		writecoil(4, (modenumber == CALIBRATION)); // Status of calibration
+		averaged = average(massive,AVERAGING)>>STEP;
+		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0); // elemental mercury
+		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0); // total mercury
+		writefloat(14, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // monitor flow
+		writefloat(16, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // vacuum
+		writefloat(18, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // dilution pressure
+		writefloat(20, (analogVoltage(&ADCB, ADC_CH2)-0.5)*100); // bypass pressure
+		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
+		writecoil(8, modenumber); // Code of a current mode
+		writefloat(28, statusword); // Errors and warnings
+
+		if (modenumber == TOTALMERCURY)
 		{
-			writecoil(99,false);
-			entermode(CALIBRATION);
-		}
-		if (readcoil(100))
-		{
-			writecoil(100,false);
-			entermode(ZERODELAY);
-		}
-		if (readcoil(101))
-		{
-			writecoil(101,false);
-			entermode(ELEMENTALMERCURY);
-		}
-		if (readcoil(102))
-		{
-			writecoil(102,false);
-			entermode(PURGE);
-		}
-		if (readcoil(103))
-		{
-			writecoil(103,false);
-			entermode(TOTALMERCURY);
+			if (readcoil(99))
+				entermode(CALIBRATION);
+			if (readcoil(100))
+				entermode(ZERODELAY);
+			if (readcoil(101))
+				entermode(ELEMENTALMERCURY);
+			if (readcoil(102))
+				entermode(PURGE);
+			if (readcoil(103))
+				entermode(TOTALMERCURY);
 		}
 	}
 }

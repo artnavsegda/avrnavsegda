@@ -29,7 +29,13 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include "stdio.h"
+#include "string.h"
+//#include "i2c_api.h"
+#include "pca9557_api.h"
+#include "config.h"
 #include "main.h"
+#include "modesequence.h"
 
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS // ??? CS AD7705
@@ -70,6 +76,8 @@ int precalibrationdelayseconds = PRECALIBRATIONDELAYSECONDS;
 int calibraionseconds = CALIBRATIONSECONDS;
 int postcalibrationdelayseconds = POSTCALIBRATIONDELAYSECONDS;
 int purgeseconds = PURGESECONDS;
+
+int timetoexitmode = 0;
 
 uint8_t worda,wordb;
 bool bounce = true;
@@ -236,18 +244,18 @@ ISR(PORTF_INT0_vect) // ?????????? 0 ????? F, button sw0
 	//pca9557_set_pin_level(0x18, SERVO_1_LEFT_OUT, true);
 }
 
-int writecoil(uint8_t memory, uint8_t content)
+/*int writecoil(uint8_t memory, uint8_t content)
 {
 	modbuscoils[memory] = content;
 	return i2c_send(&TWIE, 0x08, memory, content);
-}
+}*/
 
-uint8_t readcoil(uint8_t memory)
+/*uint8_t readcoil(uint8_t memory)
 {
 	uint8_t result = i2c_read(&TWIE,0x08,memory);
 	modbuscoils[memory] = result;
 	return result;
-}
+}*/
 
 static void alarm(uint32_t time)
 {
@@ -479,6 +487,20 @@ void modbus_float(uint8_t address, float content)
 	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
 }
 
+void writefloat(uint8_t address, float content)
+{
+	i2c_send_word(&TWIE, 0x08, address, LSW(content));
+	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
+}
+
+float readfloat(uint8_t address)
+{
+	float result = 0.0;
+	LSW(result) = i2c_read_word(&TWIE,0x08,address);
+	MSW(result) = i2c_read_word(&TWIE,0x08,address+1);
+	return result;
+}
+
 int writeregister(uint8_t memory, uint16_t content)
 {
 	modbusregisters[memory] = content;
@@ -492,6 +514,16 @@ uint16_t readregister(uint8_t memory)
 	return result;
 }
 
+int writecoil(uint8_t memory, uint8_t content)
+{
+	return i2c_send(&TWIE, 0x08, memory, content);
+}
+
+uint8_t readcoil(uint8_t memory)
+{
+	return i2c_read(&TWIE,0x08,memory);
+}
+
 static void refresh_callback(void)
 {
 	uint16_t statusword = 0;
@@ -500,14 +532,17 @@ static void refresh_callback(void)
 	runflag++;
 	if (runflag > DISPLAYUSE)
 		runflag = 0;
-	modbus_float(10, (averaged-expectedzero)/10.0);
-	modbus_float(22, (((analogRead(&ADCB, ADC_CH3)-adczero)*popugai)-0.5)*100);
+	writefloat(10, (averaged-expectedzero)/10.0);
+	writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100);
 
 	//i2c_send_word(&TWIE, 0x08, 0x64, averaged);
 	//i2c_send_word(&TWIE, 0x08, 0x65, result);
 
-	if ((analogRead(&ADCB, ADC_CH0)-adczero)*popugai < 1.0)
+	if (analogVoltage(&ADCB, ADC_CH0) < 1.0)
 		statusword|=LOW_LIGHT;
+
+	//if (analogVoltage(&ADCB, ADC_CH0) < 1.0)
+	//	statusword|=LOW_FLOW;
 
 	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))
 		statusword|=CONVERTER;
@@ -552,6 +587,8 @@ static void refresh_callback(void)
 
 static void display_callback(void)
 {
+	if (timetoexitmode-- <= 0)
+		exitmode(modenumber);
 	bounce = true;
 	switch (displaymode)
 	{
@@ -761,8 +798,9 @@ int main (void)
 	press_data.scaled = true;
 	temp_data.scaled = true;
 
-	modenumber = 22;
-
+	//modenumber = 22;
+	setupseconds();
+	entermode(STARTLEVEL);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV256_gc);
 	tc_write_clock_source(&TCC1, TC_CLKSEL_DIV1024_gc);
 	//timeout_start_singleshot(1,2);
@@ -770,43 +808,46 @@ int main (void)
 	while (true) {
 		// do
 		delay_ms(100);
-		if (runzerotest)
+		if (modenumber == TOTALMERCURY)
 		{
-			i2c_send(&TWIE, 0x08, 100, false);
-			//zerotest();
-			zerodelay();
-			//entermode(ZERODELAY);
-		}
-		if (runcalibration)
-		{
-			i2c_send(&TWIE, 0x08, 99, false);
-			calibration();
-			//entermode(CALIBRATION)
-		}
-		if (runelemental)
-		{
-			i2c_send(&TWIE, 0x08, 101, false);
-			elemental();
-			//entermode(ELEMENTALMERCURY)
-		}
-		if (startpurge)
-		{
-			i2c_send(&TWIE, 0x08, 101, false);
-			purge();
-			//entermode(PURGE)
-		}
-		if (endpurge)
-		{
-			i2c_send(&TWIE, 0x08, 101, false);
-			total_mercury();
-			//entermode(TOTALMERCURY)
+			if (runzerotest)
+			{
+				i2c_send(&TWIE, 0x08, 100, false);
+				//zerotest();
+				zerodelay();
+				//entermode(ZERODELAY);
+			}
+			if (runcalibration)
+			{
+				i2c_send(&TWIE, 0x08, 99, false);
+				calibration();
+				//entermode(CALIBRATION)
+			}
+			if (runelemental)
+			{
+				i2c_send(&TWIE, 0x08, 101, false);
+				elemental();
+				//entermode(ELEMENTALMERCURY)
+			}
+			if (startpurge)
+			{
+				i2c_send(&TWIE, 0x08, 101, false);
+				purge();
+				//entermode(PURGE)
+			}
+			if (endpurge)
+			{
+				i2c_send(&TWIE, 0x08, 101, false);
+				total_mercury();
+				//entermode(TOTALMERCURY)
+			}
 		}
 	}
 }
 
 int modeseconds[40];
 
-void setupseconds(void)
+/*void setupseconds(void)
 {
 	modeseconds[STARTLEVEL] = STARTLEVELSECONDS;
 	modeseconds[CELLDELAY] = CELLDELAYSECONDS;
@@ -821,11 +862,11 @@ void setupseconds(void)
 	modeseconds[PRECALIBRATIONDELAY] = PRECALIBRATIONDELAYSECONDS;
 	modeseconds[CALIBRATION] = CALIBRATIONSECONDS;
 	modeseconds[POSTCALIBRATIONDELAY] = POSTCALIBRATIONDELAYSECONDS;
-}
+}*/
 
-void exitmode(int modetoexit);
+//void exitmode(int modetoexit);
 
-void entermode(int modetoenter)
+/*void entermode(int modetoenter)
 {
 	modenumber = modetoenter;
 	i2c_send_word(&TWIE, 0x08, 8, modetoenter);
@@ -875,16 +916,16 @@ void entermode(int modetoenter)
 		default:
 		break;
 	}
-	delay_s(modeseconds[modetoenter]);
-	exitmode(modetoenter);
+	//delay_s(modeseconds[modetoenter]);
+	//exitmode(modetoenter);
   //rtc_set_alarm_relative(modeseconds[modetoenter]*1024);
-}
+}*/
 
-int sequence(int modetosequence);
+//int sequence(int modetosequence);
 
 int expectednominal;
 
-void exitmode(int modetoexit)
+/*void exitmode(int modetoexit)
 {
 	switch(modetoexit)
 	{
@@ -937,9 +978,9 @@ void exitmode(int modetoexit)
 		break;
 	}
 	entermode(sequence(modetoexit));
-}
+}*/
 
-int sequence(int modetosequence)
+/*int sequence(int modetosequence)
 {
 	switch(modetosequence)
 	{
@@ -988,4 +1029,4 @@ int sequence(int modetosequence)
 		break;
 	}
 	return TOTALMERCURY;
-}
+}*/

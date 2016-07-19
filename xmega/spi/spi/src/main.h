@@ -85,6 +85,10 @@ void logic_init(void);
 static void alarm(uint32_t time);
 static void display_callback(void);
 static void refresh_callback(void);
+void writefloat(uint8_t address, float content);
+float readfloat(uint8_t address);
+int writecoil(uint8_t memory, uint8_t content);
+uint8_t readcoil(uint8_t memory);
 
 
 #endif /* MAIN_H_ */

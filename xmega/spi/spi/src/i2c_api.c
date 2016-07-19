@@ -6,7 +6,7 @@
  */ 
 
 #include <asf.h>
-#include "i2c_api.h"
+//#include "i2c_api.h"
 
 status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
 {

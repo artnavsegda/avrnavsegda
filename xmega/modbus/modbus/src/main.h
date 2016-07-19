@@ -44,11 +44,25 @@
 #define VALVE_RE 5 //x10:6
 #define U3_IGNIT 1
 
+#define ALLOK 0
+#define NO_DATA 1
+#define LOW_LIGHT 2
+#define LOW_FLOW 4
+#define CONVERTER 8
+#define WATLOW1 16
+#define WATLOW2 32
+#define WATLOW3 64
+#define WATLOW4 128
+
 void defaults(void);
 void writefloat(uint8_t address, float content);
 float readfloat(uint8_t address);
 int writecoil(uint8_t memory, uint8_t content);
 uint8_t readcoil(uint8_t memory);
 void logic_init(void);
+void ad7705_init(void);
+void interrupt_init(void);
+uint8_t spi_gut(SPI_t *spi, uint8_t data);
+void mediate(int income);
 
 #endif /* MAIN_H_ */

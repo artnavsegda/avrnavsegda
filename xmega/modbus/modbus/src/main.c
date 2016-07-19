@@ -270,18 +270,18 @@ int main (void)
 		writecoil(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
 
-		if (modenumber == TOTALMERCURY)
+		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{
 			if (readcoil(99))
-				entermode(CALIBRATION);
+				entermode(PRECALIBRATIONDELAY);
 			if (readcoil(100))
 				entermode(ZERODELAY);
 			if (readcoil(101))
-				entermode(ELEMENTALMERCURY);
+				entermode(ELEMENTALMERCURYDELAY);
 			if (readcoil(102))
 				entermode(PURGE);
 			if (readcoil(103))
-				entermode(TOTALMERCURY);
+				exitmode(PURGE);
 		}
 	}
 }

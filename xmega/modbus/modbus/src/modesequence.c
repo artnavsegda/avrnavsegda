@@ -41,23 +41,26 @@
 		case CELLLEVEL:
 		break;
 		case ZERODELAY:
-			i2c_send(&TWIE, 0x08, 4, true);
+			writecoil(100, false);
+			writecoil(4, true);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		return;
 		break;
 		case ZEROTEST:
-			i2c_send(&TWIE, 0x08, 4, true);
+			writecoil(4, true);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		break;
 		case PURGE:
+			writecoil(102, false);
 		break;
 		case TOTALMERCURYDELAY:
 		break;
 		case TOTALMERCURY:
 		break;
 		case ELEMENTALMERCURYDELAY:
+			writecoil(101, false);
 			pca9557_set_pin_level(U3, VALVE_TE, true);
 			ioport_set_pin_level(LED3,false);
 		break;
@@ -66,6 +69,7 @@
 			ioport_set_pin_level(LED3,false);
 		break;
 		case PRECALIBRATIONDELAY:
+			writecoil(99, false);
 		break;
 		case CALIBRATION:
 			pca9557_set_pin_level(U3, VALVE_CM, true);
@@ -96,11 +100,12 @@ void exitmode(int modetoexit)
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
-				ioport_set_pin_level(LED0,true);
-				pca9557_set_pin_level(U3, VALVE_ZM, false);
-				i2c_send(&TWIE, 0x08, 4, false);
+			ioport_set_pin_level(LED0,true);
+			pca9557_set_pin_level(U3, VALVE_ZM, false);
+			writecoil(4, false);
 		break;
 		case PURGE:
+			writecoil(103, false);
 		break;
 		case TOTALMERCURYDELAY:
 		break;
@@ -109,21 +114,21 @@ void exitmode(int modetoexit)
 		case ELEMENTALMERCURYDELAY:
 		break;
 		case ELEMENTALMERCURY:
-				ioport_set_pin_level(LED2,true);
-				pca9557_set_pin_level(U3, VALVE_TE, false);
-				i2c_send(&TWIE, 0x08, 5, false);
+			ioport_set_pin_level(LED2,true);
+			pca9557_set_pin_level(U3, VALVE_TE, false);
+			writecoil(5, false);
 		break;
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
-				ioport_set_pin_level(LED1,true);
-				pca9557_set_pin_level(U3, VALVE_CM, false);
-				i2c_send(&TWIE, 0x08, 5, false);
+			ioport_set_pin_level(LED1,true);
+			pca9557_set_pin_level(U3, VALVE_CM, false);
+			writecoil(5, false);
 		break;
 		case POSTCALIBRATIONDELAY:
-				ioport_set_pin_level(LED1,true);
-				pca9557_set_pin_level(U3, VALVE_CM, false);
-				i2c_send(&TWIE, 0x08, 5, false);
+			ioport_set_pin_level(LED1,true);
+			pca9557_set_pin_level(U3, VALVE_CM, false);
+			writecoil(5, false);
 		break;
 		default:
 		break;

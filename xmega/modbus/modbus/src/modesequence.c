@@ -31,6 +31,7 @@
  void entermode(int modetoenter)
 {
 	modenumber = modetoenter;
+	timetoexitmode = modeseconds[modetoenter];
 	writefloat(8,modetoenter);
 	switch(modetoenter)
 	{
@@ -41,14 +42,15 @@
 		case CELLLEVEL:
 		break;
 		case ZERODELAY:
-			writecoil(100, false);
-			writecoil(4, true);
+			writecoil(100, 0);
+			writecoil(4, 1);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		return;
 		break;
 		case ZEROTEST:
-			writecoil(4, true);
+			writecoil(100, 0);
+			writecoil(4, 1);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		break;
@@ -70,21 +72,23 @@
 		break;
 		case PRECALIBRATIONDELAY:
 			writecoil(99, false);
+			writecoil(4, 1);
 		break;
 		case CALIBRATION:
+			writecoil(99, false);
+			writecoil(4, 1);
 			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
 		case POSTCALIBRATIONDELAY:
+			writecoil(99, false);
+			writecoil(4, 1);
 			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
 		default:
 		break;
 	}
-	timetoexitmode = modeseconds[modetoenter];
-	//delay_s(modeseconds[modetoenter]);
-	//exitmode(modetoenter);
 }
 
 void exitmode(int modetoexit)
@@ -143,7 +147,7 @@ int sequence(int modetosequence)
 	switch(modetosequence)
 	{
 		case STARTLEVEL:
-			return TOTALMERCURY;
+			return TOTALMERCURYDELAY;
 		break;
 		case CELLDELAY:
 			return CELLLEVEL;

@@ -45,6 +45,7 @@ struct spi_device SPI_ADC = {
 
 twi_master_options_t opt = {
 	.speed = 50000,
+	.chip = 0
 };
 
 #define STEP 6
@@ -67,6 +68,8 @@ int averaged = 0;
 int runaveraged = 0;
 uint8_t worda,wordb;
 float coefficent = 1.0;
+bool bounce = true;
+int displaymode = 5;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -83,6 +86,17 @@ ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 		mediate(result); // ????????? ????????
 	}
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
+}
+
+ISR(PORTE_INT0_vect) // sw0
+{
+	if (bounce)
+	{
+		if (displaymode++ >= 5)
+			displaymode = 1;
+		bounce = false;
+		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+	}
 }
 
 void mediate(int income) // ?????????? ??????? ?????????? ??????????
@@ -196,8 +210,10 @@ void defaults(void)
 
 static void sequence_callback(void)
 {
+	bounce = true;
 	if (timetoexitmode-- <= 0)
 		exitmode(modenumber);
+
 	averaged = average(massive,AVERAGING,counter,AVERAGING)>>STEP;
 
 	runner[runflag] = averaged;
@@ -270,7 +286,67 @@ void display(int mode)
 					gfx_mono_draw_pixel(i, (runner[i+runflag-DISPLAYUSE]-averaged)+16, GFX_PIXEL_SET);
 			}
 		break;
+		case 2:
+			snprintf(string, sizeof(string), "m %2d nm %2d", modenumber, sequence(modenumber));
+			gfx_mono_draw_string(string,0,10,&sysfont);
+			snprintf(string, sizeof(string), "l %3d x %3d nml %3d", modeseconds[modenumber], timetoexitmode, modeseconds[sequence(modenumber)]);
+			gfx_mono_draw_string(string,0,20,&sysfont);
+		break;
+		case 3:
+			snprintf(string, sizeof(string), "0: %d ", readcoil(0));
+			gfx_mono_draw_string(string,0,0,&sysfont);
+			snprintf(string, sizeof(string), "1: %d ", readcoil(1));
+			gfx_mono_draw_string(string,0,8,&sysfont);
+			snprintf(string, sizeof(string), "2: %d ", readcoil(2));
+			gfx_mono_draw_string(string,0,16,&sysfont);
+			snprintf(string, sizeof(string), "3: %d ", readcoil(3));
+			gfx_mono_draw_string(string,0,24,&sysfont);
+			snprintf(string, sizeof(string), "4:     %d", readcoil(4));
+			gfx_mono_draw_string(string,30,0,&sysfont);
+			snprintf(string, sizeof(string), "8: %5.0f", readfloat(8));
+			gfx_mono_draw_string(string,30,8,&sysfont);
+			snprintf(string, sizeof(string), "28: %4.0f", readfloat(28));
+			gfx_mono_draw_string(string,30,16,&sysfont);
+			snprintf(string, sizeof(string), "99:    %d", readcoil(99));
+			gfx_mono_draw_string(string,30,24,&sysfont);
+			snprintf(string, sizeof(string), "100: %d  ", readcoil(100));
+			gfx_mono_draw_string(string,80,0,&sysfont);
+			snprintf(string, sizeof(string), "101: %d  ", readcoil(101));
+			gfx_mono_draw_string(string,80,8,&sysfont);
+			snprintf(string, sizeof(string), "102: %d  ", readcoil(102));
+			gfx_mono_draw_string(string,80,16,&sysfont);
+			snprintf(string, sizeof(string), "103: %d  ", readcoil(103));
+			gfx_mono_draw_string(string,80,25,&sysfont);
+		break;
+		case 4:
+			snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCB, ADC_CH0));
+			gfx_mono_draw_string(string,0,0,&sysfont);
+			snprintf(string, sizeof(string), "%.6f A", analogVoltage(&ADCB, ADC_CH1)*0.3);
+			gfx_mono_draw_string(string,0,8,&sysfont);
+			snprintf(string, sizeof(string), "%1.5f L", (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
+			gfx_mono_draw_string(string,0,16,&sysfont);
+			snprintf(string, sizeof(string), "%.5f C", (analogVoltage(&ADCB, ADC_CH3)-0.5)*100);
+			gfx_mono_draw_string(string,0,24,&sysfont);
+			snprintf(string, sizeof(string), "%1.5f P", (analogVoltage(&ADCA, ADC_CH0)-0.4)*12);
+			gfx_mono_draw_string(string,64,0,&sysfont);
+			snprintf(string, sizeof(string), "%1.5f P", (analogVoltage(&ADCA, ADC_CH1)-0.4)*12);
+			gfx_mono_draw_string(string,64,8,&sysfont);
+			snprintf(string, sizeof(string), "%1.5f P", (analogVoltage(&ADCA, ADC_CH2)-0.4)*12);
+			gfx_mono_draw_string(string,64,16,&sysfont);
+			snprintf(string, sizeof(string), "%1.5f P", (analogVoltage(&ADCA, ADC_CH3)-0.4)*12);
+			gfx_mono_draw_string(string,64,24,&sysfont);
+		break;
+		case 5:
+			snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 18h", pca9557_get_pin_level(0x18, 0), pca9557_get_pin_level(0x18, 1), pca9557_get_pin_level(0x18, 2), pca9557_get_pin_level(0x18, 3), pca9557_get_pin_level(0x18, 4), pca9557_get_pin_level(0x18, 5), pca9557_get_pin_level(0x18, 6), pca9557_get_pin_level(0x18, 7));
+			gfx_mono_draw_string(string,10,0,&sysfont);
+			snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 19h", pca9557_get_pin_level(0x19, 0), pca9557_get_pin_level(0x19, 1), pca9557_get_pin_level(0x19, 2), pca9557_get_pin_level(0x19, 3), pca9557_get_pin_level(0x19, 4), pca9557_get_pin_level(0x19, 5), pca9557_get_pin_level(0x19, 6), pca9557_get_pin_level(0x19, 7));
+			gfx_mono_draw_string(string,10,10,&sysfont);
+			snprintf(string, sizeof(string), "%d %d %d %d %d %d %d %d 1Ah", pca9557_get_pin_level(0x1a, 0), pca9557_get_pin_level(0x1a, 1), pca9557_get_pin_level(0x1a, 2), pca9557_get_pin_level(0x1a, 3), pca9557_get_pin_level(0x1a, 4), pca9557_get_pin_level(0x1a, 5), pca9557_get_pin_level(0x1a, 6), pca9557_get_pin_level(0x1a, 7));
+			gfx_mono_draw_string(string,10,20,&sysfont);
+		break;
 		default:
+			snprintf(string, sizeof(string), "%d", displaymode);
+			gfx_mono_draw_string(string,10,10,&sysfont);
 		break;
 	}
 }
@@ -288,9 +364,9 @@ int main (void)
 	interrupt_init();
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	spi_master_init(&SPIC);
-	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 500000, 0);
+	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 50000, 0);
 	spi_enable(&SPIC);
-	twi_master_setup(&TWIE, &opt);
+	sensor_bus_init(&TWIE, 50000);
 	logic_init();
 	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
 	adc_init();
@@ -299,7 +375,7 @@ int main (void)
 	gfx_mono_init();
 	defaults();
 	setupseconds();
-	entermode(STARTLEVEL);
+	entermode(TOTALMERCURY);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 
@@ -310,8 +386,8 @@ int main (void)
 		writecoil(0, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
 		writecoil(1, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
 		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
-		writecoil(3, (modenumber == ZEROTEST)); // Status of zero test
-		writecoil(4, (modenumber == CALIBRATION)); // Status of calibration
+		writecoil(3, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
+		writecoil(4, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
 		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
 		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
 		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
@@ -319,25 +395,25 @@ int main (void)
 		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
 		writefloat(20, (analogVoltage(&ADCA, ADC_CH2)-0.4)*12); // bypass pressure
 		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
-		writecoil(8, modenumber); // Code of a current mode
+		writefloat(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
 		writefloat(30, coefficent); // Total mercury coefficent
 
 		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{
-			if (readcoil(99)) // Request to start calibration
+			if (readcoil(99)==1) // Request to start calibration
 				entermode(PRECALIBRATIONDELAY);
-			if (readcoil(100)) // Request to start zero test
+			if (readcoil(100)==1) // Request to start zero test
 				entermode(ZERODELAY);
-			if (readcoil(101)) // Request to start measurement of elemental mercury
+			if (readcoil(101)==1) // Request to start measurement of elemental mercury
 				entermode(ELEMENTALMERCURYDELAY);
-			if (readcoil(102)) // Request to start purge
+			if (readcoil(102)==1) // Request to start purge
 				entermode(PURGE);
-			if (readcoil(103)) // Request to end purge
+			if (readcoil(103)==1) // Request to end purge
 				exitmode(PURGE);
 		}
 
-		display(1);
+		display(displaymode);
 	}
 }
 

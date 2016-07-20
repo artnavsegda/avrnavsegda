@@ -99,6 +99,9 @@
 // From module: ST7565R LCD controller
 #include <st7565r.h>
 
+// From module: Sensors - Common Sensor Service
+#include <sensor.h>
+
 // From module: Sleep Controller driver
 #include <sleep.h>
 

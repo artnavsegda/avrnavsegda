@@ -87,7 +87,7 @@ int sequence(int modetosequence)
 	switch(modetosequence)
 	{
 		case STARTLEVEL:
-			return TOTALMERCURY;
+			return TOTALMERCURYDELAY;
 		break;
 		case CELLDELAY:
 			return CELLLEVEL;
@@ -163,15 +163,18 @@ int main (void)
 	tc_write_period(&TCC0, 31250);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	entermode(STARTLEVEL);
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
+	cpu_irq_enable();
+	gfx_mono_init();
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
+	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true)
 	{
-		snprintf(string, sizeof(string), "mode %d next mode %d", modenumber, sequence(modenumber));
-		gfx_mono_draw_string(string,10,10,&sysfont);
-		snprintf(string, sizeof(string), "length %d exit in %d next mode %d", modeseconds[modenumber], timetoexitmode, modeseconds[sequence(modenumber)]);
-		gfx_mono_draw_string(string,20,20,&sysfont);
-		delay_ms(1000);
+		snprintf(string, sizeof(string), "m %d nm %d", modenumber, sequence(modenumber));
+		gfx_mono_draw_string(string,0,10,&sysfont);
+		snprintf(string, sizeof(string), "l %d x %d nml %d", modeseconds[modenumber], timetoexitmode, modeseconds[sequence(modenumber)]);
+		gfx_mono_draw_string(string,0,20,&sysfont);
+		delay_ms(100);
 	}
 }

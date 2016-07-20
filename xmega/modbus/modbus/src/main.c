@@ -29,6 +29,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include "stdio.h"
+#include "string.h"
 #include "i2c_api.h"
 #include "adc_api.h"
 #include "pca9557_api.h"
@@ -52,13 +54,17 @@ twi_master_options_t opt = {
 #define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
 #define RESISTOR_DIVIDER 0.319
 
+#define DISPLAYUSE 64
+
 unsigned int massive[AVERAGING];
 unsigned int runner[MEMORYUSE];
+char string[20];
 unsigned int result = EXPECTEDZERO;
 uint16_t statusword = 0;
 int expectedzero = EXPECTEDZERO;
 int counter = 0, runflag = 0;
-int averaged;
+int averaged = 0;
+int runaveraged = 0;
 uint8_t worda,wordb;
 float coefficent = 1.0;
 
@@ -86,15 +92,15 @@ void mediate(int income) // ?????????? ??????? ?????????? ??????????
 	counter = 0;
 }
 
-long average(unsigned int *selekta,int amount, int startpos) // ??????????
+long average(unsigned int *selekta,int amount, int startpos, int sizeofmassive) // ??????????
 {
 	long x = 0;
 	for(int i=0; i<amount; i++)
 	{
 		if (startpos-i>0)
-			x=x+selekta[startpos-i];
+			x=x+selekta[startpos-i-1];
 		else
-			x=x+selekta[sizeof(selekta)+(startpos-i)];
+			x=x+selekta[sizeofmassive+(startpos-i)-1];
 	}
 	return x;
 }
@@ -192,6 +198,14 @@ static void sequence_callback(void)
 {
 	if (timetoexitmode-- <= 0)
 		exitmode(modenumber);
+	averaged = average(massive,AVERAGING,counter,AVERAGING)>>STEP;
+
+	runner[runflag] = averaged;
+	runflag++;
+	if (runflag > MEMORYUSE)
+		runflag = 0;
+
+	runaveraged = average(runner,DISPLAYUSE,runflag,MEMORYUSE)/DISPLAYUSE;
 }
 
 void interrupt_init(void)
@@ -225,13 +239,40 @@ int getstatus(void)
 {
 	int genstatus = 0;
 	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
-	if (analogVoltage(&ADCB, ADC_CH2) < 1.0) genstatus|=LOW_FLOW;
+	if (analogVoltage(&ADCB, ADC_CH2) < 0.0) genstatus|=LOW_FLOW;
 	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
 	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
 	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
 	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
 	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
 	return genstatus;
+}
+
+void display(int mode)
+{
+	switch (mode)
+	{
+		case 1:
+			gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
+			snprintf(string, sizeof(string), "R  %2.2X%2.2X", worda, wordb);
+			gfx_mono_draw_string(string,80,0,&sysfont);
+			snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
+			gfx_mono_draw_string(string,80,8,&sysfont);
+			snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
+			gfx_mono_draw_string(string,80,16,&sysfont);
+			snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-expectedzero);
+			gfx_mono_draw_string(string,80,24,&sysfont);
+			for (int i=0; i<DISPLAYUSE; ++i)
+			{
+				if (i+runflag<DISPLAYUSE)
+					gfx_mono_draw_pixel(i, (runner[i+runflag]-averaged)+16, GFX_PIXEL_SET);
+				else
+					gfx_mono_draw_pixel(i, (runner[i+runflag-DISPLAYUSE]-averaged)+16, GFX_PIXEL_SET);
+			}
+		break;
+		default:
+		break;
+	}
 }
 
 int main (void)
@@ -255,26 +296,22 @@ int main (void)
 	adc_init();
 	ad7705_init();
 	cpu_irq_enable();
+	gfx_mono_init();
 	defaults();
 	setupseconds();
 	entermode(STARTLEVEL);
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
-		delay_ms(100);
+		delay_ms(1000);
 		statusword = getstatus();
-		writecoil(0, (statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
-		writecoil(1, (statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
+		writecoil(0, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
+		writecoil(1, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
 		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
 		writecoil(3, (modenumber == ZEROTEST)); // Status of zero test
 		writecoil(4, (modenumber == CALIBRATION)); // Status of calibration
-		averaged = average(massive,AVERAGING,counter)>>STEP;
-		runner[runflag] = averaged;
-		runflag++;
-		if (runflag > MEMORYUSE)
-			runflag = 0;
 		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
 		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
 		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
@@ -299,6 +336,8 @@ int main (void)
 			if (readcoil(103)) // Request to end purge
 				exitmode(PURGE);
 		}
+
+		display(1);
 	}
 }
 

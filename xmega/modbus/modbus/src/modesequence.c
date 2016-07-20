@@ -100,7 +100,7 @@ void exitmode(int modetoexit)
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
-			expectedzero = average(massive,ZEROTESTSECONDS,runflag)/ZEROTESTSECONDS;
+			expectedzero = average(runner,ZEROTESTSECONDS,runflag,MEMORYUSE)/ZEROTESTSECONDS;
 			ioport_set_pin_level(LED0,true);
 			pca9557_set_pin_level(U3, VALVE_ZM, false);
 			writecoil(4, false);
@@ -122,7 +122,7 @@ void exitmode(int modetoexit)
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
-			coefficent = average(massive,CALIBRATIONSECONDS,runflag)/CALIBRATIONSECONDS;
+			coefficent = average(runner,CALIBRATIONSECONDS,runflag,MEMORYUSE)/CALIBRATIONSECONDS;
 			ioport_set_pin_level(LED1,true);
 			pca9557_set_pin_level(U3, VALVE_CM, false);
 			writecoil(5, false);

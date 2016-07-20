@@ -254,11 +254,12 @@ int main (void)
 	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
 	adc_init();
 	ad7705_init();
+	cpu_irq_enable();
 	defaults();
 	setupseconds();
 	entermode(STARTLEVEL);
-	cpu_irq_enable();
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
+	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {

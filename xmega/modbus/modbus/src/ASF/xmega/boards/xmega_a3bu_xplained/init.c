@@ -136,6 +136,16 @@ void board_init(void)
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 2), IOPORT_DIR_INPUT);
 #endif
 
+#ifdef CONF_BOARD_ENABLE_SPIC
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 4), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 5), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 6), IOPORT_DIR_INPUT);
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 7), IOPORT_DIR_OUTPUT
+			| IOPORT_INIT_HIGH);
+#endif
+
 #if defined (SENSORS_XPLAINED_BOARD)
 	/* Configure the Xplained Sensor extension board, if any, after
 	 * the platform Xplained board has configured basic clock settings,

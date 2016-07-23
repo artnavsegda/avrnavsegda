@@ -58,6 +58,8 @@ twi_master_options_t opt = {
 #define DISPLAYUSE 64
 
 #define STANDARDCONCENTRATION 2.68
+#define CTWENTIEFIVE 1.527
+#define KFACTOR 0.087
 
 unsigned int massive[AVERAGING];
 unsigned int runner[MEMORYUSE];
@@ -394,10 +396,56 @@ int main (void)
 		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
 		writecoil(3, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
 		writecoil(4, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
-		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (float)((long)averaged-(long)zerolevelavg)/(float)((long)coefficent-(long)zerolevelavg)*STANDARDCONCENTRATION); // elemental mercury
-		//if (modenumber == TOTALMERCURY)	writefloat(10, (float)((long)averaged-(long)expectedzero)/(float)((long)coefficent-(long)expectedzero)*STANDARDCONCENTRATION); // total mercury
-		if (modenumber == TOTALMERCURY)	writefloat(10, (float)((long)averaged-(long)zerolevelavg)/(float)((long)celllevelavg-(long)zerolevelavg)*(1.527*exp(0.087*(((((celltempavg-180)*((3.3/1.6)/4095))-0.5)*100.0)-25.0)))); // total mercury
-		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
+		if (modenumber == ELEMENTALMERCURY)	writefloat (
+			24, (float) (
+				(long) averaged - (long) zerolevelavg
+			) / (float) (
+				(long) coefficent - (long) zerolevelavg
+			) * STANDARDCONCENTRATION
+		); // elemental mercury
+		/* if (modenumber == TOTALMERCURY)	writefloat(
+			10, (float) (
+				(long) averaged - (long) zerolevelavg
+			) / (float) (
+				(long) coefficent - (long) zerolevelavg
+			) * STANDARDCONCENTRATION
+		); // total mercury */
+		if (modenumber == TOTALMERCURY)	writefloat (
+			10, (float) (
+				(long) averaged - (long) zerolevelavg
+			) / (float) (
+				(long) celllevelavg - (long) zerolevelavg
+			) * (
+				CTWENTIEFIVE * exp (
+					KFACTOR * (
+						(
+							(
+								(
+									(
+										celltempavg - 180 // ADC zero level
+									) * (
+										(
+											3.3 / 1.6 // Voltage reference
+										) / 4095 // ADC resolution
+									)
+								) - 0.5
+							) * 100.0 // temperature in Celsius
+						) - 25.0
+					)
+				)
+			)
+		); // total mercury
+		writefloat(14,
+			(
+				(
+					(
+						analogVoltage(&ADCB, ADC_CH2) / RESISTOR_DIVIDER
+					) / EXPECTED_FLOW_SENSOR_VOLTAGE
+				) - 0.1
+			)*(
+				FLOW_SENSOR_SPAN / 0.4	
+			)
+		); // monitor flow
 		writefloat(16, (analogVoltage(&ADCA, ADC_CH0)-0.4)*12); // vacuum
 		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
 		writefloat(20, (analogVoltage(&ADCA, ADC_CH2)-0.4)*12); // bypass pressure

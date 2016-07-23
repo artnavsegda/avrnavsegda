@@ -25,8 +25,8 @@
 #define POSTCALIBRATIONDELAY 33
 
 #define STARTLEVELSECONDS 8
-#define CELLDELAYSECONDS 120
-#define CELLLEVELSECONDS 5
+#define CELLDELAYSECONDS 12
+#define CELLLEVELSECONDS 30
 #define ZERODELAYSECONDS 12
 #define ZEROTESTSECONDS 30
 #define PURGESECONDS 32768
@@ -42,9 +42,8 @@ void entermode(int modetoenter);
 void exitmode(int modetoexit);
 int sequence(int modetosequence);
 void setupseconds(void);
+int modeseconds(int modeneed);
 
-int modeseconds[40];
-int timetoexitmode;
-int modenumber;
+//int modeseconds[40];
 
 #endif /* MODESEQUENCE_H_ */

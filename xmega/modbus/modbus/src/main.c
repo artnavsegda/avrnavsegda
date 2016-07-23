@@ -57,19 +57,26 @@ twi_master_options_t opt = {
 
 #define DISPLAYUSE 64
 
+#define STANDARDCONCENTRATION 2.68
+
 unsigned int massive[AVERAGING];
 unsigned int runner[MEMORYUSE];
+unsigned int temprunner[CALIBRATIONSECONDS];
 char string[20];
 unsigned int result = EXPECTEDZERO;
 uint16_t statusword = 0;
-int expectedzero = EXPECTEDZERO;
-int counter = 0, runflag = 0;
-int averaged = 0;
-int runaveraged = 0;
+int zerolevelavg = EXPECTEDZERO;
+int counter = 0, runflag = 0, temprunflag = 0;
+int averaged = EXPECTEDZERO;
+int runaveraged = EXPECTEDZERO;
 uint8_t worda,wordb;
-float coefficent = 1.0;
+int coefficent = EXPECTEDZERO+5000;
+int celllevelavg = EXPECTEDZERO+5000;
+int celltempavg = 1024;
 bool bounce = true;
-int displaymode = 5;
+int displaymode = 2;
+int timetoexitmode = 666;
+int modenumber = 22;
 
 ISR(PORTC_INT0_vect) // ?????????? 0 ????? C, drdy ad7705
 {
@@ -211,7 +218,8 @@ void defaults(void)
 static void sequence_callback(void)
 {
 	bounce = true;
-	if (timetoexitmode-- <= 0)
+
+	if (timetoexitmode-- == 0)
 		exitmode(modenumber);
 
 	averaged = average(massive,AVERAGING,counter,AVERAGING)>>STEP;
@@ -221,7 +229,18 @@ static void sequence_callback(void)
 	if (runflag > MEMORYUSE)
 		runflag = 0;
 
-	runaveraged = average(runner,DISPLAYUSE,runflag,MEMORYUSE)/DISPLAYUSE;
+	//runaveraged = average(runner,DISPLAYUSE,runflag,MEMORYUSE)/DISPLAYUSE;
+	runaveraged = average(runner,CALIBRATIONSECONDS,runflag,MEMORYUSE)/CALIBRATIONSECONDS;
+
+
+
+	temprunner[temprunflag] = analogRead(&ADCB, ADC_CH3);
+	temprunflag++;
+	if (temprunflag > CELLLEVELSECONDS)
+		temprunflag = 0;
+
+
+
 }
 
 void interrupt_init(void)
@@ -251,19 +270,6 @@ void ad7705_init(void) // ????????? ????????? AD7705
 	spi_deselect_device(&SPIC, &SPI_ADC); // ?????????????? CS
 }
 
-int getstatus(void)
-{
-	int genstatus = 0;
-	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
-	if (analogVoltage(&ADCB, ADC_CH2) < 0.0) genstatus|=LOW_FLOW;
-	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
-	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
-	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
-	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
-	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
-	return genstatus;
-}
-
 void display(int mode)
 {
 	switch (mode)
@@ -272,11 +278,11 @@ void display(int mode)
 			gfx_mono_draw_filled_rect(0, 0, DISPLAYUSE, 32, GFX_PIXEL_CLR);
 			snprintf(string, sizeof(string), "R  %2.2X%2.2X", worda, wordb);
 			gfx_mono_draw_string(string,80,0,&sysfont);
-			snprintf(string, sizeof(string), "N %5ld", (long)result-expectedzero);
+			snprintf(string, sizeof(string), "N %5ld", (long)result-zerolevelavg);
 			gfx_mono_draw_string(string,80,8,&sysfont);
-			snprintf(string, sizeof(string), "A %5ld", (long)averaged-expectedzero);
+			snprintf(string, sizeof(string), "A %5ld", (long)averaged-zerolevelavg);
 			gfx_mono_draw_string(string,80,16,&sysfont);
-			snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-expectedzero);
+			snprintf(string, sizeof(string), "Z %5ld", (long)runaveraged-zerolevelavg);
 			gfx_mono_draw_string(string,80,24,&sysfont);
 			for (int i=0; i<DISPLAYUSE; ++i)
 			{
@@ -289,7 +295,7 @@ void display(int mode)
 		case 2:
 			snprintf(string, sizeof(string), "m %2d nm %2d", modenumber, sequence(modenumber));
 			gfx_mono_draw_string(string,0,10,&sysfont);
-			snprintf(string, sizeof(string), "l %3d x %3d nml %3d", modeseconds[modenumber], timetoexitmode, modeseconds[sequence(modenumber)]);
+			snprintf(string, sizeof(string), "l %3d x %3d nml %3d", modeseconds(modenumber), timetoexitmode, modeseconds(sequence(modenumber)));
 			gfx_mono_draw_string(string,0,20,&sysfont);
 		break;
 		case 3:
@@ -374,8 +380,8 @@ int main (void)
 	cpu_irq_enable();
 	gfx_mono_init();
 	defaults();
-	setupseconds();
-	entermode(TOTALMERCURY);
+	//setupseconds();
+	entermode(STARTLEVEL);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 
@@ -388,8 +394,9 @@ int main (void)
 		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
 		writecoil(3, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
 		writecoil(4, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
-		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (averaged-expectedzero)/10.0*coefficent); // elemental mercury
-		if (modenumber == TOTALMERCURY)	writefloat(10, (averaged-expectedzero)/10.0*coefficent); // total mercury
+		if (modenumber == ELEMENTALMERCURY)	writefloat(24, (float)((long)averaged-(long)zerolevelavg)/(float)((long)coefficent-(long)zerolevelavg)*STANDARDCONCENTRATION); // elemental mercury
+		//if (modenumber == TOTALMERCURY)	writefloat(10, (float)((long)averaged-(long)expectedzero)/(float)((long)coefficent-(long)expectedzero)*STANDARDCONCENTRATION); // total mercury
+		if (modenumber == TOTALMERCURY)	writefloat(10, (float)((long)averaged-(long)zerolevelavg)/(float)((long)celllevelavg-(long)zerolevelavg)*(1.527*exp(0.087*(((((celltempavg-180)*((3.3/1.6)/4095))-0.5)*100.0)-25.0)))); // total mercury
 		writefloat(14, (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4)); // monitor flow
 		writefloat(16, (analogVoltage(&ADCA, ADC_CH0)-0.4)*12); // vacuum
 		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
@@ -397,7 +404,8 @@ int main (void)
 		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
 		writefloat(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
-		writefloat(30, coefficent); // Total mercury coefficent
+		writefloat(30, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent
+		//writefloat(30, runaveraged-expectedzero); // Total mercury coefficent
 
 		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{
@@ -417,3 +425,15 @@ int main (void)
 	}
 }
 
+int getstatus(void)
+{
+	int genstatus = 0;
+	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
+	if (analogVoltage(&ADCB, ADC_CH2) < 0.0) genstatus|=LOW_FLOW;
+	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
+	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
+	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
+	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
+	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
+	return genstatus;
+}

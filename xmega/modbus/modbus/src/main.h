@@ -72,10 +72,6 @@ void display(int mode);
 #define AVERAGING 64
 #define MEMORYUSE ZEROTESTSECONDS+CALIBRATIONSECONDS
 
-float coefficent;
-int expectedzero;
-unsigned int massive[AVERAGING];
-unsigned int runner[MEMORYUSE];
-int counter, runflag;
+
 
 #endif /* MAIN_H_ */

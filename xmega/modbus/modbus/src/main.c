@@ -231,8 +231,8 @@ static void sequence_callback(void)
 	if (runflag > MEMORYUSE)
 		runflag = 0;
 
-	//runaveraged = average(runner,DISPLAYUSE,runflag,MEMORYUSE)/DISPLAYUSE;
-	runaveraged = average(runner,CALIBRATIONSECONDS,runflag,MEMORYUSE)/CALIBRATIONSECONDS;
+	runaveraged = average(runner,DISPLAYUSE,runflag,MEMORYUSE)/DISPLAYUSE;
+	//runaveraged = average(runner,CALIBRATIONSECONDS,runflag,MEMORYUSE)/CALIBRATIONSECONDS;
 
 
 
@@ -450,10 +450,19 @@ int main (void)
 		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
 		writefloat(20, (analogVoltage(&ADCA, ADC_CH2)-0.4)*12); // bypass pressure
 		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
+		writefloat(26, analogRead(&ADCB, ADC_CH3)); // temperature ARB
 		writefloat(8, modenumber); // Code of a current mode
 		writefloat(28, statusword); // Errors and warnings
 		writefloat(30, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent
-		//writefloat(30, runaveraged-expectedzero); // Total mercury coefficent
+		writefloat(32, analogRead(&ADCB, ADC_CH1));//PMT current arb
+		//writefloat(34, analogVoltage(&ADCB, ADC_CH1)*0.3);//PMT current amper
+		writefloat(38, analogRead(&ADCB, ADC_CH2));//flow arb
+		writefloat(40, analogRead(&ADCB, ADC_CH0));//PMT voltage arb
+		writefloat(42, analogVoltage(&ADCB, ADC_CH0));//PMT voltage volt
+		writefloat(44, (float)averaged);//raw averaged
+		writefloat(46, (float)zerolevelavg);//zero arb
+		writefloat(48, (float)celllevelavg);//cell arb
+		writefloat(50, (float)celltempavg);
 
 		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{

@@ -138,8 +138,8 @@ void exitmode(int modetoexit)
 		case CELLDELAY:
 		break;
 		case CELLLEVEL:
-			celllevelavg = average(runner,CALIBRATIONSECONDS,runflag,MEMORYUSE)/CALIBRATIONSECONDS;
-			celltempavg = average(temprunner,CALIBRATIONSECONDS,temprunflag,CALIBRATIONSECONDS)/CALIBRATIONSECONDS;
+			celllevelavg = average(runner,CELLLEVELSECONDS,runflag,MEMORYUSE)/CELLLEVELSECONDS;
+			celltempavg = average(temprunner,CELLLEVELSECONDS,temprunflag,CELLLEVELSECONDS)/CELLLEVELSECONDS;
 			pca9557_set_pin_level(U1, SERVO_1_LEFT_OUT, true);
 			pca9557_set_pin_level(U1, SERVO_1_RIGHT_OUT, false);
 		break;

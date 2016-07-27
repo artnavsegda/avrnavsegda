@@ -51,11 +51,14 @@
 
 extern int timetoexitmode;
 extern int modenumber;
-extern int zerolevelavg;
+
 extern unsigned int runner[MEMORYUSE];
 extern unsigned int temprunner[CALIBRATIONSECONDS];
+
 extern int runflag;
 extern int temprunflag;
+
+extern int zerolevelavg;
 extern int coefficent;
 extern int celllevelavg;
 extern int celltempavg;
@@ -230,8 +233,8 @@ int sequence(int modetosequence)
 			return TOTALMERCURYDELAY;
 		break;
 		default:
-			return TOTALMERCURY;
+			return modetosequence;
 		break;
 	}
-	return TOTALMERCURY;
+	return modetosequence;
 }

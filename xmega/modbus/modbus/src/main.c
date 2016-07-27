@@ -54,6 +54,8 @@ twi_master_options_t opt = {
 #define FLOW_SENSOR_SPAN 10
 #define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
 #define RESISTOR_DIVIDER 0.319
+#define R2_RESISTOROHM 3.3
+#define R5_RESISTOROHM 10.0
 
 #define DISPLAYUSE 64
 
@@ -329,9 +331,9 @@ void display(int mode)
 		case 4:
 			snprintf(string, sizeof(string), "%.6f v", analogVoltage(&ADCB, ADC_CH0));
 			gfx_mono_draw_string(string,0,0,&sysfont);
-			snprintf(string, sizeof(string), "%.6f A", analogVoltage(&ADCB, ADC_CH1)*0.3);
+			snprintf(string, sizeof(string), "%.4f uA", (analogVoltage(&ADCB, ADC_CH1)/22)*1000);
 			gfx_mono_draw_string(string,0,8,&sysfont);
-			snprintf(string, sizeof(string), "%1.5f L", (((analogVoltage(&ADCB, ADC_CH2)/RESISTOR_DIVIDER)/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
+			snprintf(string, sizeof(string), "%1.5f L", (((analogVoltage(&ADCB, ADC_CH2)/(R2_RESISTOROHM/(R5_RESISTOROHM+R2_RESISTOROHM)))/EXPECTED_FLOW_SENSOR_VOLTAGE)-0.1)*(FLOW_SENSOR_SPAN/0.4));
 			gfx_mono_draw_string(string,0,16,&sysfont);
 			snprintf(string, sizeof(string), "%.5f C", (analogVoltage(&ADCB, ADC_CH3)-0.5)*100);
 			gfx_mono_draw_string(string,0,24,&sysfont);
@@ -455,7 +457,7 @@ int main (void)
 		writefloat(28, statusword); // Errors and warnings
 		writefloat(30, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent
 		writefloat(32, analogRead(&ADCB, ADC_CH1));//PMT current arb
-		//writefloat(34, analogVoltage(&ADCB, ADC_CH1)*0.3);//PMT current amper
+		writefloat(34, (analogVoltage(&ADCB, ADC_CH1)/22)*1000);//PMT current microamper
 		writefloat(38, analogRead(&ADCB, ADC_CH2));//flow arb
 		writefloat(40, analogRead(&ADCB, ADC_CH0));//PMT voltage arb
 		writefloat(42, analogVoltage(&ADCB, ADC_CH0));//PMT voltage volt

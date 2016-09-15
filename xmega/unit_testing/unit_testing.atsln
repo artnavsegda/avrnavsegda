@@ -11,6 +11,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "display", "display\display.
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc", "adc\adc.cproj", "{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "interrupts", "interrupts\interrupts.cproj", "{CEAB79A0-1D17-45B9-99B3-F3CA8090C694}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "timer_counter", "timer_counter\timer_counter.cproj", "{6685B21E-F972-4904-90B9-4C5B3972D306}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -33,6 +37,14 @@ Global
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Debug|AVR.Build.0 = Debug|AVR
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.ActiveCfg = Release|AVR
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.Build.0 = Release|AVR
+		{CEAB79A0-1D17-45B9-99B3-F3CA8090C694}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CEAB79A0-1D17-45B9-99B3-F3CA8090C694}.Debug|AVR.Build.0 = Debug|AVR
+		{CEAB79A0-1D17-45B9-99B3-F3CA8090C694}.Release|AVR.ActiveCfg = Release|AVR
+		{CEAB79A0-1D17-45B9-99B3-F3CA8090C694}.Release|AVR.Build.0 = Release|AVR
+		{6685B21E-F972-4904-90B9-4C5B3972D306}.Debug|AVR.ActiveCfg = Debug|AVR
+		{6685B21E-F972-4904-90B9-4C5B3972D306}.Debug|AVR.Build.0 = Debug|AVR
+		{6685B21E-F972-4904-90B9-4C5B3972D306}.Release|AVR.ActiveCfg = Release|AVR
+		{6685B21E-F972-4904-90B9-4C5B3972D306}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

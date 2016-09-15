@@ -19,6 +19,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "i2c_slave", "i2c_slave\i2c_
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "i2c_master", "i2c_master\i2c_master.cproj", "{874D2B87-9777-42F3-9A78-88B13980696B}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705", "ad7705\ad7705.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -57,6 +59,10 @@ Global
 		{874D2B87-9777-42F3-9A78-88B13980696B}.Debug|AVR.Build.0 = Debug|AVR
 		{874D2B87-9777-42F3-9A78-88B13980696B}.Release|AVR.ActiveCfg = Release|AVR
 		{874D2B87-9777-42F3-9A78-88B13980696B}.Release|AVR.Build.0 = Release|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.ActiveCfg = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.Build.0 = Debug|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.ActiveCfg = Release|AVR
+		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,8 @@
 #include <asf.h>
 #include "setup.h"
 
+extern struct spi_device SPI_ADC;
+
 void setup_init(void)
 {
 	sysclk_init();

@@ -41,7 +41,7 @@ int main (void)
 
 	setup_init();
 	setup_configure();
-	setup_enable();;
+	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
 	spi_select_device(&SPIC, &SPI_ADC);

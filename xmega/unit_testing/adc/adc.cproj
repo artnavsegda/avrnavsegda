@@ -30,14 +30,14 @@
       <framework-data>
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.gfx_mono.font" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
     <option id="xmega.drivers.adc" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
-    <configuration key="config.spi_master_type" value="usart_and_standard_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
+    <configuration key="config.spi_master_type" value="usart_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
     <configuration key="config.gfx_mono.display" value="c12832_a1z" default="c12832_a1z" content-id="Atmel.ASF" />
   </configurations>
   <files>
@@ -85,8 +85,6 @@
     <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.32.0" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/pmic/pmic.h" framework="" version="3.32.0" source="xmega\drivers\pmic\pmic.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/sleep/sleep.h" framework="" version="3.32.0" source="xmega\drivers\sleep\sleep.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/spi/spi.c" framework="" version="3.32.0" source="xmega\drivers\spi\spi.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/xmega/drivers/spi/spi.h" framework="" version="3.32.0" source="xmega\drivers\spi\spi.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.32.0" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.32.0" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.32.0" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
@@ -111,10 +109,6 @@
     <file path="src/ASF/common/services/sleepmgr/sleepmgr.h" framework="" version="3.32.0" source="common\services\sleepmgr\sleepmgr.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/sleepmgr/xmega/sleepmgr.h" framework="" version="3.32.0" source="common\services\sleepmgr\xmega\sleepmgr.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/Config/conf_sleepmgr.h" framework="" version="3.32.0" source="common\services\sleepmgr\xmega\module_config\conf_sleepmgr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/spi/xmega_spi/spi_master.c" framework="" version="3.32.0" source="common\services\spi\xmega_spi\spi_master.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/spi/spi_master.h" framework="" version="3.32.0" source="common\services\spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common/services/spi/xmega_spi/spi_master.h" framework="" version="3.32.0" source="common\services\spi\xmega_spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/Config/conf_spi_master.h" framework="" version="3.32.0" source="common\services\spi\xmega_spi\module_config\conf_spi_master.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/spi/xmega_usart_spi/usart_spi.c" framework="" version="3.32.0" source="common\services\spi\xmega_usart_spi\usart_spi.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/spi/xmega_usart_spi/usart_spi.h" framework="" version="3.32.0" source="common\services\spi\xmega_usart_spi\usart_spi.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/spi/usart_spi.h" framework="" version="3.32.0" source="common\services\spi\usart_spi.h" changed="False" content-id="Atmel.ASF" />
@@ -173,11 +167,9 @@
       <Value>../src/ASF/xmega/drivers/nvm</Value>
       <Value>../src/ASF/xmega/drivers/pmic</Value>
       <Value>../src/ASF/xmega/drivers/sleep</Value>
-      <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
-      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
       <Value>../src/ASF/xmega/drivers/usart</Value>
@@ -215,11 +207,9 @@
       <Value>../src/ASF/xmega/drivers/nvm</Value>
       <Value>../src/ASF/xmega/drivers/pmic</Value>
       <Value>../src/ASF/xmega/drivers/sleep</Value>
-      <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
-      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
       <Value>../src/ASF/xmega/drivers/usart</Value>
@@ -265,11 +255,9 @@
       <Value>../src/ASF/xmega/drivers/nvm</Value>
       <Value>../src/ASF/xmega/drivers/pmic</Value>
       <Value>../src/ASF/xmega/drivers/sleep</Value>
-      <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
-      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
       <Value>../src/ASF/xmega/drivers/usart</Value>
@@ -308,11 +296,9 @@
       <Value>../src/ASF/xmega/drivers/nvm</Value>
       <Value>../src/ASF/xmega/drivers/pmic</Value>
       <Value>../src/ASF/xmega/drivers/sleep</Value>
-      <Value>../src/ASF/xmega/drivers/spi</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
-      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
       <Value>../src/ASF/common/services/spi</Value>
       <Value>../src/ASF/xmega/drivers/adc</Value>
       <Value>../src/ASF/xmega/drivers/usart</Value>
@@ -345,7 +331,6 @@
     <Folder Include="src\ASF\common\services\sleepmgr\" />
     <Folder Include="src\ASF\common\services\sleepmgr\xmega\" />
     <Folder Include="src\ASF\common\services\spi\" />
-    <Folder Include="src\ASF\common\services\spi\xmega_spi\" />
     <Folder Include="src\ASF\common\services\spi\xmega_usart_spi\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
@@ -360,7 +345,6 @@
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
     <Folder Include="src\ASF\xmega\drivers\pmic\" />
     <Folder Include="src\ASF\xmega\drivers\sleep\" />
-    <Folder Include="src\ASF\xmega\drivers\spi\" />
     <Folder Include="src\ASF\xmega\drivers\usart\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
@@ -405,18 +389,6 @@
     <None Include="src\ASF\common\services\spi\xmega_usart_spi\usart_spi.h">
       <SubType>compile</SubType>
     </None>
-    <None Include="src\config\conf_spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\spi\xmega_spi\spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\spi\spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\common\services\spi\xmega_spi\spi_master.c">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\config\conf_sleepmgr.h">
       <SubType>compile</SubType>
     </None>
@@ -492,12 +464,6 @@
     <Compile Include="src\ASF\xmega\drivers\nvm\nvm.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\ASF\xmega\drivers\spi\spi.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\xmega\drivers\spi\spi.h">
-      <SubType>compile</SubType>
-    </None>
     <None Include="src\ASF\xmega\drivers\sleep\sleep.h">
       <SubType>compile</SubType>
     </None>

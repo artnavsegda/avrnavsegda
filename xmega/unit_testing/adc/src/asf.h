@@ -89,9 +89,6 @@
 // From module: Part identification macros
 #include <parts.h>
 
-// From module: SPI - Serial Peripheral Interface
-#include <spi.h>
-
 // From module: SPI - XMEGA implementation
 #include <usart_spi.h>
 #include <xmega_usart_spi/usart_spi.h>

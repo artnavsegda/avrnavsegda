@@ -86,12 +86,9 @@
 // From module: Part identification macros
 #include <parts.h>
 
-// From module: SPI - Serial Peripheral Interface
-#include <spi.h>
-
 // From module: SPI - XMEGA implementation
-#include <spi_master.h>
-#include <spi_master.h>
+#include <usart_spi.h>
+#include <xmega_usart_spi/usart_spi.h>
 
 // From module: ST7565R LCD controller
 #include <st7565r.h>

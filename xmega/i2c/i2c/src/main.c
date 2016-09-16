@@ -31,6 +31,7 @@
 #include <asf.h>
 #include "stdio.h"
 #include "i2c_api.h"
+#include "adc_api.h"
 
 char string[20];
 
@@ -50,7 +51,14 @@ ISR(PORTF_INT1_vect)
 
 int main (void)
 {
-	uint16_t ipaddress;
+	struct eeprom
+	{
+		uint8_t ip[4];
+		uint8_t mac[6];
+		uint16_t length_table[13];
+		uint8_t jump_table[13];
+	};
+	struct eeprom e;
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
@@ -58,6 +66,7 @@ int main (void)
 	ioport_init();
 	gfx_mono_init();
 	twi_master_setup(&TWIE, &opt);
+	adc_init();
 
 	/* Insert application code here, after the board has been initialized. */
 
@@ -77,9 +86,28 @@ int main (void)
 	//i2c_send_word(&TWIE, 0x08, 0x03, 0x1234); // register 03, contents 3f
 
 	while (true) {
-		ipaddress = i2c_read_double(&TWIE, 0x8, 100);
-		snprintf(string,sizeof(string),"IP: %d.%d.%d.%d",MSB0(ipaddress),MSB1(ipaddress),MSB2(ipaddress),MSB3(ipaddress));
+		i2c_read_array(&TWIE, 0x8, 100, 4, e.ip);
+		snprintf(string,sizeof(string),"IP: %hu.%hu.%hu.%hu",e.ip[0],e.ip[1],e.ip[2],e.ip[3]);
 		gfx_mono_draw_string(string,10,10,&sysfont);
+		i2c_read_array(&TWIE, 0x8, 101, 6, e.mac);
+		snprintf(string,sizeof(string),"mac: %hx:%hx:%hx:%hx:%hx:%hx",e.mac[0],e.mac[1],e.mac[2],e.mac[3],e.mac[4],e.mac[5]);
+		gfx_mono_draw_string(string,10,10,&sysfont);
+		i2c_send_word(&TWIE, 0x08, 0, analogVoltage(&ADCB, ADC_CH0));
+		i2c_send_word(&TWIE, 0x08, 1, analogVoltage(&ADCB, ADC_CH1));
+		i2c_send_word(&TWIE, 0x08, 2, analogVoltage(&ADCB, ADC_CH2));
+		i2c_send_word(&TWIE, 0x08, 3, analogVoltage(&ADCB, ADC_CH3));
+		i2c_send_word(&TWIE, 0x08, 4, analogVoltage(&ADCA, ADC_CH0));
+		i2c_send_word(&TWIE, 0x08, 5, analogVoltage(&ADCA, ADC_CH1));
+		i2c_send_word(&TWIE, 0x08, 6, analogVoltage(&ADCA, ADC_CH2));
+		i2c_send_word(&TWIE, 0x08, 7, analogVoltage(&ADCA, ADC_CH3));
+		i2c_send_double(&TWIE, 0x08, 100, analogVoltage(&ADCB, ADC_CH0));
+		i2c_send_double(&TWIE, 0x08, 101, analogVoltage(&ADCB, ADC_CH1));
+		i2c_send_double(&TWIE, 0x08, 102, analogVoltage(&ADCB, ADC_CH2));
+		i2c_send_double(&TWIE, 0x08, 103, analogVoltage(&ADCB, ADC_CH3));
+		i2c_send_double(&TWIE, 0x08, 104, analogVoltage(&ADCA, ADC_CH0));
+		i2c_send_double(&TWIE, 0x08, 105, analogVoltage(&ADCA, ADC_CH1));
+		i2c_send_double(&TWIE, 0x08, 106, analogVoltage(&ADCA, ADC_CH2));
+		i2c_send_double(&TWIE, 0x08, 107, analogVoltage(&ADCA, ADC_CH3));
 		delay_ms(500);
 	}
 }

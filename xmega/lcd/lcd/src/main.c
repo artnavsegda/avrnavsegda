@@ -67,10 +67,10 @@ int main (void)
 
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 	while (true) {
-		gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
-		gfx_mono_draw_pixel(10 , 10, GFX_PIXEL_SET);
-		//snprintf(string,sizeof(string),"Hello world");
-		//gfx_mono_draw_string(string,10,10,&sysfont);
+		//gfx_mono_draw_filled_rect(0, 0, 128, 32, GFX_PIXEL_CLR);
+		//gfx_mono_draw_pixel(10 , 10, GFX_PIXEL_SET);
+		snprintf(string,sizeof(string),"Hello world");
+		gfx_mono_draw_string(string,10,10,&sysfont);
 		delay_ms(500);
 	}
 }

@@ -10,7 +10,6 @@
 
 status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content) // ??????? i2c ??????
 {
-	status_code_t status;
 	uint8_t message[2];
 	twi_package_t packet = {
 		.chip         = addr,      // TWI slave bus address
@@ -19,13 +18,11 @@ status_code_t i2c_send(TWI_t *twi, uint8_t addr, uint8_t memory, uint8_t content
 	};
 	message[0] = memory;
 	message[1] = content;
-	status = twi_master_write(twi, &packet);
-	return status;
+	return twi_master_write(twi, &packet);
 }
 
 status_code_t i2c_send_word(TWI_t *twi, uint8_t addr, uint8_t memory, uint16_t content) // ??????? i2c ??????
 {
-	status_code_t status;
 	uint8_t message[3];
 	twi_package_t packet = {
 		.chip         = addr,      // TWI slave bus address
@@ -35,13 +32,11 @@ status_code_t i2c_send_word(TWI_t *twi, uint8_t addr, uint8_t memory, uint16_t c
 	message[0] = memory;
 	message[1] = MSB(content);
 	message[2] = LSB(content);
-	status = twi_master_write(twi, &packet);
-	return status;
+	return twi_master_write(twi, &packet);
 }
 
 status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, uint32_t content) // ??????? i2c ??????
 {
-	status_code_t status;
 	uint8_t message[5];
 	twi_package_t packet = {
 		.chip         = addr,      // TWI slave bus address
@@ -53,8 +48,17 @@ status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, uint32_t
 	message[2] = MSB1(content);
 	message[3] = MSB2(content);
 	message[4] = MSB3(content);
-	status = twi_master_write(twi, &packet);
-	return status;
+	return twi_master_write(twi, &packet);
+}
+
+status_code_t i2c_send_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, uint8_t array[]) // ??????? i2c ??????
+{
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = array, // transfer data source buffer
+		.length       = arraysize  // transfer data size (bytes)
+	};
+	return twi_master_write(twi, &packet);
 }
 
 uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
@@ -127,6 +131,24 @@ uint32_t i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
 			MSB3(recievedword) = message[3];
 			return recievedword;
 		}
+	}
+	return status;
+}
+
+status_code_t i2c_read_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, uint8_t array[])
+{
+	status_code_t status;
+	twi_package_t packet = {
+		.chip         = addr,      // TWI slave bus address
+		.buffer       = array,        // transfer data destination buffer
+		.length       = 1                    // transfer data size (bytes)
+	};
+	array[0] = memory;
+	status = twi_master_write(twi, &packet);
+	if(status == TWI_SUCCESS)
+	{
+		packet.length = arraysize;
+		return twi_master_read(twi, &packet);
 	}
 	return status;
 }

@@ -56,6 +56,15 @@
 #include <ccp.h>
 #include <xmega_reset_cause.h>
 
+// From module: Delay routines
+#include <delay.h>
+
+// From module: GFX Monochrome - Monochrome Graphic Library
+#include <gfx_mono.h>
+
+// From module: GFX Monochrome - System Font
+#include <sysfont.h>
+
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
 
@@ -77,6 +86,16 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: SPI - Serial Peripheral Interface
+#include <spi.h>
+
+// From module: SPI - XMEGA implementation
+#include <spi_master.h>
+#include <spi_master.h>
+
+// From module: ST7565R LCD controller
+#include <st7565r.h>
+
 // From module: Sleep Controller driver
 #include <sleep.h>
 
@@ -96,6 +115,9 @@
 
 // From module: TWI - Two-wire Master Interface
 #include <twim.h>
+
+// From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
+#include <usart.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

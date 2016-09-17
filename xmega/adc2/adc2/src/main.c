@@ -32,9 +32,6 @@
 
 void adc_init(void);
 
-int16_t ch0_result;
-int16_t ch1_result;
-
 static void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	switch (ch_mask)

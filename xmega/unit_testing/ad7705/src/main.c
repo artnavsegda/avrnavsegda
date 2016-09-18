@@ -25,6 +25,15 @@ ISR(PORTC_INT0_vect)
 	spi_deselect_device(&SPIC, &SPI_ADC);
 }
 
+void ad7705_configure()
+{
+	//ad7705_send_reset(void);
+	//ad7705_set_clock_register(0x0C);
+	//ad7705_set_setup_register(0x04);
+	//ad7705_set_scale_register(uint8_t[]){0x18,0x3A,0x00});
+	//ad7705_set_offset_register(uint8_t[]){0x89,0x78,0xD7});
+}
+
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */

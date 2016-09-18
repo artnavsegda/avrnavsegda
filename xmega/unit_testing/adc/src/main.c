@@ -1,20 +1,42 @@
 #include <asf.h>
 #include <stdio.h>
 
-static volatile int16_t adc_scan_results[8];
+static volatile int16_t adca_scan_results[8];
+static volatile int16_t adcb_scan_results[8];
 
-void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
+static void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
-	static uint8_t current_scan_channel = 0;
+	static uint8_t current_adca_scan_channel = 0, current_adcb_scan_channel = 0;
 	// Store the ADC results from the scan in the result array
-	if (ch_mask & ADC_CH0) {
-		adc_scan_results[current_scan_channel] = result;
-		current_scan_channel++;
-		// When 8 pins have been scanned the SCAN OFFSET wraps to zero
-		if (current_scan_channel == 8) {
-			current_scan_channel = 0;
+	if (adc == &ADCA) {
+		if (ch_mask & ADC_CH0) {
+			adca_scan_results[current_adca_scan_channel] = result;
+			current_adca_scan_channel++;
+			// When 8 pins have been scanned the SCAN OFFSET wraps to zero
+			if (current_adca_scan_channel == 8) {
+				current_adca_scan_channel = 0;
+			}
 		}
 	}
+	else if (adc == &ADCB) {
+		if (ch_mask & ADC_CH0) {
+			adcb_scan_results[current_adcb_scan_channel] = result;
+			current_adcb_scan_channel++;
+			// When 8 pins have been scanned the SCAN OFFSET wraps to zero
+			if (current_adcb_scan_channel == 8) {
+				current_adcb_scan_channel = 0;
+			}
+		}
+	}
+}
+
+void setup_init(void)
+{
+	sysclk_init();
+	board_init();
+	ioport_init();
+	pmic_init();
+	gfx_mono_init();
 }
 
 void adcch_configure(ADC_t *adc, uint8_t ch_mask)
@@ -33,53 +55,50 @@ void adc_configure(ADC_t *adc)
 	struct adc_config adc_conf;
 	adc_read_configuration(adc, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
-	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_EVENT_SWEEP, 1, 0);
+	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
 	adc_set_clock_rate(&adc_conf, 200000UL);
 	adc_write_configuration(adc, &adc_conf);
 	adc_set_callback(adc, &adc_handler);
 	adcch_configure(adc,ADC_CH0);
 }
 
+void ioport_configure(void)
+{
+	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+}
+
 void setup_configure(void)
 {
 	adc_configure(&ADCA);
-	//adc_configure(&ADCB);
+	adc_configure(&ADCB);
+	ioport_configure();
 }
 
 void setup_enable(void)
 {
 	adc_enable(&ADCA);
-	//adc_enable(&ADCB);
-}
-
-void setup_init(void)
-{
-	sysclk_init();
-	board_init();
-	ioport_init();
-	gfx_mono_init();
+	adc_enable(&ADCB);
+	cpu_irq_enable();
 }
 
 int main (void)
 {
 	char string[20];
-	/* Insert system clock initialization code here (sysclk_init()). */
 
 	setup_init();
 	setup_configure();
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 	while (true) {
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3]);
+		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adca_scan_results[0], adca_scan_results[1], adca_scan_results[2], adca_scan_results[3]);
 		gfx_mono_draw_string(string,8,0,&sysfont);
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[4], adc_scan_results[5], adc_scan_results[6], adc_scan_results[7]);
+		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adca_scan_results[4], adca_scan_results[5], adca_scan_results[6], adca_scan_results[7]);
 		gfx_mono_draw_string(string,8,8,&sysfont);
-		//snprintf(string,sizeof(string),"%3X %3X %3X %3X", adcb_scan_results[0], adcb_scan_results[1], adcb_scan_results[2], adcb_scan_results[3]);
-		//gfx_mono_draw_string(string,8,16,&sysfont);
-		//snprintf(string,sizeof(string),"%3X %3X %3X %3X", adcb_scan_results[4], adcb_scan_results[5], adcb_scan_results[6], adcb_scan_results[7]);
-		//gfx_mono_draw_string(string,8,24,&sysfont);
+		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adcb_scan_results[0], adcb_scan_results[1], adcb_scan_results[2], adcb_scan_results[3]);
+		gfx_mono_draw_string(string,8,16,&sysfont);
+		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adcb_scan_results[4], adcb_scan_results[5], adcb_scan_results[6], adcb_scan_results[7]);
+		gfx_mono_draw_string(string,8,24,&sysfont);
+		//delay_ms(500);
 	}
-
 }

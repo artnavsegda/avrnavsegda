@@ -74,9 +74,6 @@
 // From module: Part identification macros
 #include <parts.h>
 
-// From module: STK600-RC064X LED support enabled
-#include <led.h>
-
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
 
@@ -90,5 +87,8 @@
 // From module: XMEGA compiler driver
 #include <compiler.h>
 #include <status_codes.h>
+
+// From module: XMEGA-A3BU Xplained LED support enabled
+#include <led.h>
 
 #endif // ASF_H

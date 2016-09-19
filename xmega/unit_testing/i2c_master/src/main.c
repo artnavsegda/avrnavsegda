@@ -6,12 +6,11 @@ void setup_init(void)
 	sysclk_init();
 	board_init();
 	ioport_init();
-	gfx_mono_init();
 }
 
 void twi_configure(void)
 {
-	twi_master_options_t opt = {.speed = 50000};
+	twi_master_options_t opt = { .speed = 50000 };
 	twi_master_setup(&TWIE, &opt);
 }
 
@@ -34,11 +33,6 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	i2c_send(&TWIE, 0x18, 0x03, 0x00);
-	i2c_send(&TWIE, 0x19, 0x03, 0x00);
 	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
-
-	i2c_send(&TWIE, 0x18, 0x01, 0x00);
-	i2c_send(&TWIE, 0x19, 0x01, 0x00);
 	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
 }

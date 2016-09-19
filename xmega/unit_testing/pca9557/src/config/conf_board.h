@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ATxmega256A3B on STK600 board configuration template
+ * \brief XMEGA-A3BU Xplained board configuration template
  *
  */
 /*
@@ -11,16 +11,25 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-// Enable on-board AT45DBX interface (SPI)
+// Initialize IO pins for the LCD controller
+#define CONF_BOARD_C12832A1Z
+
+// Initialize IO pins for the DataFlash
 #define CONF_BOARD_AT45DBX
 
-// Enable UART Communication Port interface (UART)
+// Initialize IO pins for use with Analog Comparator
+#define CONF_BOARD_ENABLE_AC_PINS
+
+// Initialize IO pins for use with USART 0 on port C
 #define CONF_BOARD_ENABLE_USARTC0
-#define CONF_BOARD_ENABLE_USARTC1
+
+// Initialize IO pins for use with USART 0 on port D
 #define CONF_BOARD_ENABLE_USARTD0
-#define CONF_BOARD_ENABLE_USARTD1
+
+// Initialize IO pins for use with USART 0 on port E
 #define CONF_BOARD_ENABLE_USARTE0
-#define CONF_BOARD_ENABLE_USARTE1
-#define CONF_BOARD_ENABLE_USARTF0
+
+// Enable Sensors Xplained board interface
+//#define SENSORS_XPLAINED_BOARD
 
 #endif // CONF_BOARD_H

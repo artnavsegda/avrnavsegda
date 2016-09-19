@@ -25,9 +25,10 @@ void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir)
 	//state = i2c_read(&TWIE,addr,0x03);
 	state = configmask[addr-0x18]; // ignore actual register values and use own memory instead
 	if (dir == PCA9557_DIR_INPUT)
-	state |= _BV(port);
+		state |= _BV(port);
 	else if (dir == PCA9557_DIR_OUTPUT)
-	state &= ~_BV(port);
+		state &= ~_BV(port);
+	configmask[addr-0x18] = state; // write output back to own memory
 	i2c_send(&TWIE, addr, 0x03, state);
 }
 
@@ -37,10 +38,11 @@ void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level)
 	//state = i2c_read(&TWIE,addr,0x01);
 	state = outputmask[addr-0x18]; // ignore actual register values and use own memory instead
 	if (level)
-	state |= _BV(port);
+		state |= _BV(port);
 	else
-	state &= ~_BV(port);
-	i2c_send(&TWIE, addr, 0x03, configmask[addr-0x18]); // set direction specifically
+		state &= ~_BV(port);
+	//i2c_send(&TWIE, addr, 0x03, configmask[addr-0x18]); // set direction specifically
+	outputmask[addr-0x18] = state; // write output back to own memory
 	i2c_send(&TWIE, addr, 0x01, state);
 };
 

@@ -34,8 +34,16 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	pca9557_init(0x18);
-	pca9557_set_pin_dir(0x18, 0, PCA9557_DIR_OUTPUT);
-	pca9557_set_pin_level(0x18, 0, true);
+	pca9557_init(0x1a);
+	pca9557_set_pin_dir(0x1a, 1, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 2, PCA9557_DIR_OUTPUT);
+	//pca9557_set_pin_level(0x1a, 0, true);
+	pca9557_set_pin_level(0x1a, 1, true);
+	pca9557_set_pin_level(0x1a, 2, true);
+	//pca9557_set_pin_level(0x1a, 3, true);
+	//pca9557_set_pin_level(0x1a, 4, true);
+	//pca9557_set_pin_level(0x1a, 5, true);
+	//pca9557_set_pin_level(0x1a, 6, true);
+	//pca9557_set_pin_level(0x1a, 7, true);
 
 }

@@ -1,7 +1,12 @@
 /**
  * \file
  *
- * \brief ST7565R display controller driver configuration file.
+ * \brief XMEGA-A3BU board LEDs support package.
+ *
+ * This file contains definitions and services related to the LED features of
+ * the XMEGA-A3BU Xplained board.
+ *
+ * To use this board, define BOARD=XMEGA_A3BU_XPLAINED.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -43,59 +48,36 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_ST7565R_H_INCLUDED
-#define CONF_ST7565R_H_INCLUDED
+#ifndef _LED_H_
+#define _LED_H_
 
-#include <board.h>
+#include "gpio.h"
 
-#if BOARD == XMEGA_A3BU_XPLAINED
-// Interface configuration for XMEGA-A3BU Xplained
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_high(led_gpio)
 
-#  define ST7565R_USART_SPI_INTERFACE
-#  define ST7565R_USART_SPI    &USARTD0
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_low(led_gpio)
 
-#  define ST7565R_A0_PIN       NHD_C12832A1Z_REGISTER_SELECT
-#  define ST7565R_CS_PIN       NHD_C12832A1Z_CSN
-#  define ST7565R_RESET_PIN    NHD_C12832A1Z_RESETN
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
 
-#else
-// Interface configuration for other boards
-#  warning ST7565R driver must be configured. Please see conf_st7565r.h.
-
-// Interface possibilities:
-// 1) Regular SPI interface
-// #define ST7565R_SPI_INTERFACE
-// #define ST7565R_SPI &SPID
-
-// 2) USART SPI interface
-// #define ST7565R_USART_SPI_INTERFACE
-// #define ST7565R_USART_SPI &USARTD0
-
-// Pin mapping:
-// - Register select
-// #define ST7565R_A0_PIN       0
-// - Chip select
-// #define ST7565R_CS_PIN       1
-// - Reset
-// #define ST7565R_RESET_PIN    2
-
-
-// Placeholder setup
-
-#  define ST7565R_SPI_INTERFACE
-#  define ST7565R_SPI          0
-
-#  define ST7565R_A0_PIN       0
-#  define ST7565R_CS_PIN       1
-#  define ST7565R_RESET_PIN    2
-
-#endif // BOARD
-
-// Board independent configuration
-
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define ST7565R_CLOCK_SPEED          1000000
-#define ST7565R_DISPLAY_CONTRAST_MAX 40
-#define ST7565R_DISPLAY_CONTRAST_MIN 30
-
-#endif /* CONF_ST7565R_H_INCLUDED */
+#endif /* _LED_H_ */

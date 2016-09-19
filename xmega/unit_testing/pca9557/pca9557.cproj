@@ -282,6 +282,12 @@
     <Compile Include="src\ASF\xmega\drivers\twi\twim.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\pca9557.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\pca9557.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\config\conf_twim.h">
       <SubType>compile</SubType>
     </None>

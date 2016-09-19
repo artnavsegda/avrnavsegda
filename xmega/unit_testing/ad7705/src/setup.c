@@ -1,7 +1,9 @@
 #include <asf.h>
 #include "setup.h"
 
-extern struct spi_device SPI_ADC;
+struct spi_device SPI_ADC = {
+	.id = SPIC_SS
+};
 
 void setup_init(void)
 {
@@ -51,7 +53,7 @@ void setup_enable(void)
 	spi_enable(&SPIC);
 }
 
-void ad7705_configure()
+void ad7705_configure(void)
 {
 	//ad7705_send_reset(void);
 	//ad7705_set_clock_register(0x0C);

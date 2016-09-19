@@ -316,10 +316,19 @@
     <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\interrupt.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\setup.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\spi_transfer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\spi_transfer.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\xmega\drivers\usart\usart.h">

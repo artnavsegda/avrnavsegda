@@ -4,25 +4,15 @@
 
 void setup_init(void)
 {
-	twi_options_t m_options = {
-		.speed     = 50000,
-		.chip      = 0x50,
-		.speed_reg = TWI_BAUD(sysclk_get_cpu_hz(), 50000)
-	};
-
 	sysclk_init();
 	board_init();
 	ioport_init();
-	twi_master_init(&TWIC, &m_options);
 }
 
 void twi_configure(void)
 {
-	twi_master_options_t opt = {
-		.speed = 50000,
-		.chip  = 0x50
-	};
-	twi_master_setup(&TWIC, &opt);
+	twi_master_options_t opt = { .speed = 50000 };
+	twi_master_setup(&TWIE, &opt);
 }
 
 void setup_configure(void)
@@ -32,7 +22,7 @@ void setup_configure(void)
 
 void setup_enable(void)
 {
-	twi_master_enable(&TWIC);
+	twi_master_enable(&TWIE);
 }
 
 int main (void)

@@ -22,7 +22,7 @@ void ioport_configure(void)
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
-	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	//ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
 
 void ISR_init(void)
@@ -43,9 +43,29 @@ void setup_configure(void)
 	spi_configure();
 	ioport_configure();
 	interrupt_configure();
+	ad7705_configure();
 }
 
 void setup_enable(void)
 {
 	spi_enable(&SPIC);
+}
+
+void ad7705_configure()
+{
+	//ad7705_send_reset(void);
+	//ad7705_set_clock_register(0x0C);
+	//ad7705_set_setup_register(0x04);
+	//ad7705_set_scale_register(uint8_t[]){0x18,0x3A,0x00});
+	//ad7705_set_offset_register(uint8_t[]){0x89,0x78,0xD7});
+
+	spi_select_device(&SPIC, &SPI_ADC);
+	
+	spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5);
+	spi_write_packet(&SPIC, (uint8_t[]){0x20,0x0C,0x10,0x04}, 4);
+	spi_write_packet(&SPIC, (uint8_t[]){0x60,0x18,0x3A,0x00}, 4);
+	spi_write_packet(&SPIC, (uint8_t[]){0x70,0x89,0x78,0xD7}, 4);
+
+	spi_deselect_device(&SPIC, &SPI_ADC);
+
 }

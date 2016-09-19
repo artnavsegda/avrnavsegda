@@ -3,11 +3,7 @@
 
 void setup_init(void);
 void spi_configure(void);
-void ioport_configure(void);
-void ISR_init(void);
-void interrupt_configure(void);
 void setup_configure(void);
 void setup_enable(void);
-void ad7705_configure();
 
 #endif /* SETUP_H_ */

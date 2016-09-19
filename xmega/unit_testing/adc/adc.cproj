@@ -379,6 +379,12 @@
     <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\setup.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\setup.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\xmega\drivers\usart\usart.h">
       <SubType>compile</SubType>
     </None>

@@ -34,5 +34,5 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	i2c_send(&TWIE, 0x1a, 0x03, 0x00);
-	i2c_send(&TWIE, 0x1a, 0x01, 0xff);
+	i2c_send(&TWIE, 0x1a, 0x01, 0x00);
 }

@@ -372,6 +372,15 @@
     <Compile Include="src\ASF\common\components\display\st7565r\st7565r.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\interrupt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\spi_transfer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\spi_transfer.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\common\components\display\st7565r\st7565r.h">
       <SubType>compile</SubType>
     </None>

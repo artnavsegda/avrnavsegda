@@ -24,7 +24,7 @@ int main (void)
 	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
 	{
 		spi_transfer(&SPIC,0x38);
-		spi_read_packet(&SPIC, array, 2);
+		//spi_read_packet(&SPIC, array, 2);
 	}
 
 	spi_deselect_device(&SPIC, &SPI_ADC);

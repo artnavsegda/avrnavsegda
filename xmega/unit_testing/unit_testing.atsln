@@ -25,6 +25,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer", "sequencer\sequ
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557", "pca9557\pca9557.cproj", "{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "rolling", "rolling\rolling.cproj", "{FD7644AC-F268-444F-990D-29684123CDB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -75,6 +77,10 @@ Global
 		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Debug|AVR.Build.0 = Debug|AVR
 		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Release|AVR.ActiveCfg = Release|AVR
 		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Release|AVR.Build.0 = Release|AVR
+		{FD7644AC-F268-444F-990D-29684123CDB4}.Debug|AVR.ActiveCfg = Debug|AVR
+		{FD7644AC-F268-444F-990D-29684123CDB4}.Debug|AVR.Build.0 = Debug|AVR
+		{FD7644AC-F268-444F-990D-29684123CDB4}.Release|AVR.ActiveCfg = Release|AVR
+		{FD7644AC-F268-444F-990D-29684123CDB4}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

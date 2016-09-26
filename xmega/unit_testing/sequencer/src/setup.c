@@ -1,6 +1,8 @@
 #include <asf.h>
 #include "setup.h"
 
+void sequence_callback(void);
+
 void setup_init(void)
 {
 	sysclk_init();
@@ -16,11 +18,6 @@ void twi_configure(void)
 		.chip  = 0x50
 	};
 	twi_master_setup(&TWIC, &opt);
-}
-
-void sequence_callback(void)
-{
-
 }
 
 void tc_configure(void)

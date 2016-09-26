@@ -390,6 +390,9 @@
     <Compile Include="src\ASF\common\components\display\st7565r\st7565r.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\interrupt.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>

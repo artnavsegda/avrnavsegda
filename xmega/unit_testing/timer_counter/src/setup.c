@@ -1,6 +1,8 @@
 #include <asf.h>
 #include "setup.h"
 
+void sequence_callback(void);
+
 void setup_init(void)
 {
 	sysclk_init();
@@ -12,11 +14,6 @@ void setup_init(void)
 void setup_enable(void)
 {
 	tc_enable(&TCC0);
-}
-
-void sequence_callback(void)
-{
-
 }
 
 void tc_configure(void)

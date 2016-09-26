@@ -12,15 +12,24 @@ struct massive {
 	uint16_t position = 0;
 };
 
-uint16_t average(struct massive working, uint16_t amount)
+long average(struct massive working, uint16_t amount)
 {
-	return 100;
+	long x = 0;
+	for(int i=0; i<amount; i++)
+	{
+		if (working.postition-i>0)
+			x=x+working.massive[working.postition-i-1];
+		else
+			x=x+working.massive[sizeof(working.massive)+(working.postition-i)-1];
+	}
+	return x;
 }
 
 void iterate(struct massive working, uint16_t value)
 {
-	working.position++;
 	working.massive[working.position] = value;
+	if (working.position++ > sizeof(working.massive))
+		working.position = 0;
 }
 
 int main (void)

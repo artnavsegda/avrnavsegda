@@ -27,6 +27,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557", "pca9557\pca9557.
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "rolling", "rolling\rolling.cproj", "{FD7644AC-F268-444F-990D-29684123CDB4}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "settings", "settings\settings.cproj", "{40A2429B-9522-4C96-9ECA-B8D88198DA1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -81,6 +83,10 @@ Global
 		{FD7644AC-F268-444F-990D-29684123CDB4}.Debug|AVR.Build.0 = Debug|AVR
 		{FD7644AC-F268-444F-990D-29684123CDB4}.Release|AVR.ActiveCfg = Release|AVR
 		{FD7644AC-F268-444F-990D-29684123CDB4}.Release|AVR.Build.0 = Release|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.ActiveCfg = Debug|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.Build.0 = Debug|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.ActiveCfg = Release|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

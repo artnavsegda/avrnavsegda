@@ -5,11 +5,11 @@
 extern int16_t adca_scan_results[8];
 extern int16_t adcb_scan_results[8];
 
-#define MASSIVE_SIZE 1000;
+#define MASSIVE_SIZE 1000
 
 struct massive {
 	uint16_t massive[MASSIVE_SIZE];
-	uint16_t position = 0;
+	uint16_t position;
 };
 
 long average(struct massive working, uint16_t amount)
@@ -17,10 +17,10 @@ long average(struct massive working, uint16_t amount)
 	long x = 0;
 	for(int i=0; i<amount; i++)
 	{
-		if (working.postition-i>0)
-			x=x+working.massive[working.postition-i-1];
+		if (working.position-i>0)
+			x=x+working.massive[working.position-i-1];
 		else
-			x=x+working.massive[sizeof(working.massive)+(working.postition-i)-1];
+			x=x+working.massive[sizeof(working.massive)+(working.position-i)-1];
 	}
 	return x;
 }

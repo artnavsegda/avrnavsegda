@@ -3,13 +3,6 @@
 int timetoexitmode = 100;
 int currentmode;
 
-void sequence_callback(void)
-{
-	timetoexitmode--;
-	if (timetoexitmode == 0)
-		exitmode(currentmode);
-}
-
 int modeseconds(int modeneed)
 {
 	return 100;
@@ -29,4 +22,11 @@ int sequence(int modetosequence)
 void exitmode(int modetoexit)
 {
 	entermode(sequence(modetoexit));
+}
+
+void sequence_callback(void)
+{
+	timetoexitmode--;
+	if (timetoexitmode == 0)
+	exitmode(currentmode);
 }

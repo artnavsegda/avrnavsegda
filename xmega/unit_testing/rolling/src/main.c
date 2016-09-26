@@ -25,7 +25,7 @@ long average(struct massive working, uint16_t amount)
 	return x;
 }
 
-void iterate(struct massive working, uint16_t value)
+void increment(struct massive working, uint16_t value)
 {
 	working.massive[working.position] = value;
 	if (working.position++ > sizeof(working.massive))
@@ -43,7 +43,7 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
-		iterate(adcone, adca_scan_results[0]);
+		increment(adcone, adca_scan_results[0]);
 		snprintf(string,sizeof(string),"%d", average(adcone, 500));
 		gfx_mono_draw_string(string,8,0,&sysfont);
 		delay_ms(1000);

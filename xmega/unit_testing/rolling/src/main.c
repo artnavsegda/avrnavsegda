@@ -12,7 +12,7 @@ struct massive {
 	uint16_t position;
 };
 
-long average(struct massive working, uint16_t amount)
+long oversample(struct massive working, uint16_t amount)
 {
 	long x = 0;
 	for(int i=0; i<amount; i++)
@@ -44,7 +44,7 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
 		increment(adcone, adca_scan_results[0]);
-		snprintf(string,sizeof(string),"%d", average(adcone, 500));
+		snprintf(string,sizeof(string),"%d", oversample(adcone, 500));
 		gfx_mono_draw_string(string,8,0,&sysfont);
 		delay_ms(1000);
 	}

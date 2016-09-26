@@ -502,6 +502,12 @@
     <Compile Include="src\pca9557.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\rolling.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\rolling.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\seqencer.c">
       <SubType>compile</SubType>
     </Compile>

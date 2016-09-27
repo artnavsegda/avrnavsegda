@@ -29,6 +29,19 @@ void process_data(struct mydatastruct mydata)
 	}
 }
 
+int getstatus(void)
+{
+	/*int genstatus = 0;
+	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
+	if (analogVoltage(&ADCB, ADC_CH2) < 0.0) genstatus|=LOW_FLOW;
+	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
+	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
+	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
+	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
+	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
+	return genstatus;*/
+}
+
 void send_data(struct mydatastruct mydata)
 {
 	/*i2c_send_word(&TWIE, 0x08, 0, adc_scan_results[0]);

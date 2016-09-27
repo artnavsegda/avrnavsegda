@@ -44,7 +44,7 @@ status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, uint32_t
 	return twi_master_write(twi, &packet);
 }
 
-status_code_t i2c_send_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, uint8_t array[])
+status_code_t i2c_send_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, void *array)
 {
 	twi_package_t packet = {
 		.chip         = addr,
@@ -128,7 +128,7 @@ uint32_t i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
 	return status;
 }
 
-status_code_t i2c_read_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, uint8_t array[])
+status_code_t i2c_read_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, void *array)
 {
 	status_code_t status;
 	twi_package_t packet = {
@@ -136,7 +136,7 @@ status_code_t i2c_read_array(TWI_t *twi, uint8_t addr, uint8_t memory, int array
 		.buffer       = array,
 		.length       = 1
 	};
-	array[0] = memory;
+	((uint8_t *)array)[0] = memory;
 	status = twi_master_write(twi, &packet);
 	if(status == TWI_SUCCESS)
 	{

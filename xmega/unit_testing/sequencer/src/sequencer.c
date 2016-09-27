@@ -1,26 +1,31 @@
 #include <asf.h>
 #include "sequencer.h"
+#include "i2c.h"
+#include "settings.h"
 
 int timetoexitmode = 100;
 int currentmode;
 
 int modeseconds(int modeneed)
 {
+	struct mydatastruct mysettings;
+	i2c_read_array(&TWIE,0x08,I2C_LENGTHTABLE,26,mysettings.length_table);
+
 	switch (modeneed)
 	{
-		case STARTLEVEL: return STARTLEVELSECONDS;
-		case CELLDELAY: return CELLDELAYSECONDS;
-		case CELLLEVEL:	return CELLLEVELSECONDS;
-		case ZERODELAY: return ZERODELAYSECONDS;
-		case ZEROTEST: return ZEROTESTSECONDS;
-		case PURGE: return PURGESECONDS;
-		case TOTALMERCURYDELAY: return TOTALMERCURYDELAYSECONDS;
-		case TOTALMERCURY: return TOTALMERCURYSECONDS;
-		case ELEMENTALMERCURYDELAY: return ELEMENTALMERCURYDELAYSECONDS;
-		case ELEMENTALMERCURY: return ELEMENTALMERCURYSECONDS;
-		case PRECALIBRATIONDELAY: return PRECALIBRATIONDELAYSECONDS;
-		case CALIBRATION: return CALIBRATIONSECONDS;
-		case POSTCALIBRATIONDELAY: return POSTCALIBRATIONDELAYSECONDS;
+		case STARTLEVEL: return mysettings.length_table[0];
+		case CELLDELAY: return mysettings.length_table[1];
+		case CELLLEVEL:	return mysettings.length_table[2];
+		case ZERODELAY: return mysettings.length_table[3];
+		case ZEROTEST: return mysettings.length_table[4];
+		case PURGE: return mysettings.length_table[5];
+		case TOTALMERCURYDELAY: return mysettings.length_table[6];
+		case TOTALMERCURY: return mysettings.length_table[7];
+		case ELEMENTALMERCURYDELAY: return mysettings.length_table[8];
+		case ELEMENTALMERCURY: return mysettings.length_table[9];
+		case PRECALIBRATIONDELAY: return mysettings.length_table[10];
+		case CALIBRATION: return mysettings.length_table[11];
+		case POSTCALIBRATIONDELAY: return mysettings.length_table[12];
 	}
 	return 0;
 }

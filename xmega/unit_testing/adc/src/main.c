@@ -31,6 +31,13 @@ void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	}
 }
 
+float adc_voltage(uint16_t adcvalue)
+{
+	const float popugai = (3.3/1.6)/4095;
+	const int adczero = 180;
+	return (adcvalue-adczero)*popugai;
+}
+
 int main (void)
 {
 	char string[20];

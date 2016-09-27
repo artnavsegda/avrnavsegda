@@ -4,10 +4,10 @@
 extern uint16_t adc_scan_results[8];
 extern uint16_t ad7705_raw_data, ad7705_averaged_data;
 
-void recieve_data(struct mydatastruct mydata)
+void recieve_data(struct mydatastruct mysettings)
 {
-	//i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
-	//i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
+	i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
+	i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
 }
 
 void process_data(struct mydatastruct mydata)

@@ -1,6 +1,9 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#define I2C_IPADDRESS 100
+#define I2C_MACADDRESS 101
+
 struct mydatastruct
 {
 	uint8_t ip[4];

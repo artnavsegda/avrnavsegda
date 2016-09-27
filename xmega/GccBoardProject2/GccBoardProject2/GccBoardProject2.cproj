@@ -514,6 +514,9 @@
     <Compile Include="src\sequencer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\settings.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\spi_transfer.c">
       <SubType>compile</SubType>
     </Compile>

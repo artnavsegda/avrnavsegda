@@ -10,7 +10,6 @@ int modeseconds(int modeneed)
 {
 	struct mydatastruct mysettings;
 	i2c_read_array(&TWIE,0x08,I2C_LENGTHTABLE,26,mysettings.length_table);
-
 	switch (modeneed)
 	{
 		case STARTLEVEL: return mysettings.length_table[0];
@@ -32,21 +31,23 @@ int modeseconds(int modeneed)
 
 int sequence(int modetosequence)
 {
+	struct mydatastruct mysettings;
+	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,13,mysettings.jump_table);
 	switch(modetosequence)
 	{
-		case STARTLEVEL: return CELLDELAY;
-		case CELLDELAY: return CELLLEVEL;
-		case CELLLEVEL:	return TOTALMERCURYDELAY;
-		case ZERODELAY:	return ZEROTEST;
-		case ZEROTEST: return TOTALMERCURYDELAY;
-		case PURGE:	return TOTALMERCURYDELAY;
-		case TOTALMERCURYDELAY:	return TOTALMERCURY;
-		case TOTALMERCURY: return TOTALMERCURY;
-		case ELEMENTALMERCURYDELAY:	return ELEMENTALMERCURY;
-		case ELEMENTALMERCURY: return TOTALMERCURY;
-		case PRECALIBRATIONDELAY: return CALIBRATION;
-		case CALIBRATION: return POSTCALIBRATIONDELAY;
-		case POSTCALIBRATIONDELAY: return TOTALMERCURYDELAY;
+		case STARTLEVEL: return mysettings.jump_table[0];
+		case CELLDELAY: return mysettings.jump_table[1];
+		case CELLLEVEL:	return mysettings.jump_table[2];
+		case ZERODELAY:	return mysettings.jump_table[3];
+		case ZEROTEST: return mysettings.jump_table[4];
+		case PURGE:	return mysettings.jump_table[5];
+		case TOTALMERCURYDELAY:	return mysettings.jump_table[6];
+		case TOTALMERCURY: return mysettings.jump_table[7];
+		case ELEMENTALMERCURYDELAY:	return mysettings.jump_table[8];
+		case ELEMENTALMERCURY: return mysettings.jump_table[9];
+		case PRECALIBRATIONDELAY: return mysettings.jump_table[10];
+		case CALIBRATION: return mysettings.jump_table[11];
+		case POSTCALIBRATIONDELAY: return mysettings.jump_table[12];
 	}
 	return modetosequence;
 }

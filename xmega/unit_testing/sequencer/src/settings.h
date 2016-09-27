@@ -4,6 +4,7 @@
 #define I2C_IPADDRESS 100
 #define I2C_MACADDRESS 101
 #define I2C_LENGTHTABLE 102
+#define I2C_JUMPTABLE 103
 
 struct mydatastruct
 {

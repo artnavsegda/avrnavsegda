@@ -508,7 +508,7 @@
     <Compile Include="src\rolling.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\seqencer.c">
+    <Compile Include="src\sequencer.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\sequencer.h">

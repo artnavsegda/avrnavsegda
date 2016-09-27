@@ -1,24 +1,32 @@
 #include <asf.h>
 #include "loop.h"
+#include "sequencer.h"
+
+#define REQUESTTOSTARTCALIBRATION 1
+#define REQUESTTOSTARTZEROTEST 1
+#define REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY 1
+#define REQUESTTOSTARTPURGE 1
+#define REQUESTTOENDPURGE 1
 
 extern uint16_t adc_scan_results[8];
 extern uint16_t ad7705_raw_data, ad7705_averaged_data;
+extern int currentmode;
 
 void process_data(struct mydatastruct mydata)
 {
-	/*if (modenumber == TOTALMERCURY||modenumber == PURGE)
+	if (currentmode == TOTALMERCURY||currentmode == PURGE)
 	{
-		if (readcoil(REQUESTTOSTARTCALIBRATION)==1) // Request to start calibration
-		entermode(PRECALIBRATIONDELAY);
-		if (readcoil(REQUESTTOSTARTZEROTEST)==1) // Request to start zero test
-		entermode(ZERODELAY);
-		if (readcoil(REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY)==1) // Request to start measurement of elemental mercury
-		entermode(ELEMENTALMERCURYDELAY);
-		if (readcoil(REQUESTTOSTARTPURGE)==1) // Request to start purge
-		entermode(PURGE);
-		if (readcoil(REQUESTTOENDPURGE)==1) // Request to end purge
-		exitmode(PURGE);
-	}*/
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTCALIBRATION)==1)
+			entermode(PRECALIBRATIONDELAY);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTZEROTEST)==1)
+			entermode(ZERODELAY);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY)==1)
+			entermode(ELEMENTALMERCURYDELAY);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTPURGE)==1)
+			entermode(PURGE);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOENDPURGE)==1)
+			exitmode(PURGE);
+	}
 }
 
 void send_data(struct mydatastruct mydata)

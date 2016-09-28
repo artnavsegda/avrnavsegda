@@ -6,12 +6,14 @@
 int timetoexitmode = 100;
 int currentmode;
 
+struct mydatastate primarystate;
+
 void decrement_mode_counter(void)
 {
-	timetoexitmode = timetoexitmode - 1;
+	primarystate.timetoexitmode--;
 	
-	if (timetoexitmode == 0)
-		exitmode(currentmode);
+	if (primarystate.timetoexitmode == 0)
+		exitmode(primarystate.currentmode, primarystate);
 }
 
 int modeseconds(int modeneed)
@@ -60,10 +62,10 @@ int sequence(int modetosequence)
 	return modetosequence;
 }
 
-void entermode(int modetoenter)
+void entermode(int modetoenter, struct mydatastate mystate)
 {
-	currentmode = modetoenter;
-	timetoexitmode = modeseconds(modetoenter);
+	mystate.currentmode = modetoenter;
+	mystate.timetoexitmode = modeseconds(modetoenter);
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
@@ -98,7 +100,7 @@ void entermode(int modetoenter)
 	}
 }
 
-void exitmode(int modetoexit)
+void exitmode(int modetoexit, struct mydatastate mystate)
 {
 	switch(modetoexit)
 	{
@@ -131,5 +133,5 @@ void exitmode(int modetoexit)
 		default:
 		break;
 	}
-	entermode(sequence(modetoexit));
+	entermode(sequence(modetoexit), mystate);
 }

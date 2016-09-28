@@ -15,8 +15,12 @@
 #define CALIBRATION 32
 #define POSTCALIBRATIONDELAY 33
 
+struct mydatastate
+{
+	int timetoexitmode;
+	int currentmode;
+};
+
 void decrement_mode_counter(void);
-
-
 
 #endif /* SEQUENCER_H_ */

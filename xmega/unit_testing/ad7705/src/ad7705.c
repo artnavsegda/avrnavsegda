@@ -44,3 +44,24 @@ void ad7705_set_offset_register(SPI_t *spi, struct spi_device *device, uint32_t 
 	spi_transfer(spi, MSB3(contents));
 	spi_deselect_device(spi, device);
 }
+
+uint8_t ad7705_get_communication_register(SPI_t *spi, struct spi_device *device)
+{
+	uint8_t communication;
+	spi_select_device(spi, device);
+	spi_transfer(&SPIC, 0x08);
+	communication = spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY);
+	spi_deselect_device(spi, device);
+	return communication;
+}
+
+uint16_t ad7705_get_data_register(SPI_t *spi, struct spi_device *device)
+{
+	uint16_t data;
+	spi_select_device(spi, device);
+	spi_transfer(&SPIC, 0x38);
+	spi_read_packet(&SPIC, (uint8_t *)data, 2);
+	spi_deselect_device(spi, device);
+	return data;
+}
+

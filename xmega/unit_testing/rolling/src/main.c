@@ -3,8 +3,9 @@
 #include "setup.h"
 #include "rolling.h"
 
-extern int16_t adca_scan_results[8];
-extern int16_t adcb_scan_results[8];
+int16_t adca_scan_results[8];
+int16_t adcb_scan_results[8];
+struct massive firststage;
 
 int main (void)
 {
@@ -20,6 +21,8 @@ int main (void)
 		increment(adcone, adca_scan_results[0]);
 		snprintf(string,sizeof(string),"%ld", oversample(adcone, 500));
 		gfx_mono_draw_string(string,8,0,&sysfont);
+		snprintf(string,sizeof(string),"%ld", oversample(firststage, 32));
+		gfx_mono_draw_string(string,8,8,&sysfont);
 		delay_ms(1000);
 	}
 }

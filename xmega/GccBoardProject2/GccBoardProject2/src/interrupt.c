@@ -2,11 +2,10 @@
 #include "interrupt.h"
 #include "sequencer.h"
 #include "spi_transfer.h"
+#include "rolling.h"
 
-static volatile int16_t adca_scan_results[8];
-static volatile int16_t adcb_scan_results[8];
-uint16_t ad7705_raw_data, ad7705_averaged_data;
-
+int16_t adc_scan_results[16];
+extern struct massive ad7705_averaging_massive;
 extern struct spi_device SPI_ADC;
 
 void ISR_init(void)
@@ -23,42 +22,26 @@ void ISR_init(void)
 void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	static uint8_t current_adca_scan_channel = 0, current_adcb_scan_channel = 0;
-	// Store the ADC results from the scan in the result array
 	if (adc == &ADCA) {
 		if (ch_mask & ADC_CH0) {
-			adca_scan_results[current_adca_scan_channel] = result;
+			adc_scan_results[current_adca_scan_channel] = result;
 			current_adca_scan_channel++;
-			// When 8 pins have been scanned the SCAN OFFSET wraps to zero
-			if (current_adca_scan_channel == 8) {
-				current_adca_scan_channel = 0;
-			}
+			if (current_adca_scan_channel == 8) current_adca_scan_channel = 0;
 		}
 	}
 	else if (adc == &ADCB) {
 		if (ch_mask & ADC_CH0) {
-			adcb_scan_results[current_adcb_scan_channel] = result;
+			adc_scan_results[current_adcb_scan_channel+8] = result;
 			current_adcb_scan_channel++;
-			// When 8 pins have been scanned the SCAN OFFSET wraps to zero
-			if (current_adcb_scan_channel == 8) {
-				current_adcb_scan_channel = 0;
-			}
+			if (current_adcb_scan_channel == 8)	current_adcb_scan_channel = 0;
 		}
 	}
 }
 
 ISR(PORTC_INT0_vect)
 {
-	uint8_t array[2];
-	spi_select_device(&SPIC, &SPI_ADC);
-	spi_transfer(&SPIC, 0x08);
-	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
-	{
-		spi_transfer(&SPIC,0x38);
-		spi_read_packet(&SPIC, array, 2);
-	}
-	spi_deselect_device(&SPIC, &SPI_ADC);
-		//if (ad7705_data_is_ready())
-		//	increment(ad7705_averaging_massive, ad7705_recieve_value());
+	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
+		increment(ad7705_averaging_massive,ad7705_get_data_register(&SPIC, &SPI_ADC));
 }
 
 ISR(PORTC_INT0_vect)

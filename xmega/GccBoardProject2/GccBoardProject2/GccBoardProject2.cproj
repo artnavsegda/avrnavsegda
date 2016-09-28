@@ -478,12 +478,6 @@
     <Compile Include="src\ASF\common\services\gfx_mono\gfx_mono_c12832_a1z.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\averaging.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\averaging.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\display.c">
       <SubType>compile</SubType>
     </Compile>

@@ -35,14 +35,6 @@ void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 
 ISR(PORTC_INT0_vect)
 {
-	uint16_t value;
-	spi_select_device(&SPIC, &SPI_ADC);
-	spi_transfer(&SPIC, 0x08);
-	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
-	{
-		spi_transfer(&SPIC,0x38);
-		spi_read_packet(&SPIC, (uint8_t *)value, 2);
-		increment(firststage,value);
-	}
-	spi_deselect_device(&SPIC, &SPI_ADC);
+	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
+		increment(firststage,ad7705_get_data_register(&SPIC, &SPI_ADC));
 }

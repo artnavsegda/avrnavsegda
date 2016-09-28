@@ -3,6 +3,9 @@
 #include "i2c.h"
 #include "settings.h"
 
+extern struct massive measurment_averaging_massive;
+extern struct massive temperature_averaging_massive;
+
 void decrement_mode_counter(struct mydatastate mystate)
 {
 	mystate.timetoexitmode--;

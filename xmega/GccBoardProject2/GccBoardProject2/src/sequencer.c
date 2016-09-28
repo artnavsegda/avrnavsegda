@@ -3,17 +3,12 @@
 #include "i2c.h"
 #include "settings.h"
 
-int timetoexitmode = 100;
-int currentmode;
-
-struct mydatastate primarystate;
-
-void decrement_mode_counter(void)
+void decrement_mode_counter(struct mydatastate mystate)
 {
-	primarystate.timetoexitmode--;
+	mystate.timetoexitmode--;
 	
-	if (primarystate.timetoexitmode == 0)
-		exitmode(primarystate.currentmode, primarystate);
+	if (mystate.timetoexitmode == 0)
+		exitmode(mystate.currentmode, mystate);
 }
 
 int modeseconds(int modeneed)
@@ -109,10 +104,13 @@ void exitmode(int modetoexit, struct mydatastate mystate)
 		case CELLDELAY:
 		break;
 		case CELLLEVEL:
+			mystate.celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
+			mystate.celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
 		break;
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
+			mystate.zerolevelavg = oversample(measurment_averaging_massive,modeseconds(ZEROTEST));
 		break;
 		case PURGE:
 		break;
@@ -127,6 +125,7 @@ void exitmode(int modetoexit, struct mydatastate mystate)
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
+			mystate.coefficent = oversample(measurment_averaging_massive,modeseconds(CALIBRATION));
 		break;
 		case POSTCALIBRATIONDELAY:
 		break;

@@ -19,6 +19,10 @@ struct mydatastate
 {
 	int timetoexitmode;
 	int currentmode;
+	int coefficent;
+	int zerolevelavg;
+	int celllevelavg;
+	int celltempavg;
 };
 
 void decrement_mode_counter(void);

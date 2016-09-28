@@ -5,22 +5,21 @@
 
 extern uint16_t adc_scan_results[8];
 extern uint16_t ad7705_raw_data, ad7705_averaged_data;
-extern int currentmode;
 
-void process_data(struct mydatastruct mydata)
+void process_data(struct mydatastruct mysettings, struct mydatastate mystate)
 {
-	if (currentmode == TOTALMERCURY||currentmode == PURGE)
+	if (mystate.currentmode == TOTALMERCURY||mystate.currentmode == PURGE)
 	{
 		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTCALIBRATION)==1)
-			entermode(PRECALIBRATIONDELAY);
+			entermode(PRECALIBRATIONDELAY,mystate);
 		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTZEROTEST)==1)
-			entermode(ZERODELAY);
+			entermode(ZERODELAY,mystate);
 		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY)==1)
-			entermode(ELEMENTALMERCURYDELAY);
+			entermode(ELEMENTALMERCURYDELAY,mystate);
 		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTPURGE)==1)
-			entermode(PURGE);
+			entermode(PURGE,mystate);
 		if (i2c_read(&TWIE, 0x08, REQUESTTOENDPURGE)==1)
-			exitmode(PURGE);
+			exitmode(PURGE,mystate);
 	}
 }
 
@@ -108,9 +107,8 @@ float calculatepressure(float voltage)
 	return (voltage-0.4)*12;
 }
 
-void send_data(struct mydatastruct mydata)
+void send_data(struct mydatastruct mysettings, struct mydatastate mystate)
 {
-	/*struct mydatastruct mysettings;
 	i2c_read_double(&TWIE, 0x08, I2C_STANDARDCONCENTRATION, mysettings.standard_concentration);
 	i2c_read_double(&TWIE, 0x08, I2C_C25, mysettings.c_twentie_five);
 	i2c_read_double(&TWIE, 0x08, I2C_KFACTOR, mysettings.kfactor);
@@ -118,22 +116,22 @@ void send_data(struct mydatastruct mydata)
 	int statusword = getstatus();
 	i2c_send(&TWIE, 0x08, STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
 	i2c_send(&TWIE, 0x08, STATUSOFTHERMOCONTROLLERS, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
-	i2c_send(&TWIE, 0x08, AVAILABILITYOFEXTERNALREQUEST, (currentmode == TOTALMERCURY)); // Availability of external request
-	i2c_send(&TWIE, 0x08, STATUSOFZEROTEST, (currentmode == ZEROTEST || currentmode == ZERODELAY)); // Status of zero test
-	i2c_send(&TWIE, 0x08, STATUSOFCALIBRATION, (currentmode == CALIBRATION || currentmode == PRECALIBRATIONDELAY || currentmode == POSTCALIBRATIONDELAY)); // Status of calibration
-	if (currentmode == ELEMENTALMERCURY)	i2c_send_double(&TWIE, 0x08, ELEMENTALMERCURYROW, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
-	if (currentmode == TOTALMERCURY)	i2c_send_double(&TWIE, 0x08, TOTALMERCURYROW, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
+	i2c_send(&TWIE, 0x08, AVAILABILITYOFEXTERNALREQUEST, (mystate.currentmode == TOTALMERCURY)); // Availability of external request
+	i2c_send(&TWIE, 0x08, STATUSOFZEROTEST, (mystate.currentmode == ZEROTEST || mystate.currentmode == ZERODELAY)); // Status of zero test
+	i2c_send(&TWIE, 0x08, STATUSOFCALIBRATION, (mystate.currentmode == CALIBRATION || mystate.currentmode == PRECALIBRATIONDELAY || mystate.currentmode == POSTCALIBRATIONDELAY)); // Status of calibration
+	if (mystate.currentmode == ELEMENTALMERCURY)	i2c_send_double(&TWIE, 0x08, ELEMENTALMERCURYROW, calculatecalibration(oversample(ad7705_averaging_massive, 32), mystate.zerolevelavg, mystate.coefficent, mysettings.standard_concentration)); // elemental mercury
+	if (mystate.currentmode == TOTALMERCURY)	i2c_send_double(&TWIE, 0x08, TOTALMERCURYROW, calculatecell(oversample(ad7705_averaging_massive, 32), mystate.zerolevelavg, mystate.celllevelavg, mystate.celllevelavg, mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
 	i2c_send_double(&TWIE, 0x08, MONITORFLOW, calculateflow(adc_voltage(adc_scan_results[2]))); // monitor flow
 	i2c_send_double(&TWIE, 0x08, VACUUM, calculatepressure(adc_voltage(adc_scan_results[4]))); // vacuum
 	i2c_send_double(&TWIE, 0x08, DILUTIONPRESSURE, calculatepressure(adc_voltage(adc_scan_results[5]))); // dilution pressure
 	i2c_send_double(&TWIE, 0x08, BYPASSPRESSURE, calculatepressure(adc_voltage(adc_scan_results[6]))); // bypass pressure
 	i2c_send_double(&TWIE, 0x08, TEMPERATUREOFSPECTROMETER, (adc_voltage(adc_scan_results[3])-0.5)*100); // temperature of spectrometer
-	i2c_send_double(&TWIE, 0x08, CODEOFACURRENTMODE, currentmode); // Code of a current mode
+	i2c_send_double(&TWIE, 0x08, CODEOFACURRENTMODE, mystate.currentmode); // Code of a current mode
 	i2c_send_double(&TWIE, 0x08, ERRORSANDWARNINGS, statusword); // Errors and warnings
-	i2c_send_double(&TWIE, 0x08, TOTALMERCURYCOEFFICENT, mysettings.standard_concentration/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent*/
+	i2c_send_double(&TWIE, 0x08, TOTALMERCURYCOEFFICENT, mysettings.standard_concentration/(float)((long)mystate.coefficent-(long)mystate.zerolevelavg)); // Total mercury coefficent
 }
 
-void display_data(struct mydatastruct mydata)
+void display_data(struct mydatastruct mydata, struct mydatastate mystate)
 {
 	/*switch (displaymode)
 	{
@@ -147,19 +145,25 @@ void display_data(struct mydatastruct mydata)
 
 void loop(void)
 {
-	struct mydatastruct mydata;
+	//struct mydatastruct mydata;
 	while (true)
 	{
-		process_data(mydata);
-		display_data(mydata);
-		send_data(mydata);
+		//process_data(mydata);
+		//display_data(mydata);
+		//send_data(mydata);
 		delay_ms(500);
 	}
 }
 
 void sequence_callback(void)
 {
-	decrement_mode_counter();
-	//increment(measurment_averaging_massive, average(ad7705_averaging_massive, AD7705_AVERAGING_AMOUNT);
-	//increment(temperature_averaging_massive, current_temperature);
+	static struct mydatastate primarystate;
+	static struct mydatastruct mydata;
+
+	decrement_mode_counter(primarystate);
+	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
+	increment(temperature_averaging_massive, adc_scan_results[3]);
+	process_data(mydata,primarystate);
+	display_data(mydata,primarystate);
+	send_data(mydata,primarystate);
 }

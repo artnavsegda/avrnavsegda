@@ -44,16 +44,16 @@ int getstatus(void)
 	return genstatus;
 }
 
-/*float calculatecalibration(float standard_concentration)
+float calculatecalibration(long averaged, long zerolevelavg, long coefficent, float standard_concentration)
 {
 	return (
 		(long) averaged - (long) zerolevelavg
 	) / (float) (
 		(long) coefficent - (long) zerolevelavg
 	) * standard_concentration;
-}*/
+}
 
-/*float calculatecell(float c_twentie_five, float kfactor)
+float calculatecell(long averaged, long zerolevelavg, long celllevelavg, long celltempavg, float c_twentie_five, float kfactor)
 {
 	return (
 			(long) averaged - (long) zerolevelavg
@@ -78,9 +78,9 @@ int getstatus(void)
 			)
 		)
 	);
-}*/
+}
 
-/*#define FLOW_SENSOR_SPAN 10
+#define FLOW_SENSOR_SPAN 10
 #define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
 #define RESISTOR_DIVIDER 0.319
 #define R2_RESISTOROHM 3.3
@@ -101,12 +101,12 @@ float calculateflow(float voltage)
 	)*(
 		FLOW_SENSOR_SPAN / 0.4
 	);
-}*/
+}
 
-/*float calculatepressure(float voltage)
+float calculatepressure(float voltage)
 {
 	return (voltage-0.4)*12;
-}*/
+}
 
 void send_data(struct mydatastruct mydata)
 {

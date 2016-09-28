@@ -29,9 +29,15 @@
 #define CALIBRATIONSECONDS 64
 #define POSTCALIBRATIONDELAYSECONDS 10
 
+struct mydatastate
+{
+	int timetoexitmode;
+	int currentmode;
+};
+
 int modeseconds(int modeneed);
-void entermode(int modetoenter);
+void entermode(int modetoenter, struct mydatastate mystate);
 int sequence(int modetosequence);
-void exitmode(int modetoexit);
+void exitmode(int modetoexit, struct mydatastate mystate);
 
 #endif /* SEQUENCER_H_ */

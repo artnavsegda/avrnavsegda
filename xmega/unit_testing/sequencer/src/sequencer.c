@@ -3,9 +3,6 @@
 #include "i2c.h"
 #include "settings.h"
 
-int timetoexitmode = 100;
-int currentmode;
-
 int modeseconds(int modeneed)
 {
 	struct mydatastruct mysettings;
@@ -52,10 +49,10 @@ int sequence(int modetosequence)
 	return modetosequence;
 }
 
-void entermode(int modetoenter)
+void entermode(int modetoenter, struct mydatastate mystate)
 {
-	currentmode = modetoenter;
-	timetoexitmode = modeseconds(modetoenter);
+	mystate.currentmode = modetoenter;
+	mystate.timetoexitmode = modeseconds(modetoenter);
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
@@ -90,7 +87,7 @@ void entermode(int modetoenter)
 	}
 }
 
-void exitmode(int modetoexit)
+void exitmode(int modetoexit, struct mydatastate mystate)
 {
 	switch(modetoexit)
 	{
@@ -123,5 +120,5 @@ void exitmode(int modetoexit)
 		default:
 		break;
 	}
-	entermode(sequence(modetoexit));
+	entermode(sequence(modetoexit), mystate);
 }

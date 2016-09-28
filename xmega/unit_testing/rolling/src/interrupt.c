@@ -1,5 +1,6 @@
 #include <asf.h>
 #include "spi_transfer.h"
+#include "rolling.h"
 
 extern struct spi_device SPI_ADC;
 extern struct massive firststage;

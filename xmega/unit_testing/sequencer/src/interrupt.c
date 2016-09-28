@@ -4,9 +4,11 @@
 extern int timetoexitmode;
 extern int currentmode;
 
+struct mydatastate primarystate;
+
 void sequence_callback(void)
 {
-	timetoexitmode--;
-	if (timetoexitmode == 0)
-	exitmode(currentmode);
+	primarystate.timetoexitmode--;
+	if (primarystate.timetoexitmode == 0)
+		exitmode(primarystate.currentmode,primarystate);
 }

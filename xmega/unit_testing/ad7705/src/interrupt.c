@@ -17,5 +17,5 @@ ISR(PORTC_INT0_vect)
 	spi_deselect_device(&SPIC, &SPI_ADC);*/
 
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
-		value = ad7705_get_data_register(&SPIC, &SPI_ADC)
+		value = ad7705_get_data_register(&SPIC, &SPI_ADC);
 }

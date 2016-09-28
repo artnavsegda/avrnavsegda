@@ -34,46 +34,103 @@ float adc_voltage(uint16_t adcvalue)
 int getstatus(void)
 {
 	int genstatus = 0;
-	if (adc_voltage(adc_scan_results[0]) < 1.0) genstatus|=LOW_LIGHT;
-	if (adc_voltage(adc_scan_results[2]) < 0.0) genstatus|=LOW_FLOW;
-	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
-	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
-	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
-	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
-	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
+	if (adc_voltage(adc_scan_results[0]) < 1.0) genstatus |= LOW_LIGHT;
+	if (adc_voltage(adc_scan_results[2]) < 0.0) genstatus |= LOW_FLOW;
+	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus |= CONVERTER;
+	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus |= WATLOW1;
+	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus |= WATLOW2;
+	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus |= WATLOW3;
+	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus |= WATLOW4;
 	return genstatus;
 }
 
+/*float calculatecalibration(float standard_concentration)
+{
+	return (
+		(long) averaged - (long) zerolevelavg
+	) / (float) (
+		(long) coefficent - (long) zerolevelavg
+	) * standard_concentration;
+}*/
+
+/*float calculatecell(float c_twentie_five, float kfactor)
+{
+	return (
+			(long) averaged - (long) zerolevelavg
+	) / (float) (
+		(long) celllevelavg - (long) zerolevelavg
+	) * (
+		c_twentie_five * exp (
+			kfactor * (
+				(
+					(
+						(
+							(
+								celltempavg - 180 // ADC zero level
+							) * (
+								(
+									3.3 / 1.6 // Voltage reference
+								) / 4095 // ADC resolution
+							)
+						) - 0.5
+					) * 100.0 // temperature in Celsius
+				) - 25.0
+			)
+		)
+	);
+}*/
+
+/*#define FLOW_SENSOR_SPAN 10
+#define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
+#define RESISTOR_DIVIDER 0.319
+#define R2_RESISTOROHM 3.3
+#define R5_RESISTOROHM 10.0
+
+float calculateflow(float voltage)
+{
+	return (
+	(
+		(
+			voltage / (
+				R2_RESISTOROHM/(
+					R5_RESISTOROHM+R2_RESISTOROHM
+				)
+			)
+		) / EXPECTED_FLOW_SENSOR_VOLTAGE
+	) - 0.1
+	)*(
+		FLOW_SENSOR_SPAN / 0.4
+	);
+}*/
+
+/*float calculatepressure(float voltage)
+{
+	return (voltage-0.4)*12;
+}*/
+
 void send_data(struct mydatastruct mydata)
 {
-	/*i2c_send_word(&TWIE, 0x08, 0, adc_scan_results[0]);
-	i2c_send_word(&TWIE, 0x08, 1, adc_scan_results[1]);
-	i2c_send_word(&TWIE, 0x08, 2, adc_scan_results[2]);
-	i2c_send_word(&TWIE, 0x08, 3, adc_scan_results[3]);
-	i2c_send_word(&TWIE, 0x08, 4, adc_scan_results[4]);
-	i2c_send_word(&TWIE, 0x08, 5, adc_scan_results[5]);
-	i2c_send_word(&TWIE, 0x08, 6, adc_scan_results[6]);
-	i2c_send_word(&TWIE, 0x08, 7, adc_scan_results[7]);
-	i2c_send_word(&TWIE, 0x08, 8, ad7705_raw_data);
-	i2c_send_word(&TWIE, 0x08, 9, ad7705_averaged_data);*/
+	/*struct mydatastruct mysettings;
+	i2c_read_double(&TWIE, 0x08, I2C_STANDARDCONCENTRATION, mysettings.standard_concentration);
+	i2c_read_double(&TWIE, 0x08, I2C_C25, mysettings.c_twentie_five);
+	i2c_read_double(&TWIE, 0x08, I2C_KFACTOR, mysettings.kfactor);
 
-	/*statusword = getstatus();
-	writecoil(STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
-	writecoil(STATUSOFTHERMOCONTROLLERS, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
-	writecoil(AVAILABILITYOFEXTERNALREQUEST, (modenumber == TOTALMERCURY)); // Availability of external request
-	writecoil(STATUSOFZEROTEST, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
-	writecoil(STATUSOFCALIBRATION, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
-	if (modenumber == ELEMENTALMERCURY)	writefloat (ELEMENTALMERCURYROW, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
-	if (modenumber == TOTALMERCURY)	writefloat (TOTALMERCURYROW, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
-	writefloat(MONITORFLOW, calculateflow(analogVoltage(&ADCB, ADC_CH2))); // monitor flow
-	writefloat(VACUUM, calculatepressure(analogVoltage(&ADCA, ADC_CH0))); // vacuum
-	writefloat(DILUTIONPRESSURE, calculatepressure(analogVoltage(&ADCA, ADC_CH1))); // dilution pressure
-	writefloat(BYPASSPRESSURE, calculatepressure(analogVoltage(&ADCA, ADC_CH2))); // bypass pressure
-	writefloat(TEMPERATUREOFSPECTROMETER, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
-	//writefloat(26, analogRead(&ADCB, ADC_CH3)); // temperature ARB
-	writefloat(CODEOFACURRENTMODE, modenumber); // Code of a current mode
-	writefloat(ERRORSANDWARNINGS, statusword); // Errors and warnings
-	writefloat(TOTALMERCURYCOEFFICENT, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent*/
+	int statusword = getstatus();
+	i2c_send(&TWIE, 0x08, STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
+	i2c_send(&TWIE, 0x08, STATUSOFTHERMOCONTROLLERS, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
+	i2c_send(&TWIE, 0x08, AVAILABILITYOFEXTERNALREQUEST, (currentmode == TOTALMERCURY)); // Availability of external request
+	i2c_send(&TWIE, 0x08, STATUSOFZEROTEST, (currentmode == ZEROTEST || currentmode == ZERODELAY)); // Status of zero test
+	i2c_send(&TWIE, 0x08, STATUSOFCALIBRATION, (currentmode == CALIBRATION || currentmode == PRECALIBRATIONDELAY || currentmode == POSTCALIBRATIONDELAY)); // Status of calibration
+	if (currentmode == ELEMENTALMERCURY)	i2c_send_double(&TWIE, 0x08, ELEMENTALMERCURYROW, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
+	if (currentmode == TOTALMERCURY)	i2c_send_double(&TWIE, 0x08, TOTALMERCURYROW, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
+	i2c_send_double(&TWIE, 0x08, MONITORFLOW, calculateflow(adc_voltage(adc_scan_results[2]))); // monitor flow
+	i2c_send_double(&TWIE, 0x08, VACUUM, calculatepressure(adc_voltage(adc_scan_results[4]))); // vacuum
+	i2c_send_double(&TWIE, 0x08, DILUTIONPRESSURE, calculatepressure(adc_voltage(adc_scan_results[5]))); // dilution pressure
+	i2c_send_double(&TWIE, 0x08, BYPASSPRESSURE, calculatepressure(adc_voltage(adc_scan_results[6]))); // bypass pressure
+	i2c_send_double(&TWIE, 0x08, TEMPERATUREOFSPECTROMETER, (adc_voltage(adc_scan_results[3])-0.5)*100); // temperature of spectrometer
+	i2c_send_double(&TWIE, 0x08, CODEOFACURRENTMODE, currentmode); // Code of a current mode
+	i2c_send_double(&TWIE, 0x08, ERRORSANDWARNINGS, statusword); // Errors and warnings
+	i2c_send_double(&TWIE, 0x08, TOTALMERCURYCOEFFICENT, mysettings.standard_concentration/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent*/
 }
 
 void display_data(struct mydatastruct mydata)

@@ -5,6 +5,9 @@
 #define I2C_MACADDRESS 101
 #define I2C_LENGTHTABLE 102
 #define I2C_JUMPTABLE 103
+#define I2C_STANDARDCONCENTRATION 104
+#define I2C_C25 105
+#define I2C_KFACTOR 106
 
 struct mydatastruct
 {

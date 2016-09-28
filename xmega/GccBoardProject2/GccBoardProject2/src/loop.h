@@ -11,6 +11,7 @@
 
 
 void loop(void);
+void sequence_callback(void);
 
 
 #endif /* LOOP_H_ */

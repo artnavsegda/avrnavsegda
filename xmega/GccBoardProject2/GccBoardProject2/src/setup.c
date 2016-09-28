@@ -1,6 +1,6 @@
 #include <asf.h>
-#include "interrupt.h"
-#include "configure.h"
+#include "loop.h"
+#include "setup.h"
 
 void interrupt_configure(void)
 {

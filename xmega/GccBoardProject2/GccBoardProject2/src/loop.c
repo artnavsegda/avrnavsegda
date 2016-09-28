@@ -156,3 +156,10 @@ void loop(void)
 		delay_ms(500);
 	}
 }
+
+void sequence_callback(void)
+{
+	decrement_mode_counter();
+	//increment(measurment_averaging_massive, average(ad7705_averaging_massive, AD7705_AVERAGING_AMOUNT);
+	//increment(temperature_averaging_massive, current_temperature);
+}

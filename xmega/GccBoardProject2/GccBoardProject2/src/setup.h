@@ -1,5 +1,5 @@
-#ifndef CONFIGURE_H_
-#define CONFIGURE_H_
+#ifndef SETUP_H_
+#define SETUP_H_
 
 void interrupt_configure(void);
 void tc_configure(void);
@@ -13,4 +13,4 @@ void adc_configure(ADC_t *adc);
 void setup(void);
 
 
-#endif /* CONFIGURE_H_ */
+#endif /* SETUP_H_ */

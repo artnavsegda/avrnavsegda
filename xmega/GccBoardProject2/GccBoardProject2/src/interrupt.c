@@ -20,13 +20,6 @@ void ISR_init(void)
 	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
 }
 
-void sequence_callback(void)
-{
-	decrement_mode_counter();
-	//increment(measurment_averaging_massive, average(ad7705_averaging_massive, AD7705_AVERAGING_AMOUNT);
-	//increment(temperature_averaging_massive, current_temperature);
-}
-
 void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	static uint8_t current_adca_scan_channel = 0, current_adcb_scan_channel = 0;

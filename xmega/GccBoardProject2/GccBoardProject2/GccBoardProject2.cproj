@@ -697,10 +697,10 @@
     <None Include="src\ASF\xmega\drivers\twi\twi_common.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\configure.c">
+    <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\configure.h">
+    <Compile Include="src\setup.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\config\conf_sensors.h">

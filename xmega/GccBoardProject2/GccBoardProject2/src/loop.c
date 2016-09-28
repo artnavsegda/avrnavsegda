@@ -63,8 +63,8 @@ void send_data(struct mydatastruct mydata)
 	writecoil(AVAILABILITYOFEXTERNALREQUEST, (modenumber == TOTALMERCURY)); // Availability of external request
 	writecoil(STATUSOFZEROTEST, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
 	writecoil(STATUSOFCALIBRATION, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
-	if (modenumber == ELEMENTALMERCURY)	writefloat (24, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
-	if (modenumber == TOTALMERCURY)	writefloat (10, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
+	if (modenumber == ELEMENTALMERCURY)	writefloat (ELEMENTALMERCURYROW, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
+	if (modenumber == TOTALMERCURY)	writefloat (TOTALMERCURYROW, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
 	writefloat(MONITORFLOW, calculateflow(analogVoltage(&ADCB, ADC_CH2))); // monitor flow
 	writefloat(VACUUM, calculatepressure(analogVoltage(&ADCA, ADC_CH0))); // vacuum
 	writefloat(DILUTIONPRESSURE, calculatepressure(analogVoltage(&ADCA, ADC_CH1))); // dilution pressure

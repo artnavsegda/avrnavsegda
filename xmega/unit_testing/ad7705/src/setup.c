@@ -1,5 +1,6 @@
 #include <asf.h>
 #include "setup.h"
+#include "ad7705.h"
 
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS
@@ -55,19 +56,19 @@ void setup_enable(void)
 
 void ad7705_configure(void)
 {
-	//ad7705_send_reset(void);
-	//ad7705_set_clock_register(0x0C);
-	//ad7705_set_setup_register(0x04);
-	//ad7705_set_scale_register(uint8_t[]){0x18,0x3A,0x00});
-	//ad7705_set_offset_register(uint8_t[]){0x89,0x78,0xD7});
+	ad7705_send_reset(&SPIC, &SPI_ADC);
+	ad7705_set_clock_register(&SPIC, &SPI_ADC, 0x0C);
+	ad7705_set_setup_register(&SPIC, &SPI_ADC, 0x04);
+	ad7705_set_scale_register(&SPIC, &SPI_ADC, 0x183A00);
+	ad7705_set_offset_register(&SPIC, &SPI_ADC, 0x8978D7);
 
-	spi_select_device(&SPIC, &SPI_ADC);
+	/*spi_select_device(&SPIC, &SPI_ADC);
 	
 	spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5);
 	spi_write_packet(&SPIC, (uint8_t[]){0x20,0x0C,0x10,0x04}, 4);
 	spi_write_packet(&SPIC, (uint8_t[]){0x60,0x18,0x3A,0x00}, 4);
 	spi_write_packet(&SPIC, (uint8_t[]){0x70,0x89,0x78,0xD7}, 4);
 
-	spi_deselect_device(&SPIC, &SPI_ADC);
+	spi_deselect_device(&SPIC, &SPI_ADC);*/
 
 }

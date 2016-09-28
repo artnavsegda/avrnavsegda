@@ -1,12 +1,7 @@
 #include <asf.h>
 #include "loop.h"
 #include "sequencer.h"
-
-#define REQUESTTOSTARTCALIBRATION 1
-#define REQUESTTOSTARTZEROTEST 1
-#define REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY 1
-#define REQUESTTOSTARTPURGE 1
-#define REQUESTTOENDPURGE 1
+#include "modbus.h"
 
 extern uint16_t adc_scan_results[8];
 extern uint16_t ad7705_raw_data, ad7705_averaged_data;
@@ -29,17 +24,24 @@ void process_data(struct mydatastruct mydata)
 	}
 }
 
+float adc_voltage(uint16_t adcvalue)
+{
+	const float popugai = (3.3/1.6)/4095;
+	const int adczero = 180;
+	return (adcvalue-adczero)*popugai;
+}
+
 int getstatus(void)
 {
-	/*int genstatus = 0;
-	if (analogVoltage(&ADCB, ADC_CH0) < 1.0) genstatus|=LOW_LIGHT;
-	if (analogVoltage(&ADCB, ADC_CH2) < 0.0) genstatus|=LOW_FLOW;
+	int genstatus = 0;
+	if (adc_voltage(adc_scan_results[0]) < 1.0) genstatus|=LOW_LIGHT;
+	if (adc_voltage(adc_scan_results[2]) < 0.0) genstatus|=LOW_FLOW;
 	if (pca9557_get_pin_level(U3,SERVO_4_RIGHT_IN))	genstatus|=CONVERTER;
 	if (pca9557_get_pin_level(U2,SERVO_2_RIGHT_IN))	genstatus|=WATLOW1;
 	if (pca9557_get_pin_level(U1,SERVO_2_LEFT_IN)) genstatus|=WATLOW2;
 	if (pca9557_get_pin_level(U2,SERVO_3_RIGHT_IN))	genstatus|=WATLOW3;
 	if (pca9557_get_pin_level(U2,SERVO_3_LEFT_IN)) genstatus|=WATLOW4;
-	return genstatus;*/
+	return genstatus;
 }
 
 void send_data(struct mydatastruct mydata)

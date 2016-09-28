@@ -496,6 +496,9 @@
     <Compile Include="src\i2c.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\modbus.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\pca9557.c">
       <SubType>compile</SubType>
     </Compile>

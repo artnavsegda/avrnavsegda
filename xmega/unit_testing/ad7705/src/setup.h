@@ -8,6 +8,6 @@ void ISR_init(void);
 void interrupt_configure(void);
 void setup_configure(void);
 void setup_enable(void);
-void ad7705_configure(void);
+void ad7705_enable(void);
 
 #endif /* SETUP_H_ */

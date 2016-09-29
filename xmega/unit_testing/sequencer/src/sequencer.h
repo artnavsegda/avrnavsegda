@@ -1,20 +1,6 @@
 #ifndef SEQUENCER_H_
 #define SEQUENCER_H_
 
-#define STARTLEVEL 5
-#define CELLDELAY 7
-#define CELLLEVEL 8
-#define ZERODELAY 11
-#define ZEROTEST 12
-#define PURGE 13
-#define TOTALMERCURYDELAY 21
-#define TOTALMERCURY 22
-#define ELEMENTALMERCURYDELAY 26
-#define ELEMENTALMERCURY 27
-#define PRECALIBRATIONDELAY 31
-#define CALIBRATION 32
-#define POSTCALIBRATIONDELAY 33
-
 enum modelist {
  STARTLEVEL = 5,
  CELLDELAY = 7,
@@ -34,13 +20,12 @@ enum modelist {
 struct mydatastate
 {
 	int timetoexitmode;
-	int currentmode;
-	enum modelist operation_mode;
+	enum modelist currentmode;
 };
 
-int modeseconds(int modeneed);
-void entermode(int modetoenter, struct mydatastate mystate);
-int sequence(int modetosequence);
-void exitmode(int modetoexit, struct mydatastate mystate);
+int modeseconds(enum modelist modeneed);
+void entermode(enum modelist modetoenter, struct mydatastate mystate);
+enum modelist sequence(enum modelist modetosequence);
+void exitmode(enum modelist modetoexit, struct mydatastate mystate);
 
 #endif /* SEQUENCER_H_ */

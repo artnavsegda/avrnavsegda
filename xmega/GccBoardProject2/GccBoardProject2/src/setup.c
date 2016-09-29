@@ -1,6 +1,10 @@
 #include <asf.h>
 #include "loop.h"
 #include "setup.h"
+#include "interrupt.h"
+#include "pca9557.h"
+
+struct spi_device SPI_ADC = { .id = SPIC_SS };
 
 void interrupt_configure(void)
 {
@@ -19,7 +23,6 @@ void tc_configure(void)
 
 void spi_configure(void)
 {
-	struct spi_device SPI_ADC = { .id = SPIC_SS };
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 50000, 0);
 }
 
@@ -57,7 +60,7 @@ void adc_configure(ADC_t *adc)
 	adcch_configure(adc,ADC_CH0);
 }
 
-void ad7705_configure()
+void ad7705_configure(void)
 {
 	//ad7705_send_reset(void);
 	//ad7705_set_clock_register(0x0C);

@@ -25,6 +25,10 @@ struct mydatastate
 	int celltempavg;
 };
 
-void decrement_mode_counter(void);
+void decrement_mode_counter(struct mydatastate mystate);
+int modeseconds(int modeneed);
+int sequence(int modetosequence);
+void entermode(int modetoenter, struct mydatastate mystate);
+void exitmode(int modetoexit, struct mydatastate mystate);
 
 #endif /* SEQUENCER_H_ */

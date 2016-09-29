@@ -3,6 +3,7 @@
 #include "sequencer.h"
 #include "spi_transfer.h"
 #include "rolling.h"
+#include "ad7705.h"
 
 int16_t adc_scan_results[16];
 extern struct massive ad7705_averaging_massive;
@@ -44,12 +45,3 @@ ISR(PORTC_INT0_vect)
 		increment(ad7705_averaging_massive,ad7705_get_data_register(&SPIC, &SPI_ADC));
 }
 
-ISR(PORTC_INT0_vect)
-{
-
-}
-
-ISR(PORTE_INT0_vect)
-{
-
-}

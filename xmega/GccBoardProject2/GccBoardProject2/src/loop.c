@@ -3,6 +3,9 @@
 #include "sequencer.h"
 #include "modbus.h"
 #include "rolling.h"
+#include "settings.h"
+#include "i2c.h"
+#include "pca9557.h"
 
 extern uint16_t adc_scan_results[16];
 
@@ -113,9 +116,9 @@ float calculatepressure(float voltage)
 
 void send_data(struct mydatastruct mysettings, struct mydatastate mystate)
 {
-	i2c_read_double(&TWIE, 0x08, I2C_STANDARDCONCENTRATION, mysettings.standard_concentration);
-	i2c_read_double(&TWIE, 0x08, I2C_C25, mysettings.c_twentie_five);
-	i2c_read_double(&TWIE, 0x08, I2C_KFACTOR, mysettings.kfactor);
+	mysettings.standard_concentration = i2c_read_double(&TWIE, 0x08, I2C_STANDARDCONCENTRATION);
+	mysettings.c_twentie_five = i2c_read_double(&TWIE, 0x08, I2C_C25);
+	mysettings.kfactor = i2c_read_double(&TWIE, 0x08, I2C_KFACTOR);
 
 	int statusword = getstatus();
 	i2c_send(&TWIE, 0x08, STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); 

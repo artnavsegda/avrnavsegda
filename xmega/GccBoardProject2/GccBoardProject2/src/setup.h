@@ -11,6 +11,7 @@ void setup_init(void);
 void adcch_configure(ADC_t *adc, uint8_t ch_mask);
 void adc_configure(ADC_t *adc);
 void setup(void);
-
+void ad7705_configure(void);
+void twi_configure(void);
 
 #endif /* SETUP_H_ */

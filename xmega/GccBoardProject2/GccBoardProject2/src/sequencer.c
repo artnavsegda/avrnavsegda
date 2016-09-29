@@ -2,6 +2,7 @@
 #include "sequencer.h"
 #include "i2c.h"
 #include "settings.h"
+#include "rolling.h"
 
 extern struct massive measurment_averaging_massive;
 extern struct massive temperature_averaging_massive;

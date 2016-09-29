@@ -47,13 +47,13 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3]);
+		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3]);
 		gfx_mono_draw_string(string,8,0,&sysfont);
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[4], adc_scan_results[5], adc_scan_results[6], adc_scan_results[7]);
+		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[4], adc_scan_results[5], adc_scan_results[6], adc_scan_results[7]);
 		gfx_mono_draw_string(string,8,8,&sysfont);
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3]);
+		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[8], adc_scan_results[9], adc_scan_results[10], adc_scan_results[11]);
 		gfx_mono_draw_string(string,8,16,&sysfont);
-		snprintf(string,sizeof(string),"%3X %3X %3X %3X", adc_scan_results[4], adc_scan_results[5], adc_scan_results[6], adc_scan_results[7]);
+		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[12], adc_scan_results[13], adc_scan_results[14], adc_scan_results[15]);
 		gfx_mono_draw_string(string,8,24,&sysfont);
 		//delay_ms(500);
 	}

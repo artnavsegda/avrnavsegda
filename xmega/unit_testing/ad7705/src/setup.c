@@ -12,8 +12,8 @@ void setup_init(void)
 	board_init();
 	pmic_init();
 	ioport_init();
-	spi_master_init(&SPIC);
 	gfx_mono_init();
+	spi_master_init(&SPIC);
 }
 
 void spi_configure(void)
@@ -29,6 +29,7 @@ void ioport_configure(void)
 	ioport_set_pin_dir(J1_PIN5, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_dir(J1_PIN7, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
+	ioport_set_pin_mode(J1_PIN6, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
@@ -48,10 +49,10 @@ void interrupt_configure(void)
 
 void setup_configure(void)
 {
-	spi_configure();
 	ioport_configure();
-	interrupt_configure();
-	ad7705_configure();
+	spi_configure();
+	//interrupt_configure();
+	//ad7705_configure();
 }
 
 void setup_enable(void)

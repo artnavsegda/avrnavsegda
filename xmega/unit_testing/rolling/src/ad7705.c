@@ -60,8 +60,8 @@ uint16_t ad7705_get_data_register(SPI_t *spi, struct spi_device *device)
 	uint16_t data;
 	spi_select_device(spi, device);
 	spi_transfer(&SPIC, 0x38);
-	spi_read_packet(&SPIC, (uint8_t *)data, 2);
+	spi_read_packet(&SPIC, (uint8_t *)&data, 2);
 	spi_deselect_device(spi, device);
-	return data;
+	return Swap16(data);
 }
 

@@ -4,8 +4,9 @@
 #include "ad7705.h"
 
 extern struct spi_device SPI_ADC;
-extern struct massive firststage;
-extern int16_t adc_scan_results[16];
+int16_t adc_scan_results[16];
+extern uint16_t adcdata;
+struct massive firststage;
 
 void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
@@ -28,6 +29,10 @@ void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 
 ISR(PORTC_INT0_vect)
 {
+	LED_Toggle(LED2);
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
-		increment(firststage,ad7705_get_data_register(&SPIC, &SPI_ADC));
+	{
+		adcdata = ad7705_get_data_register(&SPIC, &SPI_ADC);
+		increment(&firststage,adcdata);
+	}
 }

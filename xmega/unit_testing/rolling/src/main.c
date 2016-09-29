@@ -1,27 +1,35 @@
 #include <asf.h>
 #include <stdio.h>
 #include "setup.h"
+#include "ad7705.h"
+#include "spi_transfer.h"
 #include "rolling.h"
 
-int16_t adc_scan_results[16];
-struct massive firststage;
+uint16_t adcdata = 0;
+extern struct massive firststage;
 
 int main (void)
 {
 	char string[20];
-	struct massive adcone;
+	/* Insert system clock initialization code here (sysclk_init()). */
 
 	setup_init();
 	setup_configure();
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
+
+	delay_ms(100);
+
 	while (true) {
-		increment(adcone, adc_scan_results[0]);
-		snprintf(string,sizeof(string),"%ld", oversample(adcone, 500));
+		snprintf(string,sizeof(string),"%04X", adcdata);
 		gfx_mono_draw_string(string,8,0,&sysfont);
-		snprintf(string,sizeof(string),"%ld", oversample(firststage, 32));
+		snprintf(string,sizeof(string),"%6ld", average(firststage.massive,16,firststage.position,64));
 		gfx_mono_draw_string(string,8,8,&sysfont);
-		delay_ms(1000);
+		snprintf(string,sizeof(string),"%6ld", average(firststage.massive,32,firststage.position,64));
+		gfx_mono_draw_string(string,8,16,&sysfont);
+		snprintf(string,sizeof(string),"%6ld", average(firststage.massive,64,firststage.position,64));
+		gfx_mono_draw_string(string,8,24,&sysfont);
+		delay_ms(500);
 	}
 }

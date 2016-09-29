@@ -5,7 +5,6 @@
 #include "spi_transfer.h"
 
 uint16_t adcdata = 0;
-extern struct spi_device SPI_ADC;
 
 int main (void)
 {

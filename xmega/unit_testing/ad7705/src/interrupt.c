@@ -3,10 +3,10 @@
 #include "ad7705.h"
 
 extern struct spi_device SPI_ADC;
+extern uint16_t value;
 
 ISR(PORTC_INT0_vect)
 {
-	uint16_t value;
 	/*spi_select_device(&SPIC, &SPI_ADC);
 	spi_transfer(&SPIC, 0x08);
 	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)

@@ -369,6 +369,12 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ad7705.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ad7705.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\common\components\display\st7565r\st7565r.c">
       <SubType>compile</SubType>
     </Compile>

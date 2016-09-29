@@ -3,8 +3,7 @@
 #include "setup.h"
 #include "rolling.h"
 
-int16_t adca_scan_results[8];
-int16_t adcb_scan_results[8];
+int16_t adc_scan_results[16];
 struct massive firststage;
 
 int main (void)
@@ -18,7 +17,7 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
-		increment(adcone, adca_scan_results[0]);
+		increment(adcone, adc_scan_results[0]);
 		snprintf(string,sizeof(string),"%ld", oversample(adcone, 500));
 		gfx_mono_draw_string(string,8,0,&sysfont);
 		snprintf(string,sizeof(string),"%ld", oversample(firststage, 32));

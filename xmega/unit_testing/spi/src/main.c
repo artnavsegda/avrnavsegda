@@ -13,6 +13,13 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
+
+	while (true)
+	{
+		gfx_mono_draw_string("do something funny",10,10,&sysfont);
+		delay_ms(500);
+	}
+
 	spi_select_device(&SPIC, &SPI_ADC);
 
 	spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5);

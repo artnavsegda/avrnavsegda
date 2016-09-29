@@ -3,6 +3,7 @@
 
 void setup_init(void);
 void spi_configure(void);
+void ioport_configure(void);
 void setup_configure(void);
 void setup_enable(void);
 

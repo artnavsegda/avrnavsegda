@@ -13,6 +13,7 @@ void setup_init(void)
 	pmic_init();
 	ioport_init();
 	spi_master_init(&SPIC);
+	gfx_mono_init();
 }
 
 void spi_configure(void)
@@ -25,7 +26,7 @@ void ioport_configure(void)
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
-	//ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
 
 void ISR_init(void)

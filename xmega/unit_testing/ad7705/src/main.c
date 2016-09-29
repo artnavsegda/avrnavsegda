@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "setup.h"
 
-uint16_t value;
+uint16_t value = 0;
 
 int main (void)
 {

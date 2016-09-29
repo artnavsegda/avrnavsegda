@@ -60,19 +60,19 @@ void adc_configure(ADC_t *adc)
 	adcch_configure(adc,ADC_CH0);
 }
 
-void ad7705_configure(void)
-{
-	//ad7705_send_reset(void);
-	//ad7705_set_clock_register(0x0C);
-	//ad7705_set_setup_register(0x04);
-	//ad7705_set_scale_register(uint8_t[]){0x18,0x3A,0x00});
-	//ad7705_set_offset_register(uint8_t[]){0x89,0x78,0xD7});
-}
-
 void twi_configure(void)
 {
 	twi_master_options_t opt = { .speed = 50000	};
 	twi_master_setup(&TWIE, &opt);
+}
+
+void ad7705_enable(void)
+{
+	ad7705_send_reset(&SPIC, &SPI_ADC);
+	ad7705_set_clock_register(&SPIC, &SPI_ADC, 0x0C);
+	ad7705_set_setup_register(&SPIC, &SPI_ADC, 0x04);
+	ad7705_set_scale_register(&SPIC, &SPI_ADC, 0x183A00);
+	ad7705_set_offset_register(&SPIC, &SPI_ADC, 0x8978D7);
 }
 
 void setup_configure(void)
@@ -94,7 +94,7 @@ void setup_enable(void)
 	adc_enable(&ADCA);
 	adc_enable(&ADCB);
 	twi_master_enable(&TWIE);
-	//ad7705_enable();
+	ad7705_enable();
 }
 
 void setup_init(void)
@@ -106,7 +106,6 @@ void setup_init(void)
 	spi_master_init(&SPIC);
 	gfx_mono_init();
 	sensor_bus_init(&TWIE, 50000);
-	//ad7705_init();
 	pca9557_init(0x18);
 	pca9557_init(0x19);
 	pca9557_init(0x1a);
@@ -116,8 +115,8 @@ void setup(void)
 {
 	//struct mysettings settings;
 	setup_init();
-	setup_enable();
 	setup_configure();
+	setup_enable();
 	//if (!recieve_settings_from_slave(settings))
 	//	default_settings(settings);
 	//setup_settings();

@@ -47,8 +47,6 @@ struct mydatastruct
 	uint8_t ip[4];
 	uint8_t mac[6];
 	struct lengthtablestruct length_table;
-	//uint16_t length_table[13];
-	//uint8_t jump_table[13];
 	struct jumptablestruct jump_table;
 	uint8_t ad7705_setup_register;
 	uint8_t ad7705_clock_register;

@@ -25,4 +25,56 @@ int main (void)
 	snprintf(string,sizeof(string),"%x:%x:%x:%x:%x:%x", mysettings.mac[0], mysettings.mac[1], mysettings.mac[2], mysettings.mac[3], mysettings.mac[4], mysettings.mac[5]);
 	gfx_mono_draw_string(string,8,8,&sysfont);
 
+	delay_ms(500);
+	snprintf(string,sizeof(string),"startlevel %d %d",mysettings.length_table.startlevel, mysettings.jump_table.startlevel);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"celldelay %d %d",mysettings.length_table.celldelay, mysettings.jump_table.celldelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"celllevel %d %d",mysettings.length_table.celllevel, mysettings.jump_table.celllevel);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"zerodelay %d %d",mysettings.length_table.zerodelay, mysettings.jump_table.zerodelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"zerotest %d %d",mysettings.length_table.zerotest, mysettings.jump_table.zerotest);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"purge %d %d",mysettings.length_table.startlevel, mysettings.jump_table.purge);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"totalmercurydelay %d %d",mysettings.length_table.totalmercurydelay, mysettings.jump_table.totalmercurydelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"totalmercury %d %d",mysettings.length_table.totalmercury, mysettings.jump_table.totalmercury);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"elementalmercurydelay %d %d",mysettings.length_table.elementalmercurydelay, mysettings.jump_table.elementalmercurydelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"elementalmercury %d %d",mysettings.length_table.elementalmercury, mysettings.jump_table.elementalmercury);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"precalibrationdelay %d %d",mysettings.length_table.precalibrationdelay, mysettings.jump_table.precalibrationdelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"calibration %d %d",mysettings.length_table.calibration, mysettings.jump_table.calibration);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
+	delay_ms(500);
+	snprintf(string,sizeof(string),"postcalibrationdelay %d %d",mysettings.length_table.postcalibrationdelay, mysettings.jump_table.postcalibrationdelay);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+
 }

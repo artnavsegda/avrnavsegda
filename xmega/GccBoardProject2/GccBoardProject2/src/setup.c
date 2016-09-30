@@ -3,6 +3,7 @@
 #include "setup.h"
 #include "interrupt.h"
 #include "pca9557.h"
+#include "ad7705.h"
 
 struct spi_device SPI_ADC = { .id = SPIC_SS };
 
@@ -84,7 +85,6 @@ void setup_configure(void)
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
 	twi_configure();
-	ad7705_configure();
 }
 
 void setup_enable(void)

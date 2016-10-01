@@ -33,6 +33,12 @@ void adc_configure(ADC_t *adc)
 	adcch_configure(adc,ADC_CH0);
 }
 
+void twi_configure(void)
+{
+	twi_master_options_t opt = { .speed = 50000 };
+	twi_master_setup(&TWIE, &opt);
+}
+
 void ioport_configure(void)
 {
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
@@ -42,6 +48,7 @@ void setup_configure(void)
 {
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
+	twi_configure();
 	ioport_configure();
 }
 
@@ -49,5 +56,6 @@ void setup_enable(void)
 {
 	adc_enable(&ADCA);
 	adc_enable(&ADCB);
+	twi_master_enable(&TWIE);
 	cpu_irq_enable();
 }

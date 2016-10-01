@@ -23,7 +23,7 @@ struct MyObject c;
 
 int main (void)
 {
-	char string[20];
+	char string[20] = "shit";
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	setup_init();
@@ -43,7 +43,8 @@ int main (void)
 	//snprintf(string,sizeof(string),"%d", i2c_read_word(&TWIE, 0x08, 6));
 	//gfx_mono_draw_string(string,8,8,&sysfont);
 
-	snprintf(string,sizeof(string),"%f", i2c_read_double(&TWIE, 0x08, 7));
+	//snprintf(string,sizeof(string),"%f", i2c_read_double(&TWIE, 0x08, 7));
+	i2c_read_array(&TWIE, 0x08, 8, 5, string);
 	gfx_mono_draw_string(string,8,8,&sysfont);
 
 	/*i2c_read_array(&TWIE, 0x08, 0, 4, e.zero);

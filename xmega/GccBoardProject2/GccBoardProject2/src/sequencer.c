@@ -41,7 +41,7 @@ int modeseconds(enum modelist modeneed)
 enum modelist sequence(enum modelist modetosequence)
 {
 	struct mydatastruct mysettings;
-	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,26,(uint8_t *)&mysettings.jump_table);
+	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,13,(uint8_t *)&mysettings.jump_table);
 	switch(modetosequence)
 	{
 		case STARTLEVEL: return mysettings.jump_table.startlevel;

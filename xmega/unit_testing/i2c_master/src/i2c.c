@@ -98,9 +98,9 @@ uint16_t i2c_read_word(TWI_t *twi, uint8_t addr, uint8_t memory)
 		return status;
 }
 
-uint32_t i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
+float i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
 {
-	uint32_t recievedword;
+	float recievedword;
 	uint8_t message[4];
 	twi_package_t packet = {
 		.addr_length  = 1,
@@ -112,10 +112,10 @@ uint32_t i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
 	status_code_t status = twi_master_read(twi, &packet);
 	if(status == TWI_SUCCESS)
 	{
-		MSB0(recievedword) = message[0];
-		MSB1(recievedword) = message[1];
-		MSB2(recievedword) = message[2];
-		MSB3(recievedword) = message[3];
+		LSB0(recievedword) = message[0];
+		LSB1(recievedword) = message[1];
+		LSB2(recievedword) = message[2];
+		LSB3(recievedword) = message[3];
 		return recievedword;
 	}
 	else

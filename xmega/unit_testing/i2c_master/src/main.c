@@ -29,18 +29,40 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	i2c_read_array(&TWIE, 0x08, 0, 4, e.zero);
+
+	//i2c_send(&TWIE, 0x08, 5, 42);
+	i2c_send_word(&TWIE, 0x08, 6, 420);
+	//i2c_send_array(&TWIE, 0x08, 5, 1, 42);
+
+	/*i2c_read_array(&TWIE, 0x08, 0, 4, e.zero);
 	i2c_read_array(&TWIE, 0x08, 1, 6, e.one);
 	i2c_read_array(&TWIE, 0x08, 2, 26, e.two);
 	i2c_read_array(&TWIE, 0x08, 3, 13, e.three);
 
-	i2c_send_array(&TWIE, 0x08, 0, 4, d.zero);
-	i2c_send_array(&TWIE, 0x08, 1, 6, d.one);
-	i2c_send_array(&TWIE, 0x08, 2, 26, d.two);
-	i2c_send_array(&TWIE, 0x08, 3, 13, d.three);
+	gfx_mono_draw_string(e.zero,8,0,&sysfont);
+	gfx_mono_draw_string(e.one,8,8,&sysfont);
+	gfx_mono_draw_string(e.two,8,16,&sysfont);
+	gfx_mono_draw_string(e.three,8,24,&sysfont);
 
-	i2c_read_array(&TWIE, 0x08, 0, 4, c.zero);
+	delay_ms(1000);*/
+
+	//i2c_send_array(&TWIE, 0x08, 0, 4, d.zero);
+	//i2c_send_array(&TWIE, 0x08, 1, 6, d.one);
+	//i2c_send_array(&TWIE, 0x08, 2, 26, d.two);
+	//i2c_send_array(&TWIE, 0x08, 3, 13, d.three);
+
+	/*i2c_read_array(&TWIE, 0x08, 0, 4, c.zero);
 	i2c_read_array(&TWIE, 0x08, 1, 6, c.one);
 	i2c_read_array(&TWIE, 0x08, 2, 26, c.two);
 	i2c_read_array(&TWIE, 0x08, 3, 13, c.three);
+
+	gfx_mono_draw_string(c.zero,8,0,&sysfont);
+	gfx_mono_draw_string(c.one,8,8,&sysfont);
+	gfx_mono_draw_string(c.two,8,16,&sysfont);
+	gfx_mono_draw_string(c.three,8,24,&sysfont);
+
+	i2c_send_array(&TWIE, 0x08, 0, 4, c.zero);
+	i2c_send_array(&TWIE, 0x08, 1, 6, c.one);
+	i2c_send_array(&TWIE, 0x08, 2, 26, c.two);
+	i2c_send_array(&TWIE, 0x08, 3, 13, c.three);*/
 }

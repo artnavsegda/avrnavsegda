@@ -30,7 +30,7 @@ status_code_t i2c_send_word(TWI_t *twi, uint8_t addr, uint8_t memory, uint16_t c
 	return twi_master_write(twi, &packet);
 }
 
-status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, uint32_t content)
+status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, float content)
 {
 	uint8_t message[4];
 	twi_package_t packet = {
@@ -40,10 +40,10 @@ status_code_t i2c_send_double(TWI_t *twi, uint8_t addr, uint8_t memory, uint32_t
 		.buffer       = message,
 		.length       = 4
 	};
-	message[0] = MSB0(content);
-	message[1] = MSB1(content);
-	message[2] = MSB2(content);
-	message[3] = MSB3(content);
+	message[0] = LSB0(content);
+	message[1] = LSB1(content);
+	message[2] = LSB2(content);
+	message[3] = LSB3(content);
 	return twi_master_write(twi, &packet);
 }
 

@@ -31,7 +31,8 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 
 	//i2c_send(&TWIE, 0x08, 5, 42);
-	i2c_send_word(&TWIE, 0x08, 6, 420);
+	//i2c_send_word(&TWIE, 0x08, 6, 420);
+	i2c_send_double(&TWIE, 0x08, 7, (float)4.20);
 	//i2c_send_array(&TWIE, 0x08, 5, 1, 42);
 
 	/*i2c_read_array(&TWIE, 0x08, 0, 4, e.zero);

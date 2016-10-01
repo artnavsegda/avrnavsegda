@@ -18,7 +18,7 @@ int main (void)
 	i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
 	i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
 	i2c_read_array(&TWIE,0x08,I2C_LENGTHTABLE,26,(uint8_t *)&mysettings.length_table);
-	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,26,(uint8_t *)&mysettings.jump_table);
+	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,13,(uint8_t *)&mysettings.jump_table);
 
 	snprintf(string,sizeof(string),"%u.%u.%u.%u", mysettings.ip[0], mysettings.ip[1], mysettings.ip[2], mysettings.ip[3]);
 	gfx_mono_draw_string(string,8,0,&sysfont);

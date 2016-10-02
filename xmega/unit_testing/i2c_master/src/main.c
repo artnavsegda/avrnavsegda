@@ -13,10 +13,10 @@ struct MyObject {
 struct MyObject e;
 
 struct MyObject d = {
-	.zero = "4321",
-	.one = "654321",
-	.two = "abcdefghijklmnopqrstuwxyz",
-	.three = "0123456789abc"
+	.zero = "432",
+	.one = "65432",
+	.two = "abcdefghijklmnopqrstuwxy",
+	.three = "0123456789ab"
 };
 
 struct MyObject c;

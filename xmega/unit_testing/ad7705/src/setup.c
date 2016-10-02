@@ -47,6 +47,12 @@ void interrupt_configure(void)
 	cpu_irq_enable();
 }
 
+void twi_configure(void)
+{
+	twi_master_options_t opt = { .speed = 50000 };
+	twi_master_setup(&TWIE, &opt);
+}
+
 void setup_configure(void)
 {
 	ioport_configure();
@@ -58,6 +64,7 @@ void setup_enable(void)
 {
 	spi_enable(&SPIC);
 	ad7705_enable();
+	twi_master_enable(&TWIE);
 }
 
 void ad7705_enable(void)

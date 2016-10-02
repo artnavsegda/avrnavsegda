@@ -30,15 +30,17 @@
       <framework-data>
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.gfx_mono.font" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.spi_master" value="Add" config="usart_and_standard_spi" content-id="Atmel.ASF" />
     <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.gfx_mono.font" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
     <configuration key="config.spi_master_type" value="usart_and_standard_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
     <configuration key="config.gfx_mono.display" value="c12832_a1z" default="c12832_a1z" content-id="Atmel.ASF" />
+    <configuration key="config.xmega.drivers.twi.mode" value="master" default="both" content-id="Atmel.ASF" />
   </configurations>
   <files>
     <file path="src/config/conf_board.h" framework="" version="" source="common/applications/user_application/atxmega256a3bu_xmega_a3bu_xplained/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
@@ -116,6 +118,14 @@
     <file path="src/ASF/common/services/gfx_mono/tools/readme.txt" framework="" version="3.32.0" source="common\services\gfx_mono\tools\readme.txt" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/gfx_mono/gfx_mono_c12832_a1z.c" framework="" version="3.32.0" source="common\services\gfx_mono\gfx_mono_c12832_a1z.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/gfx_mono/gfx_mono_c12832_a1z.h" framework="" version="3.32.0" source="common\services\gfx_mono\gfx_mono_c12832_a1z.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/twi/twi_slave.h" framework="" version="3.32.0" source="common\services\twi\twi_slave.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/twi/xmega_twi/twi_master.h" framework="" version="3.32.0" source="common\services\twi\xmega_twi\twi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/twi/xmega_twi/twi_slave.h" framework="" version="3.32.0" source="common\services\twi\xmega_twi\twi_slave.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/twi/twi_master.h" framework="" version="3.32.0" source="common\services\twi\twi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/twi/twim.c" framework="" version="3.32.0" source="xmega\drivers\twi\twim.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/twi/twim.h" framework="" version="3.32.0" source="xmega\drivers\twi\twim.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/twi/twi_common.h" framework="" version="3.32.0" source="xmega\drivers\twi\twi_common.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_twim.h" framework="" version="3.32.0" source="xmega\drivers\twi\module_config\conf_twim.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.32.0/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -183,6 +193,8 @@
       <Value>../src/ASF/common/components/display/st7565r</Value>
       <Value>../src/ASF/common/services/gfx_mono</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/xmega/drivers/twi</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -222,6 +234,8 @@
       <Value>../src/ASF/common/components/display/st7565r</Value>
       <Value>../src/ASF/common/services/gfx_mono</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/xmega/drivers/twi</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -269,6 +283,8 @@
       <Value>../src/ASF/common/components/display/st7565r</Value>
       <Value>../src/ASF/common/services/gfx_mono</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/xmega/drivers/twi</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -309,6 +325,8 @@
       <Value>../src/ASF/common/components/display/st7565r</Value>
       <Value>../src/ASF/common/services/gfx_mono</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/xmega/drivers/twi</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -338,6 +356,8 @@
     <Folder Include="src\ASF\common\services\spi\" />
     <Folder Include="src\ASF\common\services\spi\xmega_spi\" />
     <Folder Include="src\ASF\common\services\spi\xmega_usart_spi\" />
+    <Folder Include="src\ASF\common\services\twi\" />
+    <Folder Include="src\ASF\common\services\twi\xmega_twi\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
     <Folder Include="src\ASF\common\utils\make\" />
@@ -349,6 +369,7 @@
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
     <Folder Include="src\ASF\xmega\drivers\pmic\" />
     <Folder Include="src\ASF\xmega\drivers\spi\" />
+    <Folder Include="src\ASF\xmega\drivers\twi\" />
     <Folder Include="src\ASF\xmega\drivers\usart\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
@@ -411,6 +432,27 @@
     <None Include="src\ASF\common\services\gfx_mono\sysfont.h">
       <SubType>compile</SubType>
     </None>
+    <None Include="src\ASF\common\services\twi\twi_slave.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\xmega_twi\twi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\xmega_twi\twi_slave.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\twi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\xmega\drivers\twi\twim.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\drivers\twi\twim.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\xmega\drivers\twi\twi_common.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
@@ -429,6 +471,15 @@
     <None Include="src\config\conf_sysfont.h">
       <SubType>compile</SubType>
     </None>
+    <None Include="src\config\conf_twim.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\interrupt.c">
       <SubType>compile</SubType>
     </Compile>

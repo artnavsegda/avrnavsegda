@@ -13,10 +13,10 @@ struct MyObject {
 struct MyObject e;
 
 struct MyObject d = {
-	"4321",
-	"654321",
-	"abcdefghijklmnopqrstuwxyz",
-	"0123456789abc"
+	.zero = "4321",
+	.one = "654321",
+	.two = "abcdefghijklmnopqrstuwxyz",
+	.three = "0123456789abc"
 };
 
 struct MyObject c;
@@ -44,8 +44,8 @@ int main (void)
 	//gfx_mono_draw_string(string,8,8,&sysfont);
 
 	//snprintf(string,sizeof(string),"%f", i2c_read_double(&TWIE, 0x08, 7));
-	i2c_read_array(&TWIE, 0x08, 8, 5, string);
-	gfx_mono_draw_string(string,8,8,&sysfont);
+	//i2c_read_array(&TWIE, 0x08, 8, 5, string);
+	//gfx_mono_draw_string(string,8,8,&sysfont);
 
 	/*i2c_read_array(&TWIE, 0x08, 0, 4, e.zero);
 	i2c_read_array(&TWIE, 0x08, 1, 6, e.one);
@@ -59,7 +59,7 @@ int main (void)
 
 	delay_ms(1000);*/
 
-	//i2c_send_array(&TWIE, 0x08, 0, 4, d.zero);
+	i2c_send_array(&TWIE, 0x08, 0, 4, d.zero);
 	//i2c_send_array(&TWIE, 0x08, 1, 6, d.one);
 	//i2c_send_array(&TWIE, 0x08, 2, 26, d.two);
 	//i2c_send_array(&TWIE, 0x08, 3, 13, d.three);

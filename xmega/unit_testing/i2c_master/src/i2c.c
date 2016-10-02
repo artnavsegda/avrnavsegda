@@ -71,9 +71,9 @@ uint8_t i2c_read(TWI_t *twi, uint8_t addr, uint8_t memory)
 	};
 	status_code_t status = twi_master_read(twi, &packet);
 	if(status == TWI_SUCCESS)
-		return message[0];
+	return message[0];
 	else
-		return status;
+	return status;
 }
 
 uint16_t i2c_read_word(TWI_t *twi, uint8_t addr, uint8_t memory)
@@ -95,7 +95,7 @@ uint16_t i2c_read_word(TWI_t *twi, uint8_t addr, uint8_t memory)
 		return recievedword;
 	}
 	else
-		return status;
+	return status;
 }
 
 float i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
@@ -119,7 +119,7 @@ float i2c_read_double(TWI_t *twi, uint8_t addr, uint8_t memory)
 		return recievedword;
 	}
 	else
-		return status;
+	return status;
 }
 
 status_code_t i2c_read_array(TWI_t *twi, uint8_t addr, uint8_t memory, int arraysize, void *array)

@@ -57,6 +57,7 @@ void setup_configure(void)
 {
 	ioport_configure();
 	spi_configure();
+	twi_configure();
 	interrupt_configure();
 }
 

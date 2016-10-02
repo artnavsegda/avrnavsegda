@@ -361,7 +361,7 @@ void display(int mode)
 	}
 }
 
-int main (void)
+void startup_init(void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 	pmic_init();
@@ -388,6 +388,11 @@ int main (void)
 	entermode(STARTLEVEL);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+}
+
+int main (void)
+{
+	startup_init();
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {

@@ -1,6 +1,7 @@
 #include <asf.h>
 #include <stdio.h>
 #include "setup.h"
+#include "i2c.h"
 
 static volatile int16_t adc_scan_results[16];
 
@@ -48,6 +49,10 @@ int main (void)
 		gfx_mono_draw_string(string,8,16,&sysfont);
 		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[12], adc_scan_results[13], adc_scan_results[14], adc_scan_results[15]);
 		gfx_mono_draw_string(string,8,24,&sysfont);
-		//delay_ms(500);
+		delay_ms(50);
+		for (int i = 0; i < 16;i++)
+			i2c_send_word(&TWIE, 0x08, i, adc_scan_results[i]);
+		//i2c_send_word(&TWIE, 0x08, 0, adc_scan_results[0]);
+		delay_ms(50);
 	}
 }

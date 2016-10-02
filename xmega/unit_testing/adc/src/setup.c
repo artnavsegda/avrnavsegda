@@ -27,7 +27,7 @@ void adc_configure(ADC_t *adc)
 	adc_read_configuration(adc, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
-	adc_set_clock_rate(&adc_conf, 200000UL);
+	adc_set_clock_rate(&adc_conf, 200UL);
 	adc_write_configuration(adc, &adc_conf);
 	adc_set_callback(adc, &adc_handler);
 	adcch_configure(adc,ADC_CH0);

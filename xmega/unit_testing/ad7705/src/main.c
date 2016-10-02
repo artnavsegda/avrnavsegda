@@ -23,8 +23,6 @@ int main (void)
 	while (true) {
 			snprintf(string,sizeof(string),"%04X", adcdata);
 			gfx_mono_draw_string(string,8,0,&sysfont);
-			delay_ms(250);
 			i2c_send_word(&TWIE, 0x08, 0, adcdata);
-			delay_ms(250);
 	}
 }

@@ -29,6 +29,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "rolling", "rolling\rolling.
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "settings", "settings\settings.cproj", "{40A2429B-9522-4C96-9ECA-B8D88198DA1C}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ethernet", "ethernet\ethernet.cproj", "{E3E8ECFA-4E75-4EA5-B422-C20592D32C31}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "modbus", "modbus\modbus.cproj", "{CBDA584A-659F-429B-BB52-6D8AFB7E999C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -87,6 +91,14 @@ Global
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.Build.0 = Debug|AVR
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.ActiveCfg = Release|AVR
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.Build.0 = Release|AVR
+		{E3E8ECFA-4E75-4EA5-B422-C20592D32C31}.Debug|AVR.ActiveCfg = Debug|AVR
+		{E3E8ECFA-4E75-4EA5-B422-C20592D32C31}.Debug|AVR.Build.0 = Debug|AVR
+		{E3E8ECFA-4E75-4EA5-B422-C20592D32C31}.Release|AVR.ActiveCfg = Release|AVR
+		{E3E8ECFA-4E75-4EA5-B422-C20592D32C31}.Release|AVR.Build.0 = Release|AVR
+		{CBDA584A-659F-429B-BB52-6D8AFB7E999C}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CBDA584A-659F-429B-BB52-6D8AFB7E999C}.Debug|AVR.Build.0 = Debug|AVR
+		{CBDA584A-659F-429B-BB52-6D8AFB7E999C}.Release|AVR.ActiveCfg = Release|AVR
+		{CBDA584A-659F-429B-BB52-6D8AFB7E999C}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

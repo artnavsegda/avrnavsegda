@@ -1,6 +1,8 @@
 #include <asf.h>
 #include "i2c.h"
 #include "setup.h"
+#include "settings.h"
+#include "ad7705.h"
 
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS

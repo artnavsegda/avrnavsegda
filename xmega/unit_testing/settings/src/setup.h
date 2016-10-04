@@ -6,5 +6,6 @@ void twi_configure(void);
 void ioport_configure(void);
 void setup_configure(void);
 void setup_enable(void);
+void ad7705_enable(void);
 
 #endif /* SETUP_H_ */

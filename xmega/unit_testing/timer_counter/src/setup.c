@@ -1,11 +1,9 @@
 #include <asf.h>
 #include "setup.h"
 #include "ad7705.h"
+#include "interrupt.h"
 
 struct spi_device SPI_ADC = { .id = SPIC_SS };
-
-void tc_callback(void);
-void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result);
 
 void setup_init(void)
 {
@@ -43,12 +41,6 @@ void tc_configure(void)
 	tc_write_period(&TCC0, 31250);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
-}
-
-void ISR_init(void)
-{
-	PORTC.INT0MASK = PIN1_bm;
-	PORTC.INTCTRL = PORT_INT0LVL_HI_gc;
 }
 
 void interrupt_configure(void)

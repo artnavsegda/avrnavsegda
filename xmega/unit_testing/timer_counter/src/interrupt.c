@@ -45,7 +45,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	}
 }
 
-ISR(PORTC_INT0_vect)
+void ad7705_callback(void)
 {
 	LED_Toggle(LED2);
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)

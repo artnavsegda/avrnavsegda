@@ -1,8 +1,7 @@
 #include <asf.h>
 #include "setup.h"
 #include "ad7705.h"
-
-void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result);
+#include "interrupt.h"
 
 struct spi_device SPI_ADC = { .id = SPIC_SS };
 
@@ -35,7 +34,7 @@ void adc_configure(ADC_t *adc)
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
 	adc_set_clock_rate(&adc_conf, 200000UL);
 	adc_write_configuration(adc, &adc_conf);
-	adc_set_callback(adc, &adc_handler);
+	adc_set_callback(adc, &adc_callback);
 	adcch_configure(adc,ADC_CH0);
 }
 
@@ -55,12 +54,6 @@ void ioport_configure(void)
 	ioport_set_pin_mode(J1_PIN6, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
-}
-
-void ISR_init(void)
-{
-	PORTC.INT0MASK = PIN1_bm;
-	PORTC.INTCTRL = PORT_INT0LVL_HI_gc;
 }
 
 void interrupt_configure(void)

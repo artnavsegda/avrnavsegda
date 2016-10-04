@@ -10,8 +10,8 @@ void setup_init(void)
 	sysclk_init();
 	board_init();
 	ioport_init();
-	gfx_mono_init();
 	spi_master_init(&SPIC);
+	gfx_mono_init();
 }
 
 void spi_configure(void)

@@ -29,9 +29,10 @@ int main (void)
 
 	while (true)
 	{
-		snprintf(string,sizeof(string),"%d", adc_scan_results[0]);
+		snprintf(string,sizeof(string),"%d", adc_scan_results[1]);
 		i2c_send_word(&TWIE,0x08,6,adc_scan_results[0]);
-		gfx_mono_draw_string(string,16,0,&sysfont);
+		gfx_mono_draw_string(string,8,16,&sysfont);
+		delay_ms(500);
 	}
 
 }

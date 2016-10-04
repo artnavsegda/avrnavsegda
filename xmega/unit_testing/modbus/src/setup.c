@@ -1,7 +1,5 @@
 #include <asf.h>
-#include "i2c.h"
 #include "setup.h"
-#include "settings.h"
 #include "interrupt.h"
 
 void setup_init(void)
@@ -9,6 +7,7 @@ void setup_init(void)
 	sysclk_init();
 	board_init();
 	ioport_init();
+	pmic_init();
 	gfx_mono_init();
 }
 
@@ -38,7 +37,6 @@ void adc_configure(ADC_t *adc)
 void twi_configure(void)
 {
 	twi_master_options_t opt = { .speed = 50000 };
-	sysclk_enable_peripheral_clock(&TWIE);
 	twi_master_setup(&TWIE, &opt);
 }
 
@@ -51,8 +49,8 @@ void setup_configure(void)
 {
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
-	ioport_configure();
 	twi_configure();
+	ioport_configure();
 }
 
 void setup_enable(void)

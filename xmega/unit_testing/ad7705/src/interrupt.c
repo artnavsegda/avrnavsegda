@@ -5,7 +5,7 @@
 extern struct spi_device SPI_ADC;
 extern uint16_t adcdata;
 
-ISR(PORTC_INT0_vect)
+void ad7705_callback(void)
 {
 	LED_Toggle(LED2);
 	/*spi_select_device(&SPIC, &SPI_ADC);

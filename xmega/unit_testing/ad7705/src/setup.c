@@ -34,12 +34,6 @@ void ioport_configure(void)
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
 
-void ISR_init(void)
-{
-	PORTC.INT0MASK = PIN1_bm;
-	PORTC.INTCTRL = PORT_INT0LVL_HI_gc;
-}
-
 void interrupt_configure(void)
 {
 	ISR_init();

@@ -4,5 +4,4 @@
 int main(void)
 {
 	setup();
-	loop();
 }

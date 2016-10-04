@@ -138,39 +138,4 @@ void send_data(struct mydatastruct mysettings, struct mydatastate mystate)
 	i2c_send_double(&TWIE, 0x08, TOTALMERCURYCOEFFICENT, mysettings.standard_concentration/(float)((long)mystate.coefficent-(long)mystate.zerolevelavg)); // Total mercury coefficent
 }
 
-void display_data(struct mydatastruct mydata, struct mydatastate mystate)
-{
-	/*switch (displaymode)
-	{
-		case 1:
-			display_mode_one();
-		break;
-		default:
-		break;
-	}*/
-}
 
-void loop(void)
-{
-	//struct mydatastruct mydata;
-	while (true)
-	{
-		//process_data(mydata);
-		//display_data(mydata);
-		//send_data(mydata);
-		delay_ms(500);
-	}
-}
-
-void sequence_callback(void)
-{
-	static struct mydatastate primarystate;
-	static struct mydatastruct mydata;
-
-	decrement_mode_counter(primarystate);
-	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
-	increment(temperature_averaging_massive, adc_scan_results[3]);
-	process_data(mydata,primarystate);
-	display_data(mydata,primarystate);
-	send_data(mydata,primarystate);
-}

@@ -6,21 +6,10 @@
 #include "ad7705.h"
 
 int16_t adc_scan_results[16];
-extern struct massive ad7705_averaging_massive;
+struct massive ad7705_averaging_massive;
 extern struct spi_device SPI_ADC;
 
-void ISR_init(void)
-{
-	PORTC.INT0MASK = PIN1_bm;
-	PORTE.INT0MASK = PIN5_bm;
-	PORTF.INT0MASK = PIN1_bm;
-	PORTF.INT1MASK = PIN2_bm;
-	PORTC.INTCTRL = PORT_INT0LVL_HI_gc;
-	PORTE.INTCTRL = PORT_INT0LVL_LO_gc;
-	PORTF.INTCTRL = PORT_INT0LVL_LO_gc | PORT_INT1LVL_LO_gc;
-}
-
-void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
+void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	static uint8_t current_adca_scan_channel = 0, current_adcb_scan_channel = 0;
 	if (adc == &ADCA) {
@@ -39,9 +28,21 @@ void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	}
 }
 
-ISR(PORTC_INT0_vect)
+void ad7705_callback(void);
 {
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
 		increment(ad7705_averaging_massive,ad7705_get_data_register(&SPIC, &SPI_ADC));
 }
 
+void tc_callback(void)
+{
+	static struct mydatastate primarystate;
+	static struct mydatastruct mydata;
+
+	decrement_mode_counter(primarystate);
+	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
+	increment(temperature_averaging_massive, adc_scan_results[3]);
+	process_data(mydata,primarystate);
+	display_data(mydata,primarystate);
+	send_data(mydata,primarystate);
+}

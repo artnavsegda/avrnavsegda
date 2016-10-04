@@ -94,7 +94,6 @@
 
 // From module: SPI - XMEGA implementation
 #include <spi_master.h>
-#include <spi_master.h>
 
 // From module: ST7565R LCD controller
 #include <st7565r.h>
@@ -108,6 +107,13 @@
 
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
+
+// From module: TWI - Two-Wire Interface - XMEGA implementation
+#include <twi_master.h>
+#include <xmega_twi/twi_master.h>
+
+// From module: TWI - Two-wire Master Interface
+#include <twim.h>
 
 // From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
 #include <usart.h>

@@ -4,6 +4,7 @@
 #include "ad7705.h"
 #include "spi_transfer.h"
 #include "rolling.h"
+#include "i2c.h"
 
 int16_t adc_scan_results[16];
 uint16_t adcdata = 0;

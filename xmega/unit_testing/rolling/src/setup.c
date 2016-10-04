@@ -90,8 +90,8 @@ void ad7705_enable(void)
 
 void setup_enable(void)
 {
-	//adc_enable(&ADCA);
-	//adc_enable(&ADCB);
+	adc_enable(&ADCA);
+	adc_enable(&ADCB);
 	spi_enable(&SPIC);
 	ad7705_enable();
 	cpu_irq_enable();

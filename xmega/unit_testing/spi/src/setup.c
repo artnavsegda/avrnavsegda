@@ -19,11 +19,11 @@ void spi_configure(void)
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 50000, 0);
 }
 
-void twi_configure(void)
+/*void twi_configure(void)
 {
 	twi_master_options_t opt = { .speed = 50000 };
 	twi_master_setup(&TWIE, &opt);
-}
+}*/
 
 void ioport_configure(void)
 {
@@ -47,5 +47,5 @@ void setup_configure(void)
 void setup_enable(void)
 {
 	spi_enable(&SPIC);
-	twi_master_enable(&TWIE);
+	//twi_master_enable(&TWIE);
 }

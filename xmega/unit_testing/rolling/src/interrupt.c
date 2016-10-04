@@ -4,9 +4,9 @@
 #include "ad7705.h"
 
 extern struct spi_device SPI_ADC;
-int16_t adc_scan_results[16];
+extern int16_t adc_scan_results[16];
 extern uint16_t adcdata;
-struct massive firststage;
+extern struct massive firststage;
 
 void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {

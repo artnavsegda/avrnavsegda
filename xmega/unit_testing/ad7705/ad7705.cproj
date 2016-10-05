@@ -489,6 +489,9 @@
     <Compile Include="src\ISR.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\settings.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>

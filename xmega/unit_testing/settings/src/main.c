@@ -26,7 +26,6 @@ int main (void)
 	gfx_mono_draw_string(string,8,0,&sysfont);
 	snprintf(string,sizeof(string),"%x:%x:%x:%x:%x:%x", mysettings.mac[0], mysettings.mac[1], mysettings.mac[2], mysettings.mac[3], mysettings.mac[4], mysettings.mac[5]);
 	gfx_mono_draw_string(string,8,8,&sysfont);
-
 	snprintf(string,sizeof(string),"setup:%02X clock:%02X", mysettings.ad7705_setup_register, mysettings.ad7705_clock_register);
 	gfx_mono_draw_string(string,8,16,&sysfont);
 

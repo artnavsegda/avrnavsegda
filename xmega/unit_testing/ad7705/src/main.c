@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "i2c.h"
 
+uint16_t adc_scan_results[16];
 uint16_t adcdata = 0;
 
 int main (void)

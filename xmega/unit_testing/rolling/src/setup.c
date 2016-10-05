@@ -31,7 +31,7 @@ void adc_configure(ADC_t *adc)
 	struct adc_config adc_conf;
 	adc_read_configuration(adc, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
-	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
+	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
 	adc_set_clock_rate(&adc_conf, 200000UL);
 	adc_write_configuration(adc, &adc_conf);
 	adc_set_callback(adc, &adc_callback);
@@ -60,7 +60,6 @@ void interrupt_configure(void)
 {
 	ISR_init();
 	irq_initialize_vectors();
-	cpu_irq_enable();
 }
 
 void setup_configure(void)
@@ -83,9 +82,11 @@ void ad7705_enable(void)
 
 void setup_enable(void)
 {
+	cpu_irq_enable();
 	adc_enable(&ADCA);
+	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);
+	adc_start_conversion(&ADCB, ADC_CH0);
 	spi_enable(&SPIC);
 	ad7705_enable();
-	cpu_irq_enable();
 }

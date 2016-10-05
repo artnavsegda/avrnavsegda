@@ -3,7 +3,7 @@
 
 long oversample(struct massive *working, uint16_t amount)
 {
-	return average(working->massive,amount,working->position,sizeof(working->massive));
+	return average(working->massive,amount,working->position,sizeof(working->massive)/2);
 }
 
 long average(unsigned int *selekta,int amount, int startpos, int sizeofmassive) // ??????????

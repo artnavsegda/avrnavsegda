@@ -20,7 +20,7 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	/*i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
+	i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
 	i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
 	mysettings.ad7705_setup_register = i2c_read(&TWIE,0x08,I2C_AD7705_SETUP_REGISTER);
 	mysettings.ad7705_clock_register = i2c_read(&TWIE,0x08,I2C_AD7705_CLOCK_REGISTER);
@@ -32,7 +32,7 @@ int main (void)
 	snprintf(string,sizeof(string),"setup:%02X clock:%02X", mysettings.ad7705_setup_register, mysettings.ad7705_clock_register);
 	gfx_mono_draw_string(string,8,16,&sysfont);
 
-	delay_ms(3000);*/
+	delay_ms(3000);
 
 	while (true) {
 		snprintf(string,sizeof(string),"%03X %03X %03X %03X %03X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3], adc_scan_results[4]);
@@ -43,10 +43,10 @@ int main (void)
 		gfx_mono_draw_string(string,8,16,&sysfont);
 		snprintf(string,sizeof(string),"%03X %04X", adc_scan_results[15], adcdata);
 		gfx_mono_draw_string(string,8,24,&sysfont);
-		/*delay_ms(50);
+		delay_ms(50);
 		for (int i = 0; i < 16;i++)
 			i2c_send_word(&TWIE, 0x08, i, adc_scan_results[i]);
 		i2c_send_word(&TWIE, 0x08, I2C_AD7705_DATA, adcdata);
-		delay_ms(50);*/
+		delay_ms(50);
 	}
 }

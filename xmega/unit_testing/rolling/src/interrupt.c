@@ -25,6 +25,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 			if (current_adcb_scan_channel == 8)	current_adcb_scan_channel = 0;
 		}
 	}
+	adc_start_conversion(adc, ch_mask);
 }
 
 void ad7705_callback(void)

@@ -96,9 +96,10 @@ void setup_enable(void)
 
 void ad7705_enable(void)
 {
+	delay_ms(3000);
 	ad7705_send_reset(&SPIC, &SPI_ADC);
-	ad7705_set_clock_register(&SPIC, &SPI_ADC, 0x0C);
-	ad7705_set_setup_register(&SPIC, &SPI_ADC, 0x04);
+	ad7705_set_clock_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_CLOCK_REGISTER));
+	ad7705_set_setup_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_SETUP_REGISTER));
 	ad7705_set_scale_register(&SPIC, &SPI_ADC, 0x183A00);
 	ad7705_set_offset_register(&SPIC, &SPI_ADC, 0x8978D7);
 }

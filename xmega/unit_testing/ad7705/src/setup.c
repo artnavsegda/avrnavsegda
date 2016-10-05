@@ -35,8 +35,8 @@ void adc_configure(ADC_t *adc)
 	struct adc_config adc_conf;
 	adc_read_configuration(adc, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
-	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
-	adc_set_clock_rate(&adc_conf, 200UL);
+	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
+	adc_set_clock_rate(&adc_conf, 200000UL);
 	adc_write_configuration(adc, &adc_conf);
 	adc_set_callback(adc, &adc_callback);
 	adcch_configure(adc,ADC_CH0);
@@ -86,7 +86,9 @@ void setup_configure(void)
 void setup_enable(void)
 {
 	adc_enable(&ADCA);
+	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);
+	adc_start_conversion(&ADCB, ADC_CH0);
 	twi_master_enable(&TWIE);
 	spi_enable(&SPIC);
 	ad7705_enable();
@@ -95,8 +97,8 @@ void setup_enable(void)
 void ad7705_enable(void)
 {
 	ad7705_send_reset(&SPIC, &SPI_ADC);
-	ad7705_set_clock_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_CLOCK_REGISTER));
-	ad7705_set_setup_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_SETUP_REGISTER));
+	ad7705_set_clock_register(&SPIC, &SPI_ADC, 0x0C);
+	ad7705_set_setup_register(&SPIC, &SPI_ADC, 0x04);
 	ad7705_set_scale_register(&SPIC, &SPI_ADC, 0x183A00);
 	ad7705_set_offset_register(&SPIC, &SPI_ADC, 0x8978D7);
 }

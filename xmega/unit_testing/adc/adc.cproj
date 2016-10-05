@@ -430,6 +430,12 @@
     <Compile Include="src\i2c.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\interrupt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\interrupt.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\settings.h">
       <SubType>compile</SubType>
     </Compile>

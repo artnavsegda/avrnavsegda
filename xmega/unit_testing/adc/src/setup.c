@@ -1,5 +1,6 @@
 #include <asf.h>
 #include "setup.h"
+#include "interrupt.h"
 
 void setup_init(void)
 {
@@ -29,7 +30,7 @@ void adc_configure(ADC_t *adc)
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
 	adc_set_clock_rate(&adc_conf, 200UL);
 	adc_write_configuration(adc, &adc_conf);
-	adc_set_callback(adc, &adc_handler);
+	adc_set_callback(adc, &adc_callback);
 	adcch_configure(adc,ADC_CH0);
 }
 

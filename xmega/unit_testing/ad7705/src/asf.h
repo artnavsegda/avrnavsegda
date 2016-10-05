@@ -94,6 +94,7 @@
 
 // From module: SPI - XMEGA implementation
 #include <spi_master.h>
+#include <spi_master.h>
 
 // From module: ST7565R LCD controller
 #include <st7565r.h>
@@ -114,6 +115,9 @@
 
 // From module: TWI - Two-wire Master Interface
 #include <twim.h>
+
+// From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
+#include <usart.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

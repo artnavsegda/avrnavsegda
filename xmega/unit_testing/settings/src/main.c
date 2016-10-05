@@ -25,7 +25,10 @@ int main (void)
 	snprintf(string,sizeof(string),"%x:%x:%x:%x:%x:%x", mysettings.mac[0], mysettings.mac[1], mysettings.mac[2], mysettings.mac[3], mysettings.mac[4], mysettings.mac[5]);
 	gfx_mono_draw_string(string,8,8,&sysfont);
 
-	delay_ms(500);
+	snprintf(string,sizeof(string),"setup:%x clock:%x", mysettings.ad7705_setup_register, mysettings.ad7705_clock_register);
+	gfx_mono_draw_string(string,8,16,&sysfont);
+
+	/*delay_ms(500);
 	snprintf(string,sizeof(string),"startlevel %d %d",mysettings.length_table.startlevel, mysettings.jump_table.startlevel);
 	gfx_mono_draw_string(string,8,0,&sysfont);
 
@@ -75,6 +78,6 @@ int main (void)
 
 	delay_ms(500);
 	snprintf(string,sizeof(string),"postcalibrationdelay %d %d",mysettings.length_table.postcalibrationdelay, mysettings.jump_table.postcalibrationdelay);
-	gfx_mono_draw_string(string,8,0,&sysfont);
+	gfx_mono_draw_string(string,8,0,&sysfont);*/
 
 }

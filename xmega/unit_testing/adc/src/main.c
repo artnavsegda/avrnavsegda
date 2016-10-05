@@ -1,6 +1,7 @@
 #include <asf.h>
 #include <stdio.h>
 #include "setup.h"
+#include "settings.h"
 #include "i2c.h"
 
 static volatile int16_t adc_scan_results[16];
@@ -33,6 +34,7 @@ float adc_voltage(uint16_t adcvalue)
 
 int main (void)
 {
+	struct mydatastruct mysettings;
 	char string[20];
 
 	setup_init();
@@ -40,6 +42,14 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
+	i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
+	i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
+
+	snprintf(string,sizeof(string),"%u.%u.%u.%u", mysettings.ip[0], mysettings.ip[1], mysettings.ip[2], mysettings.ip[3]);
+	gfx_mono_draw_string(string,8,0,&sysfont);
+	snprintf(string,sizeof(string),"%x:%x:%x:%x:%x:%x", mysettings.mac[0], mysettings.mac[1], mysettings.mac[2], mysettings.mac[3], mysettings.mac[4], mysettings.mac[5]);
+	gfx_mono_draw_string(string,8,8,&sysfont);
+
 	while (true) {
 		snprintf(string,sizeof(string),"%03X %03X %03X %03X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3]);
 		gfx_mono_draw_string(string,8,0,&sysfont);

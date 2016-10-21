@@ -6,6 +6,12 @@ enum pca9557_direction {
 	PCA9557_DIR_OUTPUT,
 };
 
+struct pca9557_pin {
+	uint8_t address;
+	uint8_t pin_number;
+	pca9557_direction direction;
+};
+
 void pca9557_init(uint8_t addr);
 void pca9557_set_pin_dir(uint8_t addr, uint8_t port, enum pca9557_direction dir);
 void pca9557_set_pin_level(uint8_t addr, uint8_t port, bool level);

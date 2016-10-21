@@ -12,14 +12,21 @@ int main (void)
 	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
+	pca9557_set_pin_dir(0x1a, 0, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, 1, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, 2, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 3, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 4, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 5, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 6, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 7, PCA9557_DIR_OUTPUT);
+
 	pca9557_set_pin_level(0x1a, 0, false);
-	pca9557_set_pin_level(0x1a, 1, false);
+	pca9557_set_pin_level(0x1a, 1, true);
 	pca9557_set_pin_level(0x1a, 2, false);
-	//pca9557_set_pin_level(0x1a, 3, true);
-	//pca9557_set_pin_level(0x1a, 4, true);
-	//pca9557_set_pin_level(0x1a, 5, true);
-	//pca9557_set_pin_level(0x1a, 6, true);
-	//pca9557_set_pin_level(0x1a, 7, true);
+	pca9557_set_pin_level(0x1a, 3, true);
+	pca9557_set_pin_level(0x1a, 4, false);
+	pca9557_set_pin_level(0x1a, 5, true);
+	pca9557_set_pin_level(0x1a, 6, false);
+	pca9557_set_pin_level(0x1a, 7, true);
 }

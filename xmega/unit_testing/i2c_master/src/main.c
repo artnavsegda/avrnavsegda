@@ -5,6 +5,7 @@
 
 int main (void)
 {
+	uint8_t i = 0;
 	char string[20];
 	/* Insert system clock initialization code here (sysclk_init()). */
 
@@ -34,12 +35,10 @@ int main (void)
 
 	while (true)
 	{
-		i2c_send(&TWIE, 0x1a, 0x01, 0xFF);
 		LED_Toggle(LED2);
-		delay_ms(1000);
-		i2c_send(&TWIE, 0x1a, 0x01, 0x00);
-		LED_Toggle(LED2);
-		delay_ms(1000);
+		i2c_send(&TWIE, 0x1a, 0x01, i);
+		delay_ms(100);
+		i++;
 	}
 
 }

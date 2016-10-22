@@ -1,3 +1,6 @@
+#include "pca9557.h"
+#include "drv8832.h"
+
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
@@ -80,6 +83,15 @@ struct mydatastate
 	int zerolevelavg;
 	int celllevelavg;
 	int celltempavg;
+	struct pca9557_pin x20_relay;
+	struct pca9557_pin x19_relay;
+	struct pca9557_pin x22;
+	struct pca9557_pin vt4;
+	struct pca9557_pin elemental;
+	struct pca9557_pin calibration;
+	struct pca9557_pin zero;
+	struct pca9557_pin ignition;
+	struct drv8832 cell;
 };
 
 #endif /* SETTINGS_H_ */

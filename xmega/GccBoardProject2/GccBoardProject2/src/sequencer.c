@@ -3,6 +3,8 @@
 #include "i2c.h"
 #include "settings.h"
 #include "rolling.h"
+#include "pca9557.h"
+#include "drv8832.h"
 
 extern struct massive measurment_averaging_massive;
 extern struct massive temperature_averaging_massive;
@@ -68,12 +70,15 @@ void entermode(enum modelist modetoenter, struct mydatastate mystate)
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
+			pca9557_set_pin_level(mystate.ignition.address,mystate.ignition.pin_number,true);
 		break;
 		case CELLDELAY:
+			drv8832_turn(mystate.cell, DRV8832_LEFT);
 		break;
 		case CELLLEVEL:
 		break;
 		case ZERODELAY:
+			pca9557_set_pin_level(mystate.zero.address,mystate.zero.pin_number,true);
 		return;
 		break;
 		case ZEROTEST:
@@ -89,6 +94,7 @@ void entermode(enum modelist modetoenter, struct mydatastate mystate)
 		case ELEMENTALMERCURY:
 		break;
 		case PRECALIBRATIONDELAY:
+			pca9557_set_pin_level(mystate.calibration.address,mystate.calibration.pin_number,true);
 		break;
 		case CALIBRATION:
 		break;
@@ -104,17 +110,20 @@ void exitmode(enum modelist modetoexit, struct mydatastate mystate)
 	switch(modetoexit)
 	{
 		case STARTLEVEL:
+			pca9557_set_pin_level(mystate.ignition.address,mystate.ignition.pin_number,false);
 		break;
 		case CELLDELAY:
 		break;
 		case CELLLEVEL:
 			mystate.celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
 			mystate.celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
+			drv8832_turn(mystate.cell, DRV8832_RIGHT);
 		break;
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
 			mystate.zerolevelavg = oversample(measurment_averaging_massive,modeseconds(ZEROTEST));
+			pca9557_set_pin_level(mystate.zero.address,mystate.zero.pin_number,false);
 		break;
 		case PURGE:
 		break;
@@ -130,6 +139,7 @@ void exitmode(enum modelist modetoexit, struct mydatastate mystate)
 		break;
 		case CALIBRATION:
 			mystate.coefficent = oversample(measurment_averaging_massive,modeseconds(CALIBRATION));
+			pca9557_set_pin_level(mystate.calibration.address,mystate.calibration.pin_number,false);
 		break;
 		case POSTCALIBRATIONDELAY:
 		break;

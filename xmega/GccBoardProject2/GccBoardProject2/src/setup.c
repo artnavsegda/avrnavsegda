@@ -94,6 +94,9 @@ void setup_enable(void)
 	adc_enable(&ADCA);
 	adc_enable(&ADCB);
 	twi_master_enable(&TWIE);
+	pca9557_init(0x18);
+	pca9557_init(0x19);
+	pca9557_init(0x1a);
 	ad7705_enable();
 }
 
@@ -106,9 +109,6 @@ void setup_init(void)
 	spi_master_init(&SPIC);
 	gfx_mono_init();
 	sensor_bus_init(&TWIE, 50000);
-	pca9557_init(0x18);
-	pca9557_init(0x19);
-	pca9557_init(0x1a);
 }
 
 void setup(void)

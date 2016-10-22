@@ -70,6 +70,6 @@ void setup_enable(void)
 	adc_enable(&ADCB);
 	adc_start_conversion(&ADCB, ADC_CH0);
 	twi_master_enable(&TWIE);
-	tc_enable(&TCC0);
 	cpu_irq_enable();
+	tc_enable(&TCC0);
 }

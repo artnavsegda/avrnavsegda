@@ -27,6 +27,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 void tc_callback(void)
 {
 	char string[20];
+	LED_Toggle(LED2);
 	snprintf(string,sizeof(string),"%03X %03X %03X %03X %03X", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3], adc_scan_results[4]);
 	gfx_mono_draw_string(string,8,0,&sysfont);
 	snprintf(string,sizeof(string),"%03X %03X %03X %03X %03X", adc_scan_results[5], adc_scan_results[6], adc_scan_results[7], adc_scan_results[8], adc_scan_results[9]);

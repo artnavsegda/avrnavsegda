@@ -8,9 +8,6 @@ void setup_init(void)
 	sysclk_init();
 	board_init();
 	ioport_init();
-	pca9557_init(0x18);
-	pca9557_init(0x19);
-	pca9557_init(0x1a);
 }
 
 void twi_configure(void)
@@ -27,4 +24,7 @@ void setup_configure(void)
 void setup_enable(void)
 {
 	twi_master_enable(&TWIE);
+	pca9557_init(0x18);
+	pca9557_init(0x19);
+	pca9557_init(0x1a);
 }

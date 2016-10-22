@@ -95,8 +95,17 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	drv8832_init(cell);
-	drv8832_turn(cell, DRV8832_LEFT);
-	delay_ms(1000);
-	drv8832_turn(cell, DRV8832_RIGHT);
+	drv8832_init(servo_2);
+	while (true)
+	{
+		drv8832_turn(cell, DRV8832_LEFT);
+		delay_ms(1000);
+		drv8832_turn(cell, DRV8832_RIGHT);
+		delay_ms(1000);
+		drv8832_turn(servo_2, DRV8832_LEFT);
+		delay_ms(1000);
+		drv8832_turn(servo_2, DRV8832_RIGHT);
+		delay_ms(1000);
+	}
 
 }

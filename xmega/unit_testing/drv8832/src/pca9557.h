@@ -9,20 +9,6 @@ enum pca9557_direction {
 struct pca9557_pin {
 	uint8_t address;
 	uint8_t pin_number;
-	pca9557_direction direction;
-};
-
-enum abc1234_direction {
-	ABC1234_LEFT,
-	ABC1234_RIGHT,
-	ABC1234_UNKNOWN,
-};
-
-struct abc1234 {
-	pca9557_pin left_out,
-	pca9557_pin right_out,
-	pca9557_pin left_in,
-	pca9557_pin right_in,
 };
 
 void pca9557_init(uint8_t addr);

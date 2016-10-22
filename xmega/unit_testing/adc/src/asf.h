@@ -106,9 +106,14 @@
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
 
+// From module: TC - Timer Counter
+#include <tc.h>
+
 // From module: TWI - Two-Wire Interface - XMEGA implementation
 #include <twi_master.h>
+#include <twi_slave.h>
 #include <xmega_twi/twi_master.h>
+#include <xmega_twi/twi_slave.h>
 
 // From module: TWI - Two-wire Master Interface
 #include <twim.h>

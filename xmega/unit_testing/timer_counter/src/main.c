@@ -10,4 +10,5 @@ int main (void)
 	setup_configure();
 
 	/* Insert application code here, after the board has been initialized. */
+	//do nothing as timer counter working inside interrupt itself
 }

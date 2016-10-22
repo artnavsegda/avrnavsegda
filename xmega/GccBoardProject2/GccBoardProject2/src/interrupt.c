@@ -4,9 +4,10 @@
 #include "spi_transfer.h"
 #include "rolling.h"
 #include "ad7705.h"
+#include "modbus.h"
 
 int16_t adc_scan_results[16];
-struct massive ad7705_averaging_massive;
+struct massive ad7705_averaging_massive, measurment_averaging_massive, temperature_averaging_massive;
 extern struct spi_device SPI_ADC;
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
@@ -28,7 +29,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	}
 }
 
-void ad7705_callback(void);
+void ad7705_callback(void)
 {
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
 		increment(ad7705_averaging_massive,ad7705_get_data_register(&SPIC, &SPI_ADC));
@@ -43,6 +44,6 @@ void tc_callback(void)
 	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
 	increment(temperature_averaging_massive, adc_scan_results[3]);
 	process_data(mydata,primarystate);
-	display_data(mydata,primarystate);
+	//display_data(mydata,primarystate);
 	send_data(mydata,primarystate);
 }

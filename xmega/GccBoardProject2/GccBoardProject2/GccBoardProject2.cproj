@@ -484,6 +484,12 @@
     <Compile Include="src\display.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\drv8832.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\drv8832.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\i2c.c">
       <SubType>compile</SubType>
     </Compile>

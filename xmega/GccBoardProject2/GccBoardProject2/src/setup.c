@@ -15,7 +15,7 @@ void interrupt_configure(void)
 
 void tc_configure(void)
 {
-	tc_set_overflow_interrupt_callback(&TCC0, sequence_callback);
+	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
@@ -57,7 +57,7 @@ void adc_configure(ADC_t *adc)
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_FREERUN, 1, 0);
 	adc_set_clock_rate(&adc_conf, 200000UL);
 	adc_write_configuration(adc, &adc_conf);
-	adc_set_callback(adc, &adc_handler);
+	adc_set_callback(adc, &adc_callback);
 	adcch_configure(adc,ADC_CH0);
 }
 

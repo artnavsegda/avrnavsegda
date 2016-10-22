@@ -7,7 +7,6 @@
 
 
 void loop(void);
-void sequence_callback(void);
 void process_data(struct mydatastruct, struct mydatastate);
 float adc_voltage(uint16_t adcvalue);
 int getstatus(void);

@@ -1,3 +1,6 @@
+#include <asf.h>
+#include "interrupt.h"
+
 void ISR_init(void)
 {
 	PORTC.INT0MASK = PIN1_bm;

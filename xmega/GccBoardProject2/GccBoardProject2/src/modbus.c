@@ -1,5 +1,4 @@
 #include <asf.h>
-#include "loop.h"
 #include "sequencer.h"
 #include "modbus.h"
 #include "rolling.h"

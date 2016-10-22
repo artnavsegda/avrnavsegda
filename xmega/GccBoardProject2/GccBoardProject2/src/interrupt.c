@@ -57,10 +57,9 @@ void tc_callback(void)
 	};
 	static struct mydatastruct mydata;
 
-	decrement_mode_counter(primarystate);
+	decrement_mode_counter(&primarystate);
 	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
 	increment(temperature_averaging_massive, adc_scan_results[3]);
-	process_data(mydata,primarystate);
-	//display_data(mydata,primarystate);
-	send_data(mydata,primarystate);
+	process_data(mydata,&primarystate);
+	send_data(mydata,&primarystate);
 }

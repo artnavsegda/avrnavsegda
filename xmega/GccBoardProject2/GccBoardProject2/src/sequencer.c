@@ -9,12 +9,12 @@
 extern struct massive measurment_averaging_massive;
 extern struct massive temperature_averaging_massive;
 
-void decrement_mode_counter(struct mydatastate mystate)
+void decrement_mode_counter(struct mydatastate *mystate)
 {
-	mystate.timetoexitmode--;
+	mystate->timetoexitmode--;
 	
-	if (mystate.timetoexitmode == 0)
-		exitmode(mystate.currentmode, mystate);
+	if (mystate->timetoexitmode == 0)
+		exitmode(mystate->currentmode, mystate);
 }
 
 int modeseconds(enum modelist modeneed)
@@ -63,22 +63,22 @@ enum modelist sequence(enum modelist modetosequence)
 	return modetosequence;
 }
 
-void entermode(enum modelist modetoenter, struct mydatastate mystate)
+void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 {
-	mystate.currentmode = modetoenter;
-	mystate.timetoexitmode = modeseconds(modetoenter);
+	mystate->currentmode = modetoenter;
+	mystate->timetoexitmode = modeseconds(modetoenter);
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
-			pca9557_set_pin_level(mystate.ignition.address,mystate.ignition.pin_number,true);
+			pca9557_set_pin_level(mystate->ignition.address,mystate->ignition.pin_number,true);
 		break;
 		case CELLDELAY:
-			drv8832_turn(mystate.cell, DRV8832_LEFT);
+			drv8832_turn(mystate->cell, DRV8832_LEFT);
 		break;
 		case CELLLEVEL:
 		break;
 		case ZERODELAY:
-			pca9557_set_pin_level(mystate.zero.address,mystate.zero.pin_number,true);
+			pca9557_set_pin_level(mystate->zero.address,mystate->zero.pin_number,true);
 		return;
 		break;
 		case ZEROTEST:
@@ -94,7 +94,7 @@ void entermode(enum modelist modetoenter, struct mydatastate mystate)
 		case ELEMENTALMERCURY:
 		break;
 		case PRECALIBRATIONDELAY:
-			pca9557_set_pin_level(mystate.calibration.address,mystate.calibration.pin_number,true);
+			pca9557_set_pin_level(mystate->calibration.address,mystate->calibration.pin_number,true);
 		break;
 		case CALIBRATION:
 		break;
@@ -105,25 +105,25 @@ void entermode(enum modelist modetoenter, struct mydatastate mystate)
 	}
 }
 
-void exitmode(enum modelist modetoexit, struct mydatastate mystate)
+void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 {
 	switch(modetoexit)
 	{
 		case STARTLEVEL:
-			pca9557_set_pin_level(mystate.ignition.address,mystate.ignition.pin_number,false);
+			pca9557_set_pin_level(mystate->ignition.address,mystate->ignition.pin_number,false);
 		break;
 		case CELLDELAY:
 		break;
 		case CELLLEVEL:
-			mystate.celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
-			mystate.celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
-			drv8832_turn(mystate.cell, DRV8832_RIGHT);
+			mystate->celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
+			mystate->celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
+			drv8832_turn(mystate->cell, DRV8832_RIGHT);
 		break;
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
-			mystate.zerolevelavg = oversample(measurment_averaging_massive,modeseconds(ZEROTEST));
-			pca9557_set_pin_level(mystate.zero.address,mystate.zero.pin_number,false);
+			mystate->zerolevelavg = oversample(measurment_averaging_massive,modeseconds(ZEROTEST));
+			pca9557_set_pin_level(mystate->zero.address,mystate->zero.pin_number,false);
 		break;
 		case PURGE:
 		break;
@@ -138,8 +138,8 @@ void exitmode(enum modelist modetoexit, struct mydatastate mystate)
 		case PRECALIBRATIONDELAY:
 		break;
 		case CALIBRATION:
-			mystate.coefficent = oversample(measurment_averaging_massive,modeseconds(CALIBRATION));
-			pca9557_set_pin_level(mystate.calibration.address,mystate.calibration.pin_number,false);
+			mystate->coefficent = oversample(measurment_averaging_massive,modeseconds(CALIBRATION));
+			pca9557_set_pin_level(mystate->calibration.address,mystate->calibration.pin_number,false);
 		break;
 		case POSTCALIBRATIONDELAY:
 		break;

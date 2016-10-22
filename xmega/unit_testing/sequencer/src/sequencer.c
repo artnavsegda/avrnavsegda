@@ -49,10 +49,10 @@ enum modelist sequence(enum modelist modetosequence)
 	return modetosequence;
 }
 
-void entermode(enum modelist modetoenter, struct mydatastate mystate)
+void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 {
-	mystate.currentmode = modetoenter;
-	mystate.timetoexitmode = modeseconds(modetoenter);
+	mystate->currentmode = modetoenter;
+	mystate->timetoexitmode = modeseconds(modetoenter);
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
@@ -87,7 +87,7 @@ void entermode(enum modelist modetoenter, struct mydatastate mystate)
 	}
 }
 
-void exitmode(enum modelist modetoexit, struct mydatastate mystate)
+void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 {
 	switch(modetoexit)
 	{

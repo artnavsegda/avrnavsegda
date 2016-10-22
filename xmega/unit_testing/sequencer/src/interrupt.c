@@ -20,7 +20,7 @@ void tc_callback(void)
 	increment(&adcmassive,adc_scan_results[0]);
 	primarystate.timetoexitmode--;
 	if (primarystate.timetoexitmode == 0)
-		exitmode(primarystate.currentmode,primarystate);
+		exitmode(primarystate.currentmode,&primarystate);
 }
 
 void ad7705_callback(void)

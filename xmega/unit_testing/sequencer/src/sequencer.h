@@ -24,8 +24,8 @@ struct mydatastate
 };
 
 int modeseconds(enum modelist modeneed);
-void entermode(enum modelist modetoenter, struct mydatastate mystate);
+void entermode(enum modelist modetoenter, struct mydatastate *mystate);
 enum modelist sequence(enum modelist modetosequence);
-void exitmode(enum modelist modetoexit, struct mydatastate mystate);
+void exitmode(enum modelist modetoexit, struct mydatastate *mystate);
 
 #endif /* SEQUENCER_H_ */

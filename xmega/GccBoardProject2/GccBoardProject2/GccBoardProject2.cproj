@@ -718,9 +718,6 @@
     <Compile Include="src\modbus.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\loop.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\main.h">
       <SubType>compile</SubType>
     </Compile>

@@ -40,26 +40,27 @@ void ad7705_callback(void)
 void tc_callback(void)
 {
 	static struct mydatastate primarystate = {
-		.x20_relay = { .address = 0x18, .pin_number = 0 },
-		.x19_relay = { .address = 0x19, .pin_number = 0 },
-		.x22 = { .address = 0x1a,	.pin_number = 0 },
-		.vt4 = { .address = 0x1a, .pin_number = 5 },
-		.elemental = { .address = 0x1a, .pin_number = 4 },
-		.calibration = { .address = 0x1a, .pin_number = 3 },
-		.zero = {	.address = 0x1a, .pin_number = 2 },
-		.ignition = {	.address = 0x1a, .pin_number = 1 },
-		.cell = {
-			.left_out = { .address = 0x18, .pin_number = 7 },
-			.right_out = { .address = 0x18, .pin_number = 6 },
-			.left_in = { .address = 0x18, .pin_number = 5 },
-			.right_in = { .address = 0x18, .pin_number = 4 }
-		}
+		.settings = {
+			.x20_relay = { .address = 0x18, .pin_number = 0 },
+			.x19_relay = { .address = 0x19, .pin_number = 0 },
+			.x22 = { .address = 0x1a,	.pin_number = 0 },
+			.vt4 = { .address = 0x1a, .pin_number = 5 },
+			.elemental = { .address = 0x1a, .pin_number = 4 },
+			.calibration = { .address = 0x1a, .pin_number = 3 },
+			.zero = {	.address = 0x1a, .pin_number = 2 },
+			.ignition = {	.address = 0x1a, .pin_number = 1 },
+			.cell = {
+				.left_out = { .address = 0x18, .pin_number = 7 },
+				.right_out = { .address = 0x18, .pin_number = 6 },
+				.left_in = { .address = 0x18, .pin_number = 5 },
+				.right_in = { .address = 0x18, .pin_number = 4 }
+				}
+			}
 	};
-	static struct mydatastruct mydata;
 
 	decrement_mode_counter(&primarystate);
 	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
 	increment(temperature_averaging_massive, adc_scan_results[3]);
-	process_data(mydata,&primarystate);
-	send_data(mydata,&primarystate);
+	process_data(&primarystate.settings,&primarystate);
+	send_data(&primarystate.settings,&primarystate);
 }

@@ -60,7 +60,7 @@ struct jumptablestruct {
 	enum modelist postcalibrationdelay;
 };
 
-struct mydatastruct
+struct mysettingsstruct
 {
 	uint8_t ip[4];
 	uint8_t mac[6];
@@ -73,6 +73,15 @@ struct mydatastruct
 	float standard_concentration;
 	float c_twentie_five;
 	float kfactor;
+	struct pca9557_pin x20_relay;
+	struct pca9557_pin x19_relay;
+	struct pca9557_pin x22;
+	struct pca9557_pin vt4;
+	struct pca9557_pin elemental;
+	struct pca9557_pin calibration;
+	struct pca9557_pin zero;
+	struct pca9557_pin ignition;
+	struct drv8832 cell;
 };
 
 struct mydatastate
@@ -83,15 +92,7 @@ struct mydatastate
 	int zerolevelavg;
 	int celllevelavg;
 	int celltempavg;
-	struct pca9557_pin x20_relay;
-	struct pca9557_pin x19_relay;
-	struct pca9557_pin x22;
-	struct pca9557_pin vt4;
-	struct pca9557_pin elemental;
-	struct pca9557_pin calibration;
-	struct pca9557_pin zero;
-	struct pca9557_pin ignition;
-	struct drv8832 cell;
+	struct mysettingsstruct settings;
 };
 
 #endif /* SETTINGS_H_ */

@@ -1,5 +1,4 @@
 #include <asf.h>
-#include "loop.h"
 #include "setup.h"
 #include "interrupt.h"
 #include "pca9557.h"

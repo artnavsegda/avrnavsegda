@@ -20,10 +20,10 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
@@ -149,6 +149,20 @@
         <board id="board.xmega_a3bu_xplained" value="Add" config="" content-id="Atmel.ASF" />
       </framework-data>
     </AsfFrameworkConfig>
+    <avrtool>com.atmel.avrdbg.tool.ispmk2</avrtool>
+    <avrtoolinterface>PDI</avrtoolinterface>
+    <avrtoolserialnumber>000200212345</avrtoolserialnumber>
+    <avrdeviceexpectedsignature>0x1E9843</avrdeviceexpectedsignature>
+    <com_atmel_avrdbg_tool_ispmk2>
+      <ToolOptions>
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>PDI</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.ispmk2</ToolType>
+      <ToolNumber>000200212345</ToolNumber>
+      <ToolName>AVRISP mkII</ToolName>
+    </com_atmel_avrdbg_tool_ispmk2>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -399,12 +413,6 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ad7705.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ad7705.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\ASF\common\components\display\st7565r\st7565r.c">
       <SubType>compile</SubType>
     </Compile>
@@ -412,15 +420,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\interrupt.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\ISR.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\spi_transfer.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\spi_transfer.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\common\services\twi\twi_slave.h">
@@ -462,19 +461,7 @@
     <None Include="src\config\conf_twim.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\i2c.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\i2c.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\interrupt.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\rolling.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\rolling.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\setup.c">

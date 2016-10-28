@@ -37,6 +37,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "drv8832", "drv8832\drv8832.
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cproj", "{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+settings", "ad7705+settings\ad7705+settings.cproj", "{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -111,6 +113,10 @@ Global
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.Build.0 = Debug|AVR
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.ActiveCfg = Release|AVR
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.Build.0 = Release|AVR
+		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Debug|AVR.ActiveCfg = Debug|AVR
+		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Debug|AVR.Build.0 = Debug|AVR
+		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Release|AVR.ActiveCfg = Release|AVR
+		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

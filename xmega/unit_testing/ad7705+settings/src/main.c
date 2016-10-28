@@ -44,9 +44,5 @@ int main (void)
 		snprintf(string,sizeof(string),"%03X %04X", adc_scan_results[15], adcdata);
 		gfx_mono_draw_string(string,8,24,&sysfont);
 		delay_ms(50);
-		for (int i = 0; i < 16;i++)
-		i2c_send_word(&TWIE, 0x08, i, adc_scan_results[i]);
-		i2c_send_word(&TWIE, 0x08, I2C_AD7705_DATA, adcdata);
-		delay_ms(50);
 	}
 }

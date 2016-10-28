@@ -90,8 +90,7 @@
 #include <spi.h>
 
 // From module: SPI - XMEGA implementation
-#include <usart_spi.h>
-#include <xmega_usart_spi/usart_spi.h>
+#include <spi_master.h>
 
 // From module: ST7565R LCD controller
 #include <st7565r.h>

@@ -53,11 +53,19 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+rolling+sequence
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+rolling+sequencer+tc", "ad7705+adc+drv8832+rolling+sequencer+tc\ad7705+adc+drv8832+rolling+sequencer+tc.cproj", "{0E3F053C-371D-4938-880F-035D2210638E}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc", "ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc\ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc.cproj", "{57FB9923-5619-442D-B9C9-0BEE8FC7297D}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+modbus+rolling+sequencer+settings+tc", "ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc\ad7705+adc+drv8832+modbus+rolling+sequencer+settings+tc.cproj", "{57FB9923-5619-442D-B9C9-0BEE8FC7297D}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+modbus+settings", "ad7705+adc+modbus+settings\ad7705+adc+modbus+settings.cproj", "{1F6A7F30-E214-4003-BB68-CCC746D852B0}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+tc", "ad7705+adc+tc\ad7705+adc+tc.cproj", "{12B6D3DC-2276-4327-B2FE-02EC817B8C24}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "drv8832+sequencer", "drv8832+sequencer\drv8832+sequencer.cproj", "{08D92037-1797-40D1-9D05-80B41A8E8993}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tethered", "tethered", "{26A18EE5-7F69-4921-8878-848494C84DFB}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling+tc", "ad7705+rolling+tc\ad7705+rolling+tc.cproj", "{C60BCEF5-02BA-4AF4-85C6-26E8BDDE45DC}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+rolling", "ad7705+adc+rolling\ad7705+adc+rolling.cproj", "{21157608-6169-4FCF-ADA9-543110D56D0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,8 +185,29 @@ Global
 		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Debug|AVR.Build.0 = Debug|AVR
 		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Release|AVR.ActiveCfg = Release|AVR
 		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Release|AVR.Build.0 = Release|AVR
+		{08D92037-1797-40D1-9D05-80B41A8E8993}.Debug|AVR.ActiveCfg = Debug|AVR
+		{08D92037-1797-40D1-9D05-80B41A8E8993}.Debug|AVR.Build.0 = Debug|AVR
+		{08D92037-1797-40D1-9D05-80B41A8E8993}.Release|AVR.ActiveCfg = Release|AVR
+		{08D92037-1797-40D1-9D05-80B41A8E8993}.Release|AVR.Build.0 = Release|AVR
+		{C60BCEF5-02BA-4AF4-85C6-26E8BDDE45DC}.Debug|AVR.ActiveCfg = Debug|AVR
+		{C60BCEF5-02BA-4AF4-85C6-26E8BDDE45DC}.Debug|AVR.Build.0 = Debug|AVR
+		{C60BCEF5-02BA-4AF4-85C6-26E8BDDE45DC}.Release|AVR.ActiveCfg = Release|AVR
+		{C60BCEF5-02BA-4AF4-85C6-26E8BDDE45DC}.Release|AVR.Build.0 = Release|AVR
+		{21157608-6169-4FCF-ADA9-543110D56D0D}.Debug|AVR.ActiveCfg = Debug|AVR
+		{21157608-6169-4FCF-ADA9-543110D56D0D}.Debug|AVR.Build.0 = Debug|AVR
+		{21157608-6169-4FCF-ADA9-543110D56D0D}.Release|AVR.ActiveCfg = Release|AVR
+		{21157608-6169-4FCF-ADA9-543110D56D0D}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{E3E8ECFA-4E75-4EA5-B422-C20592D32C31} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{CBDA584A-659F-429B-BB52-6D8AFB7E999C} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{4581C8AC-BDF6-4CCC-916D-D419951050A6} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{57FB9923-5619-442D-B9C9-0BEE8FC7297D} = {26A18EE5-7F69-4921-8878-848494C84DFB}
+		{1F6A7F30-E214-4003-BB68-CCC746D852B0} = {26A18EE5-7F69-4921-8878-848494C84DFB}
 	EndGlobalSection
 EndGlobal

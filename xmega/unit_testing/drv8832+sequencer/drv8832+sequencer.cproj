@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
-    <ProjectGuid>{57fb9923-5619-442d-b9c9-0bee8fc7297d}</ProjectGuid>
+    <ProjectGuid>{08d92037-1797-40d1-9d05-80b41a8e8993}</ProjectGuid>
     <avrdevice>ATxmega256A3BU</avrdevice>
     <avrdeviceseries>xmegaau</avrdeviceseries>
     <OutputType>Executable</OutputType>
@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc</AssemblyName>
-    <Name>ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc</Name>
-    <RootNamespace>ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc</RootNamespace>
+    <AssemblyName>drv8832+sequencer</AssemblyName>
+    <Name>drv8832+sequencer</Name>
+    <RootNamespace>drv8832+sequencer</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>

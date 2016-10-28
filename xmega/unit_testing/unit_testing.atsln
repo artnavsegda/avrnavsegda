@@ -35,6 +35,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "modbus", "modbus\modbus.cpr
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "drv8832", "drv8832\drv8832.cproj", "{CADB4F3A-827C-46AE-AF35-B1A84CDED452}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cproj", "{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -105,6 +107,10 @@ Global
 		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Debug|AVR.Build.0 = Debug|AVR
 		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Release|AVR.ActiveCfg = Release|AVR
 		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Release|AVR.Build.0 = Release|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.ActiveCfg = Debug|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.Build.0 = Debug|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.ActiveCfg = Release|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

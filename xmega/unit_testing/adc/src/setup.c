@@ -4,10 +4,10 @@
 
 void setup_init(void)
 {
+	pmic_init();
 	sysclk_init();
 	board_init();
 	ioport_init();
-	pmic_init();
 	gfx_mono_init();
 }
 
@@ -34,21 +34,6 @@ void adc_configure(ADC_t *adc)
 	adcch_configure(adc,ADC_CH0);
 }
 
-void tc_configure(void)
-{
-	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
-	tc_set_wgm(&TCC0, TC_WG_NORMAL);
-	tc_write_period(&TCC0, 31250);
-	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
-}
-
-void twi_configure(void)
-{
-	twi_master_options_t opt = { .speed = 50000 };
-	twi_master_setup(&TWIE, &opt);
-}
-
 void ioport_configure(void)
 {
 	ioport_set_value(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
@@ -58,9 +43,7 @@ void setup_configure(void)
 {
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
-	twi_configure();
 	ioport_configure();
-	tc_configure();
 }
 
 void setup_enable(void)
@@ -69,7 +52,5 @@ void setup_enable(void)
 	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);
 	adc_start_conversion(&ADCB, ADC_CH0);
-	twi_master_enable(&TWIE);
 	cpu_irq_enable();
-	tc_enable(&TCC0);
 }

@@ -2,8 +2,6 @@
 #include "setup.h"
 #include "ad7705.h"
 #include "interrupt.h"
-#include "settings.h"
-#include "i2c.h"
 
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS
@@ -67,19 +65,12 @@ void interrupt_configure(void)
 	cpu_irq_enable();
 }
 
-void twi_configure(void)
-{
-	twi_master_options_t opt = { .speed = 50000 };
-	twi_master_setup(&TWIE, &opt);
-}
-
 void setup_configure(void)
 {
 	ioport_configure();
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
 	spi_configure();
-	twi_configure();
 	interrupt_configure();
 }
 
@@ -89,17 +80,20 @@ void setup_enable(void)
 	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);
 	adc_start_conversion(&ADCB, ADC_CH0);
-	twi_master_enable(&TWIE);
 	spi_enable(&SPIC);
 	ad7705_enable();
 }
 
 void ad7705_enable(void)
 {
-	delay_ms(3000);
+	/*spi_write_packet(&SPIC, (uint8_t[]){0xFF,0xFF,0xFF,0xFF,0xFF}, 5);
+	spi_write_packet(&SPIC, (uint8_t[]){0x20,0x0C,0x10,0x04}, 4);
+	spi_write_packet(&SPIC, (uint8_t[]){0x60,0x18,0x3A,0x00}, 4);
+	spi_write_packet(&SPIC, (uint8_t[]){0x70,0x89,0x78,0xD7}, 4);*/
+
 	ad7705_send_reset(&SPIC, &SPI_ADC);
-	ad7705_set_clock_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_CLOCK_REGISTER));
-	ad7705_set_setup_register(&SPIC, &SPI_ADC, i2c_read(&TWIE,0x08,I2C_AD7705_SETUP_REGISTER));
+	ad7705_set_clock_register(&SPIC, &SPI_ADC, 0x0C);
+	ad7705_set_setup_register(&SPIC, &SPI_ADC, 0x04);
 	ad7705_set_scale_register(&SPIC, &SPI_ADC, 0x183A00);
 	ad7705_set_offset_register(&SPIC, &SPI_ADC, 0x8978D7);
 }

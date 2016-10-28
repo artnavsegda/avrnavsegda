@@ -18,8 +18,8 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 
 	while (true) {
-		snprintf(string,sizeof(string),"%04X", adc_scan_results[15], adcdata);
-		gfx_mono_draw_string(string,8,24,&sysfont);
-		delay_ms(50);
+		snprintf(string,sizeof(string),"%04X", adcdata);
+		gfx_mono_draw_string(string,8,8,&sysfont);
+		delay_ms(500);
 	}
 }

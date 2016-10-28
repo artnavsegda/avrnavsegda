@@ -52,9 +52,9 @@ void tc_configure(void)
 
 void setup_configure(void)
 {
+	ioport_configure();
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
-	ioport_configure();
 	tc_configure();
 }
 

@@ -57,6 +57,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+pca9557+
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+modbus+settings", "ad7705+adc+modbus+settings\ad7705+adc+modbus+settings.cproj", "{1F6A7F30-E214-4003-BB68-CCC746D852B0}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+tc", "ad7705+adc+tc\ad7705+adc+tc.cproj", "{12B6D3DC-2276-4327-B2FE-02EC817B8C24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -171,6 +173,10 @@ Global
 		{1F6A7F30-E214-4003-BB68-CCC746D852B0}.Debug|AVR.Build.0 = Debug|AVR
 		{1F6A7F30-E214-4003-BB68-CCC746D852B0}.Release|AVR.ActiveCfg = Release|AVR
 		{1F6A7F30-E214-4003-BB68-CCC746D852B0}.Release|AVR.Build.0 = Release|AVR
+		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Debug|AVR.ActiveCfg = Debug|AVR
+		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Debug|AVR.Build.0 = Debug|AVR
+		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Release|AVR.ActiveCfg = Release|AVR
+		{12B6D3DC-2276-4327-B2FE-02EC817B8C24}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

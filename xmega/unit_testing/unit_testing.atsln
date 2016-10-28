@@ -41,6 +41,20 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+settings", "ad7705+s
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling", "ad7705+rolling\ad7705+rolling.cproj", "{772E3B5F-397C-41BD-8A3A-706236E330AB}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+rolling+tc", "adc+rolling+tc\adc+rolling+tc.cproj", "{353639D5-BAD4-4CFC-9389-07C751B55A7A}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer+settings", "sequencer+settings\sequencer+settings.cproj", "{4581C8AC-BDF6-4CCC-916D-D419951050A6}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc", "ad7705+adc\ad7705+adc.cproj", "{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+rolling+tc", "ad7705+adc+rolling+tc\ad7705+adc+rolling+tc.cproj", "{331FEC4C-3E90-4BCC-996B-8B05BD1F40FA}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+rolling+sequencer+tc", "ad7705+adc+rolling+sequencer+tc\ad7705+adc+rolling+sequencer+tc.cproj", "{2707E9B3-DBD3-4CEA-BA10-0342EB32FC3D}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+rolling+sequencer+tc", "ad7705+adc+drv8832+rolling+sequencer+tc\ad7705+adc+drv8832+rolling+sequencer+tc.cproj", "{0E3F053C-371D-4938-880F-035D2210638E}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc", "ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc\ad7705+adc+drv8832+pca9557+rolling+sequencer+settings+tc.cproj", "{57FB9923-5619-442D-B9C9-0BEE8FC7297D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -123,6 +137,34 @@ Global
 		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Debug|AVR.Build.0 = Debug|AVR
 		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Release|AVR.ActiveCfg = Release|AVR
 		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Release|AVR.Build.0 = Release|AVR
+		{353639D5-BAD4-4CFC-9389-07C751B55A7A}.Debug|AVR.ActiveCfg = Debug|AVR
+		{353639D5-BAD4-4CFC-9389-07C751B55A7A}.Debug|AVR.Build.0 = Debug|AVR
+		{353639D5-BAD4-4CFC-9389-07C751B55A7A}.Release|AVR.ActiveCfg = Release|AVR
+		{353639D5-BAD4-4CFC-9389-07C751B55A7A}.Release|AVR.Build.0 = Release|AVR
+		{4581C8AC-BDF6-4CCC-916D-D419951050A6}.Debug|AVR.ActiveCfg = Debug|AVR
+		{4581C8AC-BDF6-4CCC-916D-D419951050A6}.Debug|AVR.Build.0 = Debug|AVR
+		{4581C8AC-BDF6-4CCC-916D-D419951050A6}.Release|AVR.ActiveCfg = Release|AVR
+		{4581C8AC-BDF6-4CCC-916D-D419951050A6}.Release|AVR.Build.0 = Release|AVR
+		{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}.Debug|AVR.ActiveCfg = Debug|AVR
+		{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}.Debug|AVR.Build.0 = Debug|AVR
+		{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}.Release|AVR.ActiveCfg = Release|AVR
+		{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}.Release|AVR.Build.0 = Release|AVR
+		{331FEC4C-3E90-4BCC-996B-8B05BD1F40FA}.Debug|AVR.ActiveCfg = Debug|AVR
+		{331FEC4C-3E90-4BCC-996B-8B05BD1F40FA}.Debug|AVR.Build.0 = Debug|AVR
+		{331FEC4C-3E90-4BCC-996B-8B05BD1F40FA}.Release|AVR.ActiveCfg = Release|AVR
+		{331FEC4C-3E90-4BCC-996B-8B05BD1F40FA}.Release|AVR.Build.0 = Release|AVR
+		{2707E9B3-DBD3-4CEA-BA10-0342EB32FC3D}.Debug|AVR.ActiveCfg = Debug|AVR
+		{2707E9B3-DBD3-4CEA-BA10-0342EB32FC3D}.Debug|AVR.Build.0 = Debug|AVR
+		{2707E9B3-DBD3-4CEA-BA10-0342EB32FC3D}.Release|AVR.ActiveCfg = Release|AVR
+		{2707E9B3-DBD3-4CEA-BA10-0342EB32FC3D}.Release|AVR.Build.0 = Release|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Debug|AVR.Build.0 = Debug|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Release|AVR.ActiveCfg = Release|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Release|AVR.Build.0 = Release|AVR
+		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Debug|AVR.ActiveCfg = Debug|AVR
+		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Debug|AVR.Build.0 = Debug|AVR
+		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Release|AVR.ActiveCfg = Release|AVR
+		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

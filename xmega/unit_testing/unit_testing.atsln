@@ -39,6 +39,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cpr
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+settings", "ad7705+settings\ad7705+settings.cproj", "{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling", "ad7705+rolling\ad7705+rolling.cproj", "{772E3B5F-397C-41BD-8A3A-706236E330AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -117,6 +119,10 @@ Global
 		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Debug|AVR.Build.0 = Debug|AVR
 		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Release|AVR.ActiveCfg = Release|AVR
 		{DB9D51C2-D29F-4D7E-AF69-7D8E0BB591A0}.Release|AVR.Build.0 = Release|AVR
+		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Debug|AVR.ActiveCfg = Debug|AVR
+		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Debug|AVR.Build.0 = Debug|AVR
+		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Release|AVR.ActiveCfg = Release|AVR
+		{772E3B5F-397C-41BD-8A3A-706236E330AB}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

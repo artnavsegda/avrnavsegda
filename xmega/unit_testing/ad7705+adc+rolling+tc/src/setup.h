@@ -2,10 +2,10 @@
 #define SETUP_H_
 
 void setup_init(void);
-void ioport_configure(void);
 void spi_configure(void);
+void ioport_configure(void);
 void interrupt_configure(void);
-void tc_configure(void);
+void twi_configure(void);
 void setup_configure(void);
 void setup_enable(void);
 void ad7705_enable(void);

@@ -39,11 +39,23 @@ void interrupt_configure(void)
 	irq_initialize_vectors();
 }
 
+void tc_configure(void)
+{
+	cpu_irq_enable();
+	tc_enable(&TCC0);
+	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
+	tc_set_wgm(&TCC0, TC_WG_NORMAL);
+	tc_write_period(&TCC0, 31250);
+	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
+	tc_set_resolution(&TCC0, 31250);
+}
+
 void setup_configure(void)
 {
 	spi_configure();
 	ioport_configure();
 	interrupt_configure();
+	tc_configure();
 }
 
 void ad7705_enable(void)

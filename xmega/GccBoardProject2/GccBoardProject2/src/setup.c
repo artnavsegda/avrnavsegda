@@ -14,6 +14,7 @@ void interrupt_configure(void)
 
 void tc_configure(void)
 {
+	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
@@ -88,7 +89,6 @@ void setup_configure(void)
 
 void setup_enable(void)
 {
-	tc_enable(&TCC0);
 	spi_enable(&SPIC);
 	adc_enable(&ADCA);
 	adc_enable(&ADCB);

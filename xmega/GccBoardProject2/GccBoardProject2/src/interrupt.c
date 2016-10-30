@@ -58,9 +58,11 @@ void tc_callback(void)
 			}
 	};
 
+	LED_Toggle(LED2);
 	decrement_mode_counter(&primarystate);
 	increment(measurment_averaging_massive, oversample(ad7705_averaging_massive, 32));
 	increment(temperature_averaging_massive, adc_scan_results[3]);
 	process_data(&primarystate.settings,&primarystate);
 	send_data(&primarystate.settings,&primarystate);
+	tc_clear_overflow(&TCC0);
 }

@@ -83,6 +83,7 @@ void interrupt_configure(void)
 
 void setup_configure(void)
 {
+	ioport_configure();
 	twi_configure();
 	tc_configure();
 }

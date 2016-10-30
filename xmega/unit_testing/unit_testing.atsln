@@ -9,6 +9,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "timer_counter", "timer_coun
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer", "sequencer\sequencer.cproj", "{8B6D0219-F0C5-47D7-ABAB-C9DC27FFF7EE}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial", "serial\serial.cproj", "{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -27,6 +29,10 @@ Global
 		{8B6D0219-F0C5-47D7-ABAB-C9DC27FFF7EE}.Debug|AVR.Build.0 = Debug|AVR
 		{8B6D0219-F0C5-47D7-ABAB-C9DC27FFF7EE}.Release|AVR.ActiveCfg = Release|AVR
 		{8B6D0219-F0C5-47D7-ABAB-C9DC27FFF7EE}.Release|AVR.Build.0 = Release|AVR
+		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Debug|AVR.ActiveCfg = Debug|AVR
+		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Debug|AVR.Build.0 = Debug|AVR
+		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Release|AVR.ActiveCfg = Release|AVR
+		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

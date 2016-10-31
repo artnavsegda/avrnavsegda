@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include "setup.h"
 
-extern int16_t adc_scan_results[16];
-
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */

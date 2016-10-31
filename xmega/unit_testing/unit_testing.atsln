@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "tc+sequencer", "tc+sequencer\tc+sequencer.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer+tc", "tc+sequencer\sequencer+tc.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "timer_counter", "timer_counter\timer_counter.cproj", "{6685B21E-F972-4904-90B9-4C5B3972D306}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+serial+tc", "adc+serial+tc\adc+serial+tc.cproj", "{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cproj", "{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial+sequencer+tc", "serial+sequencer+tc\serial+sequencer+tc.cproj", "{2C467988-5ED4-4DFC-9E4B-954F66484AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.Build.0 = Debug|AVR
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.ActiveCfg = Release|AVR
 		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.Build.0 = Release|AVR
+		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Debug|AVR.ActiveCfg = Debug|AVR
+		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Debug|AVR.Build.0 = Debug|AVR
+		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Release|AVR.ActiveCfg = Release|AVR
+		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

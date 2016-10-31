@@ -6,8 +6,8 @@ int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 	setup_init();
-	setup_configure();
 	setup_enable();
+	setup_configure();
 
 	/* Insert application code here, after the board has been initialized. */
 	do {

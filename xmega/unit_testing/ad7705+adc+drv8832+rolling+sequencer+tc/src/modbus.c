@@ -35,6 +35,33 @@ float calculatecalibration(long averaged, long zerolevelavg, long coefficent, fl
 	) * standard_concentration;
 }
 
+float calculatecell(long averaged, long zerolevelavg, long celllevelavg, long celltempavg, float c_twentie_five, float kfactor)
+{
+	return (
+			(long) averaged - (long) zerolevelavg
+	) / (float) (
+		(long) celllevelavg - (long) zerolevelavg
+	) * (
+		c_twentie_five * exp (
+			kfactor * (
+				(
+					(
+						(
+							(
+								celltempavg - 180 // ADC zero level
+							) * (
+								(
+									3.3 / 1.6 // Voltage reference
+								) / 4095 // ADC resolution
+							)
+						) - 0.5
+					) * 100.0 // temperature in Celsius
+				) - 25.0
+			)
+		)
+	);
+}
+
 #define FLOW_SENSOR_SPAN 10
 #define EXPECTED_FLOW_SENSOR_VOLTAGE 9.0
 #define RESISTOR_DIVIDER 0.319
@@ -78,6 +105,8 @@ void send_data(struct mydatastate *mystate)
 	printf("AVAILABILITY OF EXTERNAL REQUEST = %d\r" , (mystate->currentmode == TOTALMERCURY));
 	printf("STATUS OF ZEROTEST = %d\r", (mystate->currentmode == ZEROTEST || mystate->currentmode == ZERODELAY));
 	printf("STATUS OF CALIBRATION = %d\r", (mystate->currentmode == CALIBRATION || mystate->currentmode == PRECALIBRATIONDELAY || mystate->currentmode == POSTCALIBRATIONDELAY));
+	//printf("ELEMENTALMERCURYROW = %d\r", calculatecalibration(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->coefficent, 0.65));
+	//printf("TOTALMERCURYROW = %d\r", calculatecell(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->celllevelavg, mystate->celllevelavg, 0.24, 0.17));
 	printf("MONITOR FLOW = %f\r", calculateflow(adc_voltage(adc_scan_results[2])));
 	printf("VACUUM = %f\r", calculatepressure(adc_voltage(adc_scan_results[4])));
 	printf("DILUTIONPRESSURE = %f\r", calculatepressure(adc_voltage(adc_scan_results[5])));

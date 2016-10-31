@@ -21,6 +21,10 @@ struct mydatastate
 {
 	int timetoexitmode;
 	enum modelist currentmode;
+	int coefficent;
+	int zerolevelavg;
+	int celllevelavg;
+	int celltempavg;
 };
 
 void tickmode(struct mydatastate *primarystate);

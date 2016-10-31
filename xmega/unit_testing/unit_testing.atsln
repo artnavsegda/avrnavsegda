@@ -13,6 +13,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial", "serial\serial.cpr
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd", "sd\sd.cproj", "{89C868E7-76F1-482B-BFB5-E093906D876B}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+serial+tc", "adc+serial+tc\adc+serial+tc.cproj", "{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cproj", "{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -39,6 +43,14 @@ Global
 		{89C868E7-76F1-482B-BFB5-E093906D876B}.Debug|AVR.Build.0 = Debug|AVR
 		{89C868E7-76F1-482B-BFB5-E093906D876B}.Release|AVR.ActiveCfg = Release|AVR
 		{89C868E7-76F1-482B-BFB5-E093906D876B}.Release|AVR.Build.0 = Release|AVR
+		{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}.Debug|AVR.ActiveCfg = Debug|AVR
+		{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}.Debug|AVR.Build.0 = Debug|AVR
+		{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}.Release|AVR.ActiveCfg = Release|AVR
+		{8E781F05-ABB2-4EE3-96D2-CEA7080DE4F8}.Release|AVR.Build.0 = Release|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.ActiveCfg = Debug|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Debug|AVR.Build.0 = Debug|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.ActiveCfg = Release|AVR
+		{472E39E9-3836-4CA9-BB0F-7F5174E4AC90}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

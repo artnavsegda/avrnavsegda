@@ -1,10 +1,13 @@
 #include <asf.h>
 #include <stdio.h>
+#include "ad7705.h"
 #include "interrupt.h"
 #include "sequencer.h"
 #include "modbus.h"
 
+extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];
+uint16_t adcdata;
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
@@ -24,6 +27,22 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 		}
 	}
 	adc_start_conversion(adc, ch_mask);
+}
+
+void ad7705_callback(void)
+{
+	LED_Toggle(LED3);
+	/*spi_select_device(&SPIC, &SPI_ADC);
+	spi_transfer(&SPIC, 0x08);
+	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
+	{
+		spi_transfer(&SPIC,0x38);
+		spi_read_packet(&SPIC, (uint8_t *)value, 2);
+	}
+	spi_deselect_device(&SPIC, &SPI_ADC);*/
+
+	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
+		adcdata = ad7705_get_data_register(&SPIC, &SPI_ADC);
 }
 
 void tc_callback(void)

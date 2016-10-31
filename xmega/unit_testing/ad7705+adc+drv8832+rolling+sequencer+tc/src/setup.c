@@ -21,6 +21,7 @@ void setup_init(void)
 	sysclk_init();
 	board_init();
 	ioport_init();
+	spi_master_init(&SPIC);
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 }
 
@@ -49,6 +50,14 @@ void adc_configure(ADC_t *adc)
 
 void ioport_configure(void)
 {
+	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(J1_PIN6, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(J1_PIN4, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(J1_PIN5, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(J1_PIN7, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
+	ioport_set_pin_mode(J1_PIN6, IOPORT_MODE_PULLUP);
+	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
 

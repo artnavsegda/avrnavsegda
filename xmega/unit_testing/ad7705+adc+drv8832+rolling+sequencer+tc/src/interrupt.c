@@ -4,6 +4,7 @@
 #include "interrupt.h"
 #include "sequencer.h"
 #include "modbus.h"
+#include "rolling.h"
 
 extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];

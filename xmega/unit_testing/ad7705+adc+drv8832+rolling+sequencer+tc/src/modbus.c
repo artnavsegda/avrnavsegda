@@ -1,10 +1,14 @@
 #include <asf.h>
 #include <stdio.h>
+#include <math.h>
 #include "modbus.h"
 #include "sequencer.h"
 #include "pca9557.h"
+#include "rolling.h"
 
 extern int16_t adc_scan_results[16];
+extern struct massive firststage, secondstage;
+extern uint16_t adcdata;
 
 float adc_voltage(uint16_t adcvalue)
 {
@@ -97,7 +101,12 @@ void send_data(struct mydatastate *mystate)
 	printf("%03X %03X %03X %03X %03X\r", adc_scan_results[0], adc_scan_results[1], adc_scan_results[2], adc_scan_results[3], adc_scan_results[4]);
 	printf("%03X %03X %03X %03X %03X\r", adc_scan_results[5], adc_scan_results[6], adc_scan_results[7], adc_scan_results[8], adc_scan_results[9]);
 	printf("%03X %03X %03X %03X %03X\r", adc_scan_results[10], adc_scan_results[11], adc_scan_results[12], adc_scan_results[13], adc_scan_results[14]);
-	printf("%03X\r", adc_scan_results[15]);
+	printf("%03X %04X\r", adc_scan_results[15], adcdata);
+
+	printf("%6lX", oversample(&firststage,16)/16);
+	printf("%6lX", oversample(&firststage,32)/32);
+	printf("%6lX", oversample(&firststage,64)/64);
+	printf("%6lX\r", oversample(&secondstage,8)/8);
 
 	int statusword = getstatus();
 	printf("status of the spectrometer = %d\r", !(statusword & (LOW_LIGHT|LOW_FLOW)));
@@ -105,8 +114,8 @@ void send_data(struct mydatastate *mystate)
 	printf("AVAILABILITY OF EXTERNAL REQUEST = %d\r" , (mystate->currentmode == TOTALMERCURY));
 	printf("STATUS OF ZEROTEST = %d\r", (mystate->currentmode == ZEROTEST || mystate->currentmode == ZERODELAY));
 	printf("STATUS OF CALIBRATION = %d\r", (mystate->currentmode == CALIBRATION || mystate->currentmode == PRECALIBRATIONDELAY || mystate->currentmode == POSTCALIBRATIONDELAY));
-	//printf("ELEMENTALMERCURYROW = %d\r", calculatecalibration(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->coefficent, 0.65));
-	//printf("TOTALMERCURYROW = %d\r", calculatecell(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->celllevelavg, mystate->celllevelavg, 0.24, 0.17));
+	printf("ELEMENTALMERCURYROW = %d\r", calculatecalibration(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->coefficent, 0.65));
+	printf("TOTALMERCURYROW = %d\r", calculatecell(oversample(&secondstage, 32), mystate->zerolevelavg, mystate->celllevelavg, mystate->celllevelavg, 0.24, 0.17));
 	printf("MONITOR FLOW = %f\r", calculateflow(adc_voltage(adc_scan_results[2])));
 	printf("VACUUM = %f\r", calculatepressure(adc_voltage(adc_scan_results[4])));
 	printf("DILUTIONPRESSURE = %f\r", calculatepressure(adc_voltage(adc_scan_results[5])));

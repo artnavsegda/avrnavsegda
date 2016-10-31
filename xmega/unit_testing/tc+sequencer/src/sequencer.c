@@ -1,52 +1,89 @@
 #include <asf.h>
 #include "sequencer.h"
-#include "i2c.h"
-#include "settings.h"
 
-int modeseconds(enum modelist modeneed)
+void tickmode(struct mydatastate *primarystate)
 {
-	struct mydatastruct mysettings;
-	i2c_read_array(&TWIE,0x08,I2C_LENGTHTABLE,26,(uint8_t *)&mysettings.length_table);
-	switch (modeneed)
+	primarystate->timetoexitmode--;
+	if (primarystate->timetoexitmode == 0)
+	exitmode(primarystate->currentmode,primarystate);
+}
+
+void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
+{
+	switch(modetoexit)
 	{
-		case STARTLEVEL: return mysettings.length_table.startlevel;
-		case CELLDELAY: return mysettings.length_table.celldelay;
-		case CELLLEVEL:	return mysettings.length_table.celllevel;
-		case ZERODELAY: return mysettings.length_table.zerodelay;
-		case ZEROTEST: return mysettings.length_table.zerotest;
-		case PURGE: return mysettings.length_table.purge;
-		case TOTALMERCURYDELAY: return mysettings.length_table.totalmercurydelay;
-		case TOTALMERCURY: return mysettings.length_table.totalmercury;
-		case ELEMENTALMERCURYDELAY: return mysettings.length_table.elementalmercurydelay;
-		case ELEMENTALMERCURY: return mysettings.length_table.elementalmercury;
-		case PRECALIBRATIONDELAY: return mysettings.length_table.precalibrationdelay;
-		case CALIBRATION: return mysettings.length_table.calibration;
-		case POSTCALIBRATIONDELAY: return mysettings.length_table.postcalibrationdelay;
+		case STARTLEVEL:
+		break;
+		case CELLDELAY:
+		break;
+		case CELLLEVEL:
+		break;
+		case ZERODELAY:
+		break;
+		case ZEROTEST:
+		break;
+		case PURGE:
+		break;
+		case TOTALMERCURYDELAY:
+		break;
+		case TOTALMERCURY:
+		break;
+		case ELEMENTALMERCURYDELAY:
+		break;
+		case ELEMENTALMERCURY:
+		break;
+		case PRECALIBRATIONDELAY:
+		break;
+		case CALIBRATION:
+		break;
+		case POSTCALIBRATIONDELAY:
+		break;
+		default:
+		break;
 	}
-	return 0;
+	entermode(sequence(modetoexit), mystate);
 }
 
 enum modelist sequence(enum modelist modetosequence)
 {
-	struct mydatastruct mysettings;
-	i2c_read_array(&TWIE,0x08,I2C_JUMPTABLE,26,(uint8_t *)&mysettings.jump_table);
 	switch(modetosequence)
 	{
-		case STARTLEVEL: return mysettings.jump_table.startlevel;
-		case CELLDELAY: return mysettings.jump_table.celldelay;
-		case CELLLEVEL:	return mysettings.jump_table.celllevel;
-		case ZERODELAY:	return mysettings.jump_table.zerodelay;
-		case ZEROTEST: return mysettings.jump_table.zerotest;
-		case PURGE:	return mysettings.jump_table.purge;
-		case TOTALMERCURYDELAY:	return mysettings.jump_table.totalmercurydelay;
-		case TOTALMERCURY: return mysettings.jump_table.totalmercury;
-		case ELEMENTALMERCURYDELAY:	return mysettings.jump_table.elementalmercurydelay;
-		case ELEMENTALMERCURY: return mysettings.jump_table.elementalmercury;
-		case PRECALIBRATIONDELAY: return mysettings.jump_table.precalibrationdelay;
-		case CALIBRATION: return mysettings.jump_table.calibration;
-		case POSTCALIBRATIONDELAY: return mysettings.jump_table.postcalibrationdelay;
+		case STARTLEVEL: return CELLDELAY;
+		case CELLDELAY: return CELLLEVEL;
+		case CELLLEVEL:	return ZERODELAY;
+		case ZERODELAY:	return ZEROTEST;
+		case ZEROTEST: return PURGE;
+		case PURGE:	return TOTALMERCURYDELAY;
+		case TOTALMERCURYDELAY:	return TOTALMERCURY;
+		case TOTALMERCURY: return ELEMENTALMERCURYDELAY;
+		case ELEMENTALMERCURYDELAY:	return ELEMENTALMERCURY;
+		case ELEMENTALMERCURY: return PRECALIBRATIONDELAY;
+		case PRECALIBRATIONDELAY: return CALIBRATION;
+		case CALIBRATION: return POSTCALIBRATIONDELAY;
+		case POSTCALIBRATIONDELAY: return STARTLEVEL;
 	}
 	return modetosequence;
+}
+
+int modeseconds(enum modelist modeneed)
+{
+	switch (modeneed)
+	{
+		case STARTLEVEL: return 10;
+		case CELLDELAY: return 10;
+		case CELLLEVEL:	return 10;
+		case ZERODELAY: return 10;
+		case ZEROTEST: return 10;
+		case PURGE: return 10;
+		case TOTALMERCURYDELAY: return 10;
+		case TOTALMERCURY: return 10;
+		case ELEMENTALMERCURYDELAY: return 10;
+		case ELEMENTALMERCURY: return 10;
+		case PRECALIBRATIONDELAY: return 10;
+		case CALIBRATION: return 10;
+		case POSTCALIBRATIONDELAY: return 10;
+	}
+	return 0;
 }
 
 void entermode(enum modelist modetoenter, struct mydatastate *mystate)
@@ -85,40 +122,4 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 		default:
 		break;
 	}
-}
-
-void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
-{
-	switch(modetoexit)
-	{
-		case STARTLEVEL:
-		break;
-		case CELLDELAY:
-		break;
-		case CELLLEVEL:
-		break;
-		case ZERODELAY:
-		break;
-		case ZEROTEST:
-		break;
-		case PURGE:
-		break;
-		case TOTALMERCURYDELAY:
-		break;
-		case TOTALMERCURY:
-		break;
-		case ELEMENTALMERCURYDELAY:
-		break;
-		case ELEMENTALMERCURY:
-		break;
-		case PRECALIBRATIONDELAY:
-		break;
-		case CALIBRATION:
-		break;
-		case POSTCALIBRATIONDELAY:
-		break;
-		default:
-		break;
-	}
-	entermode(sequence(modetoexit), mystate);
 }

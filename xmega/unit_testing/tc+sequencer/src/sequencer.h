@@ -23,6 +23,7 @@ struct mydatastate
 	enum modelist currentmode;
 };
 
+void tickmode(struct mydatastate *primarystate);
 int modeseconds(enum modelist modeneed);
 void entermode(enum modelist modetoenter, struct mydatastate *mystate);
 enum modelist sequence(enum modelist modetosequence);

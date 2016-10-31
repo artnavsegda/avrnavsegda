@@ -19,6 +19,12 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+tc", "adc+tc\adc+tc.cpr
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial+sequencer+tc", "serial+sequencer+tc\serial+sequencer+tc.cproj", "{2C467988-5ED4-4DFC-9E4B-954F66484AB0}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+rolling+serial+sequencer+tc", "ad7705+adc+drv8832+rolling+sequencer+tc\ad7705+adc+drv8832+rolling+serial+sequencer+tc.cproj", "{0E3F053C-371D-4938-880F-035D2210638E}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557", "pca9557\pca9557.cproj", "{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+pca9557+serial+sequencer+tc", "adc+pca9557+serial+sequencer+tc\adc+pca9557+serial+sequencer+tc.cproj", "{94AF4111-31F9-4217-A002-C1A4E7371592}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -57,6 +63,18 @@ Global
 		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Debug|AVR.Build.0 = Debug|AVR
 		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Release|AVR.ActiveCfg = Release|AVR
 		{2C467988-5ED4-4DFC-9E4B-954F66484AB0}.Release|AVR.Build.0 = Release|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Debug|AVR.Build.0 = Debug|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Release|AVR.ActiveCfg = Release|AVR
+		{0E3F053C-371D-4938-880F-035D2210638E}.Release|AVR.Build.0 = Release|AVR
+		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Debug|AVR.ActiveCfg = Debug|AVR
+		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Debug|AVR.Build.0 = Debug|AVR
+		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Release|AVR.ActiveCfg = Release|AVR
+		{95D56FC9-70E4-4866-9B4D-9B55D8DE8B79}.Release|AVR.Build.0 = Release|AVR
+		{94AF4111-31F9-4217-A002-C1A4E7371592}.Debug|AVR.ActiveCfg = Debug|AVR
+		{94AF4111-31F9-4217-A002-C1A4E7371592}.Debug|AVR.Build.0 = Debug|AVR
+		{94AF4111-31F9-4217-A002-C1A4E7371592}.Release|AVR.ActiveCfg = Release|AVR
+		{94AF4111-31F9-4217-A002-C1A4E7371592}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

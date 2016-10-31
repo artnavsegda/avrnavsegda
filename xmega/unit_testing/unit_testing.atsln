@@ -11,6 +11,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer", "sequencer\sequ
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial", "serial\serial.cproj", "{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd", "sd\sd.cproj", "{89C868E7-76F1-482B-BFB5-E093906D876B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -33,6 +35,10 @@ Global
 		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Debug|AVR.Build.0 = Debug|AVR
 		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Release|AVR.ActiveCfg = Release|AVR
 		{1F9DF039-33E5-4992-8AC2-67944DCFC6CE}.Release|AVR.Build.0 = Release|AVR
+		{89C868E7-76F1-482B-BFB5-E093906D876B}.Debug|AVR.ActiveCfg = Debug|AVR
+		{89C868E7-76F1-482B-BFB5-E093906D876B}.Debug|AVR.Build.0 = Debug|AVR
+		{89C868E7-76F1-482B-BFB5-E093906D876B}.Release|AVR.ActiveCfg = Release|AVR
+		{89C868E7-76F1-482B-BFB5-E093906D876B}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

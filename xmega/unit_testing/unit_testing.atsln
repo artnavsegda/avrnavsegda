@@ -43,6 +43,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+rolling", "adc+rolling\
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc", "adc\adc.cproj", "{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+rolling+serial", "adc+rolling+serial\adc+rolling+serial.cproj", "{0472E5C0-1AD3-4C61-922D-ED4D4B508337}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+serial", "adc+serial\adc+serial.cproj", "{8AE2A810-E649-4841-B85D-C50FA365D3C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -129,6 +133,14 @@ Global
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Debug|AVR.Build.0 = Debug|AVR
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.ActiveCfg = Release|AVR
 		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.Build.0 = Release|AVR
+		{0472E5C0-1AD3-4C61-922D-ED4D4B508337}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0472E5C0-1AD3-4C61-922D-ED4D4B508337}.Debug|AVR.Build.0 = Debug|AVR
+		{0472E5C0-1AD3-4C61-922D-ED4D4B508337}.Release|AVR.ActiveCfg = Release|AVR
+		{0472E5C0-1AD3-4C61-922D-ED4D4B508337}.Release|AVR.Build.0 = Release|AVR
+		{8AE2A810-E649-4841-B85D-C50FA365D3C7}.Debug|AVR.ActiveCfg = Debug|AVR
+		{8AE2A810-E649-4841-B85D-C50FA365D3C7}.Debug|AVR.Build.0 = Debug|AVR
+		{8AE2A810-E649-4841-B85D-C50FA365D3C7}.Release|AVR.ActiveCfg = Release|AVR
+		{8AE2A810-E649-4841-B85D-C50FA365D3C7}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

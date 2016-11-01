@@ -1,7 +1,7 @@
 #ifndef ROLLING_H_
 #define ROLLING_H_
 
-#define MASSIVE_SIZE 64
+#define MASSIVE_SIZE 4096
 
 struct massive {
 	uint16_t massive[MASSIVE_SIZE];

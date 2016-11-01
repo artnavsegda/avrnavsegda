@@ -3,7 +3,8 @@
 #include "interrupt.h"
 #include "rolling.h"
 
-struct massive adc_massive[16];
+//struct massive adc_massive[16];
+struct massive adc_massive[1];
 int16_t adc_scan_results[16];
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
@@ -12,7 +13,8 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	if (adc == &ADCA) {
 		if (ch_mask & ADC_CH0) {
 			adc_scan_results[current_adca_scan_channel] = result;
-			increment(&adc_massive[current_adca_scan_channel],result);
+			if (current_adca_scan_channel == 0)
+				increment(&adc_massive[current_adca_scan_channel],result);
 			current_adca_scan_channel++;
 			if (current_adca_scan_channel == 8)	current_adca_scan_channel = 0;
 		}
@@ -20,7 +22,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 	else if (adc == &ADCB) {
 		if (ch_mask & ADC_CH0) {
 			adc_scan_results[current_adcb_scan_channel+8] = result;
-			increment(&adc_massive[current_adcb_scan_channel+8],result);
+			//increment(&adc_massive[current_adcb_scan_channel+8],result);
 			current_adcb_scan_channel++;
 			if (current_adcb_scan_channel == 8)	current_adcb_scan_channel = 0;
 		}

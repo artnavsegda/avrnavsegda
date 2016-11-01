@@ -39,6 +39,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "rolling", "rolling\rolling.
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling+serial+tc", "ad7705+rolling+serial+tc\ad7705+rolling+serial+tc.cproj", "{CECF9ECA-4A9E-476F-B3B3-EC297B054F73}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc+rolling", "adc+rolling\adc+rolling.cproj", "{350C7A66-1655-414E-97DB-F29073CB19CE}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "adc", "adc\adc.cproj", "{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -117,6 +121,14 @@ Global
 		{CECF9ECA-4A9E-476F-B3B3-EC297B054F73}.Debug|AVR.Build.0 = Debug|AVR
 		{CECF9ECA-4A9E-476F-B3B3-EC297B054F73}.Release|AVR.ActiveCfg = Release|AVR
 		{CECF9ECA-4A9E-476F-B3B3-EC297B054F73}.Release|AVR.Build.0 = Release|AVR
+		{350C7A66-1655-414E-97DB-F29073CB19CE}.Debug|AVR.ActiveCfg = Debug|AVR
+		{350C7A66-1655-414E-97DB-F29073CB19CE}.Debug|AVR.Build.0 = Debug|AVR
+		{350C7A66-1655-414E-97DB-F29073CB19CE}.Release|AVR.ActiveCfg = Release|AVR
+		{350C7A66-1655-414E-97DB-F29073CB19CE}.Release|AVR.Build.0 = Release|AVR
+		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Debug|AVR.ActiveCfg = Debug|AVR
+		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Debug|AVR.Build.0 = Debug|AVR
+		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.ActiveCfg = Release|AVR
+		{63DDB140-21E1-47AC-AF06-64B7DA3DFC29}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

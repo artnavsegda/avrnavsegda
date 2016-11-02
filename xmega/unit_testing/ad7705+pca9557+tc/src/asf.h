@@ -52,6 +52,19 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
+// From module: CPU specific features
+#include <ccp.h>
+#include <xmega_reset_cause.h>
+
+// From module: Delay routines
+#include <delay.h>
+
+// From module: GFX Monochrome - Monochrome Graphic Library
+#include <gfx_mono.h>
+
+// From module: GFX Monochrome - System Font
+#include <sysfont.h>
+
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
 
@@ -64,8 +77,47 @@
 // From module: Interrupt management - XMEGA implementation
 #include <interrupt.h>
 
+// From module: NVM - Non Volatile Memory
+#include <nvm.h>
+
+// From module: PMIC - Programmable Multi-level Interrupt Controller
+#include <pmic.h>
+
 // From module: Part identification macros
 #include <parts.h>
+
+// From module: SPI - Serial Peripheral Interface
+#include <spi.h>
+
+// From module: SPI - XMEGA implementation
+#include <spi_master.h>
+#include <spi_master.h>
+
+// From module: ST7565R LCD controller
+#include <st7565r.h>
+
+// From module: Sleep Controller driver
+#include <sleep.h>
+
+// From module: Sleep manager - XMEGA A/AU/B/D implementation
+#include <sleepmgr.h>
+#include <xmega/sleepmgr.h>
+
+// From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
+#include <sysclk.h>
+
+// From module: TC - Timer Counter
+#include <tc.h>
+
+// From module: TWI - Two-Wire Interface - XMEGA implementation
+#include <twi_master.h>
+#include <twi_slave.h>
+#include <xmega_twi/twi_master.h>
+#include <xmega_twi/twi_slave.h>
+
+// From module: TWI - Two-wire Master and Slave Interface
+#include <twim.h>
+#include <twis.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

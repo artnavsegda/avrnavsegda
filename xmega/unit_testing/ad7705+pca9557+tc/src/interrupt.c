@@ -9,7 +9,7 @@ uint16_t adcdata;
 
 void ad7705_callback(void)
 {
-	LED_Toggle(LED3);
+	LED_Toggle(LED1);
 	/*spi_select_device(&SPIC, &SPI_ADC);
 	spi_transfer(&SPIC, 0x08);
 	if (spi_transfer(&SPIC,CONFIG_SPI_MASTER_DUMMY) == 8)
@@ -26,7 +26,7 @@ void ad7705_callback(void)
 void tc_callback(void)
 {
 	char string[20];
-	LED_Toggle(LED2);
+	LED_Toggle(LED0);
 	snprintf(string,sizeof(string),"%6X", adcdata);
 	gfx_mono_draw_string(string,8,0,&sysfont);
 	tc_clear_overflow(&TCC0);

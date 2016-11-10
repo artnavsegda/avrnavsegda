@@ -21,19 +21,19 @@ int main (void)
 		
 		delay_s(5);
 		pca9557_set_pin_level(x19_relay.address, x19_relay.pin_number, false);
-		LED_On(LED0);
+		LED_On(LED2);
 
 		delay_s(5);
 		pca9557_set_pin_level(x19_relay.address, x19_relay.pin_number, true);
-		LED_Off(LED0);
+		LED_Off(LED2);
 
 		delay_s(5);
 		pca9557_set_pin_level(x20_relay.address, x20_relay.pin_number, false);
-		LED_On(LED1);
+		LED_On(LED3);
 
 		delay_s(5);
 		pca9557_set_pin_level(x20_relay.address, x20_relay.pin_number, true);
-		LED_Off(LED1);
+		LED_Off(LED3);
 
-	} while (1);
+	} while (true);
 }

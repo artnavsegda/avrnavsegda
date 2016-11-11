@@ -31,16 +31,16 @@ void tc_callback(void)
 {
 	char string[20];
 	LED_Toggle(LED0);
-	snprintf(string,sizeof(string),"%6ld", (long)adcdata-0x17CC);
-	if (!pca9557_get_pin_level(x19_relay.address, x19_relay.pin_number))
+	if (pca9557_get_pin_level(x19_relay.address, x19_relay.pin_number) && pca9557_get_pin_level(x20_relay.address, x20_relay.pin_number))
+	{
+		snprintf(string,sizeof(string),"%6ld", (long)adcmax-0x17CC);
 		gfx_mono_draw_string(string,8,0,&sysfont);
-	else if (!pca9557_get_pin_level(x20_relay.address, x20_relay.pin_number))
-		gfx_mono_draw_string(string,8,16,&sysfont);
-	else
+		snprintf(string,sizeof(string),"%6ld", (long)adcdata-0x17CC);
 		gfx_mono_draw_string(string,8,8,&sysfont);
-
-	snprintf(string,sizeof(string),"%f", (adcdata-adczero)/(adcmax-adczero));
-	gfx_mono_draw_string(string,8,16,&sysfont);
-
+		snprintf(string,sizeof(string),"%6ld", (long)adczero-0x17CC);
+		gfx_mono_draw_string(string,8,16,&sysfont);
+		snprintf(string,sizeof(string),"%f", (float)(adcdata-adczero)/(adcmax-adczero));
+		gfx_mono_draw_string(string,8,24,&sysfont);
+	}
 	tc_clear_overflow(&TCC0);
 }

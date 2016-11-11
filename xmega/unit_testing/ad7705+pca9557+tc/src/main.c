@@ -6,7 +6,7 @@
 struct pca9557_pin x20_relay = { .address = 0x18, .pin_number = 0 };
 struct pca9557_pin x19_relay = { .address = 0x19, .pin_number = 0 };
 extern uint16_t adcdata;
-uint16_t adczero, adccal;
+uint16_t adczero, adcmax;
 
 int main (void)
 {
@@ -30,7 +30,7 @@ int main (void)
 		LED_Off(LED2);
 
 		delay_s(1);
-		adccal = adcdata;
+		adcmax = adcdata;
 		pca9557_set_pin_level(x20_relay.address, x20_relay.pin_number, false);
 		LED_On(LED3);
 

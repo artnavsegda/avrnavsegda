@@ -9,6 +9,8 @@ extern struct spi_device SPI_ADC;
 extern struct pca9557_pin x19_relay,x20_relay;
 uint16_t adcdata;
 
+extern uint16_t adczero, adcmax;
+
 void ad7705_callback(void)
 {
 	LED_Toggle(LED1);
@@ -36,5 +38,9 @@ void tc_callback(void)
 		gfx_mono_draw_string(string,8,16,&sysfont);
 	else
 		gfx_mono_draw_string(string,8,8,&sysfont);
+
+	snprintf(string,sizeof(string),"%f", (adcdata-adczero)/(adcmax-adczero));
+	gfx_mono_draw_string(string,8,16,&sysfont);
+
 	tc_clear_overflow(&TCC0);
 }

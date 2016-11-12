@@ -14,6 +14,8 @@ void setup_init(void)
 
 void tc_configure(void)
 {
+	cpu_irq_enable();
+	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
@@ -35,8 +37,6 @@ void setup_configure(void)
 
 void setup_enable(void)
 {
-	cpu_irq_enable();
-	tc_enable(&TCC0);
 	twi_master_enable(&TWIE);
 	pca9557_init(0x18);
 	pca9557_init(0x19);

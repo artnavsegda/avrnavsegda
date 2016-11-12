@@ -3,6 +3,6 @@
 
 void tc_callback(void)
 {
-	LED_Toggle(LED2);
+	pca9557_toggle_pin_level(0x1a, 0);
 	tc_clear_overflow(&TCC0);
 }

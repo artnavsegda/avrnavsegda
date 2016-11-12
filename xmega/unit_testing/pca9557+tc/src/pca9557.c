@@ -59,9 +59,9 @@ void pca9557_toggle_pin_level(uint8_t addr, uint8_t port)
 {
 	uint8_t state = outputmask[addr-0x18];
 	if (state & _BV(port))
-		state |= _BV(port);
-	else
 		state &= ~_BV(port);
+	else
+		state |= _BV(port);
 	outputmask[addr-0x18] = state;
 	i2c_send(&TWIE, addr, 0x01, state);
 }

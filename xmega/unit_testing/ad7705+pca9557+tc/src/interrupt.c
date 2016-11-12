@@ -9,7 +9,7 @@ extern struct spi_device SPI_ADC;
 extern struct pca9557_pin x19_relay,x20_relay;
 uint16_t adcdata;
 
-extern uint16_t adczero, adcmax;
+extern uint16_t adczero, adcmax, adcresult;
 
 void ad7705_callback(void)
 {
@@ -29,18 +29,15 @@ void ad7705_callback(void)
 
 void tc_callback(void)
 {
+	tc_clear_overflow(&TCC0);
 	char string[20];
 	LED_Toggle(LED0);
-	if (pca9557_get_pin_level(x19_relay.address, x19_relay.pin_number) && pca9557_get_pin_level(x20_relay.address, x20_relay.pin_number))
-	{
-		snprintf(string,sizeof(string),"%6ld", (long)adcmax-0x17CC);
-		gfx_mono_draw_string(string,8,0,&sysfont);
-		snprintf(string,sizeof(string),"%6ld", (long)adcdata-0x17CC);
-		gfx_mono_draw_string(string,8,8,&sysfont);
-		snprintf(string,sizeof(string),"%6ld", (long)adczero-0x17CC);
-		gfx_mono_draw_string(string,8,16,&sysfont);
-		snprintf(string,sizeof(string),"%f", (float)(adcdata-adczero)/(adcmax-adczero));
-		gfx_mono_draw_string(string,8,24,&sysfont);
-	}
-	tc_clear_overflow(&TCC0);
+	snprintf(string,sizeof(string),"%6ld", (long)adcmax-0x17CC);
+    gfx_mono_draw_string(string,8,0,&sysfont);
+	snprintf(string,sizeof(string),"%6ld", (long)adcresult-0x17CC);
+	gfx_mono_draw_string(string,8,8,&sysfont);
+	snprintf(string,sizeof(string),"%6ld", (long)adczero-0x17CC);
+	gfx_mono_draw_string(string,8,16,&sysfont);
+	snprintf(string,sizeof(string),"%f", (float)(adcresult-adczero)/(adcmax-adczero));
+	gfx_mono_draw_string(string,8,24,&sysfont);
 }

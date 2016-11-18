@@ -18,15 +18,18 @@ void tc_configure(void)
 	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
-	tc_write_period(&TCC0, 31250/8);
+	tc_write_period(&TCC0, 31250/48);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	tc_set_resolution(&TCC0, 31250);
 }
 
 void twi_configure(void)
 {
-	twi_master_options_t opt = { .speed = 50000 };
-	twi_master_setup(&TWIE, &opt);
+	//twi_master_options_t opt = { .speed = 1000000 };
+	//twi_master_setup(&TWIE, &opt);
+	twi_master_options_t opt = { .speed_reg = 0x0 };
+	sysclk_enable_peripheral_clock(&TWIE);
+	twi_master_init(&TWIE, &opt);
 }
 
 void setup_configure(void)

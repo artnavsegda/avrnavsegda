@@ -51,6 +51,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+tc", "ad7705
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+tc", "pca9557+tc\pca9557+tc.cproj", "{915C58A5-4C8C-41BE-9F4D-180E97A88930}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+tc", "ad7705+pca9557+rolling+tc\ad7705+pca9557+rolling+tc.cproj", "{D8CA7AE5-2228-43B8-B557-E5B442B1297C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -153,6 +155,10 @@ Global
 		{915C58A5-4C8C-41BE-9F4D-180E97A88930}.Debug|AVR.Build.0 = Debug|AVR
 		{915C58A5-4C8C-41BE-9F4D-180E97A88930}.Release|AVR.ActiveCfg = Release|AVR
 		{915C58A5-4C8C-41BE-9F4D-180E97A88930}.Release|AVR.Build.0 = Release|AVR
+		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Debug|AVR.ActiveCfg = Debug|AVR
+		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Debug|AVR.Build.0 = Debug|AVR
+		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Release|AVR.ActiveCfg = Release|AVR
+		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,7 +35,7 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling+tc", "ad7705
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc", "ad7705+adc\ad7705+adc.cproj", "{98D776D3-8ECB-4D1D-AF39-2D61981B4F48}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "rolling", "rolling\rolling.cproj", "{FD7644AC-F268-444F-990D-29684123CDB4}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling", "rolling\ad7705+rolling.cproj", "{FD7644AC-F268-444F-990D-29684123CDB4}"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+rolling+serial+tc", "ad7705+rolling+serial+tc\ad7705+rolling+serial+tc.cproj", "{CECF9ECA-4A9E-476F-B3B3-EC297B054F73}"
 EndProject

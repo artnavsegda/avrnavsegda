@@ -9,12 +9,20 @@ struct spi_device SPI_ADC = {
 	.id = SPIC_SS
 };
 
+const usart_serial_options_t usart_serial_options = {
+	.baudrate     = 57600,
+	.charlength   = USART_CHSIZE_8BIT_gc,
+	.paritytype   = USART_PMODE_DISABLED_gc,
+	.stopbits     = false
+};
+
 void setup_init(void)
 {
 	sysclk_init();
 	board_init();
 	pmic_init();
 	ioport_init();
+	stdio_serial_init(&USARTC0, &usart_serial_options);
 	spi_master_init(&SPIC);
 	//gfx_mono_init();
 }

@@ -51,7 +51,7 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+tc", "ad7705
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+tc", "pca9557+tc\pca9557+tc.cproj", "{915C58A5-4C8C-41BE-9F4D-180E97A88930}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+tc", "ad7705+pca9557+rolling+tc\ad7705+pca9557+rolling+tc.cproj", "{D8CA7AE5-2228-43B8-B557-E5B442B1297C}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+serial+tc", "ad7705+pca9557+rolling+tc\ad7705+pca9557+rolling+serial+tc.cproj", "{D8CA7AE5-2228-43B8-B557-E5B442B1297C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

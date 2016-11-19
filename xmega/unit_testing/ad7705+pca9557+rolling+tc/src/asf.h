@@ -56,6 +56,9 @@
 #include <ccp.h>
 #include <xmega_reset_cause.h>
 
+// From module: Delay routines
+#include <delay.h>
+
 // From module: GPIO - General purpose Input/Output
 #include <gpio.h>
 
@@ -81,7 +84,6 @@
 #include <spi.h>
 
 // From module: SPI - XMEGA implementation
-#include <spi_master.h>
 #include <spi_master.h>
 
 // From module: Sleep Controller driver

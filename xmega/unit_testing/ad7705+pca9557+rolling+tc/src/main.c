@@ -24,7 +24,7 @@ int main (void)
 		pca9557_set_pin_level(x19_relay.address, x19_relay.pin_number, false);
 		LED_On(LED2);
 		delay_s(30);
-		zerolevelavg = oversample(secondstage,30)/30;
+		zerolevelavg = oversample(&secondstage,30)/30;
 
 		pca9557_set_pin_level(x19_relay.address, x19_relay.pin_number, true);
 		LED_Off(LED2);
@@ -33,7 +33,7 @@ int main (void)
 		pca9557_set_pin_level(x20_relay.address, x20_relay.pin_number, false);
 		LED_On(LED3);
 		delay_s(30);
-		coefficent = oversample(secondstage,30)/30;
+		coefficent = oversample(&secondstage,30)/30;
 
 		pca9557_set_pin_level(x20_relay.address, x20_relay.pin_number, true);
 		LED_Off(LED3);

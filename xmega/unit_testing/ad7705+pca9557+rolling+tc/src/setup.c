@@ -16,7 +16,7 @@ void setup_init(void)
 	pmic_init();
 	ioport_init();
 	spi_master_init(&SPIC);
-	gfx_mono_init();
+	//gfx_mono_init();
 }
 
 void spi_configure(void)

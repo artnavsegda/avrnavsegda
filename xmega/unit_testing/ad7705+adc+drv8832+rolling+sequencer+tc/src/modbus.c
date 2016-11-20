@@ -15,6 +15,9 @@ void send_data(struct mydatastate *mystate)
 	printf("\033[2Jtime to exit mode: %d\r",mystate->timetoexitmode);
 	printf("current mode: %d\r",mystate->currentmode);
 
+	if (mystate->currentmode == TOTALMERCURY)
+		printf("calculated value is %f\r", (float)(adcdata/64-mystate->zerolevelavg)/(mystate->coefficent-mystate->zerolevelavg));
+
 	printf("%6lX", oversample(&firststage,16)/16);
 	printf("%6lX", oversample(&firststage,32)/32);
 	printf("%6lX", oversample(&firststage,64)/64);

@@ -33,7 +33,7 @@ void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 
 void ad7705_callback(void)
 {
-	LED_Toggle(LED3);
+	LED_Toggle(LED1);
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
 	{
 		adcdata = ad7705_get_data_register(&SPIC, &SPI_ADC);
@@ -49,7 +49,7 @@ void tc_callback(void)
 		.x20_relay = { .address = 0x18, .pin_number = 0 },
 		.x19_relay = { .address = 0x19, .pin_number = 0 }
 	};
-	LED_Toggle(LED2);
+	LED_Toggle(LED0);
 	increment(&secondstage,oversample(&firststage,64)/64);
 	tickmode(&primarystate);
 	send_data(&primarystate);

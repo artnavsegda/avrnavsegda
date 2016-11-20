@@ -45,7 +45,9 @@ void tc_callback(void)
 {
 	static struct mydatastate primarystate = {
 		.timetoexitmode = 10,
-		.currentmode = STARTLEVEL
+		.currentmode = STARTLEVEL,
+		.x20_relay = { .address = 0x18, .pin_number = 0 },
+		.x19_relay = { .address = 0x19, .pin_number = 0 }
 	};
 	LED_Toggle(LED2);
 	increment(&secondstage,oversample(&firststage,64)/64);

@@ -1,3 +1,5 @@
+#include "pca9557.h"
+
 #ifndef SEQUENCER_H_
 #define SEQUENCER_H_
 
@@ -21,10 +23,13 @@ struct mydatastate
 {
 	int timetoexitmode;
 	enum modelist currentmode;
-	int coefficent;
-	int zerolevelavg;
-	int celllevelavg;
-	int celltempavg;
+	uint16_t coefficent;
+	uint16_t zerolevelavg;
+	uint16_t celllevelavg;
+	uint16_t celltempavg;
+	uint16_t measurment;
+	struct pca9557_pin x20_relay;
+	struct pca9557_pin x19_relay;
 };
 
 void tickmode(struct mydatastate *primarystate);

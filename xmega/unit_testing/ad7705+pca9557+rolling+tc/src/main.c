@@ -37,22 +37,19 @@ int main (void)
 		delay_s(10);
 		zerolevelavg = oversample(&secondstage,10)/10;
 		printf("zerolevelavg is %u\n\r", zerolevelavg);
-
 		printf("disabling green relay\n\r");
 		pca9557_set_pin_high(x19_relay.address, x19_relay.pin_number);
 		LED_Off(LED3);
 		delay_s(10);
 		measurment = oversample(&secondstage,10)/10;
 		printf("measurment is %u\n\r", measurment);
-
 		printf("enabling red relay\n\r");
 		pca9557_set_pin_low(x20_relay.address, x20_relay.pin_number);
 		LED_On(LED2);
 		delay_s(10);
 		coefficent = oversample(&secondstage,10)/10;
 		printf("coefficent is %u\n\r", coefficent);
-
-		printf("disabling green relay\n\r");
+		printf("disabling red relay\n\r");
 		pca9557_set_pin_high(x20_relay.address, x20_relay.pin_number);
 		LED_Off(LED2);
 		delay_s(10);

@@ -4,8 +4,8 @@
 #include "ad7705.h"
 
 extern struct spi_device SPI_ADC;
-extern int16_t adc_scan_results[16];
-extern uint16_t adcdata;
+int16_t adc_scan_results[16];
+uint16_t adcdata;
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {

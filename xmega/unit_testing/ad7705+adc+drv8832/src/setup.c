@@ -14,7 +14,7 @@ void setup_init(void)
 	pmic_init();
 	ioport_init();
 	spi_master_init(&SPIC);
-	gfx_mono_init();
+	//gfx_mono_init();
 }
 
 void adcch_configure(ADC_t *adc, uint8_t ch_mask)

@@ -9,7 +9,7 @@
 extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];
 uint16_t adcdata;
-struct massive firststage, secondstage;
+struct massive firststage, secondstage, temperature_averaging_massive;
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
@@ -46,11 +46,16 @@ void tc_callback(void)
 	static struct mydatastate primarystate = {
 		.timetoexitmode = 10,
 		.currentmode = STARTLEVEL,
-		.x20_relay = { .address = 0x18, .pin_number = 0 },
-		.x19_relay = { .address = 0x19, .pin_number = 0 }
+		.cell = {
+			.left_out = { .address = 0x18, .pin_number = 7 },
+			.right_out = { .address = 0x18, .pin_number = 6 },
+			.left_in = { .address = 0x18, .pin_number = 5 },
+			.right_in = { .address = 0x18, .pin_number = 4 }
+		}
 	};
 	LED_Toggle(LED0);
 	increment(&secondstage,oversample(&firststage,64)/64);
+	increment(&temperature_averaging_massive,adc_scan_results[6]);
 	tickmode(&primarystate);
 	send_data(&primarystate);
 	tc_clear_overflow(&TCC0);

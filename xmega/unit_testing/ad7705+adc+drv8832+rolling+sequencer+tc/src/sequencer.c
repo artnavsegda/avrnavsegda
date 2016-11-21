@@ -3,7 +3,7 @@
 #include "rolling.h"
 #include "drv8832.h"
 
-extern struct massive firststage, secondstage;
+extern struct massive secondstage, temperature_averaging_massive;
 extern struct drv8832 cell;
 
 void tickmode(struct mydatastate *primarystate)
@@ -58,7 +58,7 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 		case ZEROTEST:
 		break;
 		case CELLDELAY:
-			drv8832_turn(cell, DRV8832_LEFT);
+			drv8832_turn(mystate->cell, DRV8832_LEFT);
 		break;
 		case CELLLEVEL:
 		break;
@@ -88,8 +88,8 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 		break;
 		case CELLLEVEL:
 			mystate->celllevelavg = oversample(&secondstage,modeseconds(CELLLEVEL));
-			mystate->celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
-			drv8832_turn(cell, DRV8832_RIGHT);
+			mystate->celltempavg = oversample(&temperature_averaging_massive,modeseconds(CELLLEVEL));
+			drv8832_turn(mystate->cell, DRV8832_RIGHT);
 		break;
 		case TOTALMERCURYDELAY:
 		break;

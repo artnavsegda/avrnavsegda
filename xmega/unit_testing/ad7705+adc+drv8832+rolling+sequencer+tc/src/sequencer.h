@@ -1,4 +1,5 @@
 #include "pca9557.h"
+#include "drv8832.h"
 
 #ifndef SEQUENCER_H_
 #define SEQUENCER_H_
@@ -28,8 +29,9 @@ struct mydatastate
 	uint16_t celllevelavg;
 	uint16_t celltempavg;
 	uint16_t measurment;
-	struct pca9557_pin x20_relay;
-	struct pca9557_pin x19_relay;
+	struct drv8832 cell;
+	float c_twentie_five;
+	float kfactor;
 };
 
 void tickmode(struct mydatastate *primarystate);

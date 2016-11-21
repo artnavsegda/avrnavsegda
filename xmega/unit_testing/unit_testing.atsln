@@ -55,6 +55,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+seri
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+serial+sequencer+tc", "ad7705+pca9557+rolling+serial+sequencer+tc\ad7705+pca9557+rolling+serial+sequencer+tc.cproj", "{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "drv8832", "drv8832\drv8832.cproj", "{CADB4F3A-827C-46AE-AF35-B1A84CDED452}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -165,6 +167,10 @@ Global
 		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Debug|AVR.Build.0 = Debug|AVR
 		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Release|AVR.ActiveCfg = Release|AVR
 		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Release|AVR.Build.0 = Release|AVR
+		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Debug|AVR.Build.0 = Debug|AVR
+		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Release|AVR.ActiveCfg = Release|AVR
+		{CADB4F3A-827C-46AE-AF35-B1A84CDED452}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

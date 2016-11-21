@@ -1,8 +1,10 @@
 #include <asf.h>
 #include "sequencer.h"
 #include "rolling.h"
+#include "drv8832.h"
 
 extern struct massive firststage, secondstage;
+extern struct drv8832 cell;
 
 void tickmode(struct mydatastate *primarystate)
 {
@@ -56,7 +58,7 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 		case ZEROTEST:
 		break;
 		case CELLDELAY:
-			drv8832_turn(mystate->settings.cell, DRV8832_LEFT);
+			drv8832_turn(cell, DRV8832_LEFT);
 		break;
 		case CELLLEVEL:
 		break;
@@ -85,9 +87,9 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 		case CELLDELAY:
 		break;
 		case CELLLEVEL:
-			mystate->celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
+			mystate->celllevelavg = oversample(&secondstage,modeseconds(CELLLEVEL));
 			mystate->celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
-			drv8832_turn(mystate->settings.cell, DRV8832_RIGHT);
+			drv8832_turn(cell, DRV8832_RIGHT);
 		break;
 		case TOTALMERCURYDELAY:
 		break;

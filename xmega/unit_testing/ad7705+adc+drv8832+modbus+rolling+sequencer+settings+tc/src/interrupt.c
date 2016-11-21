@@ -57,6 +57,7 @@ void tc_callback(void)
 	increment(&secondstage,oversample(&firststage,64)/64);
 	increment(&temperature_averaging_massive,adc_scan_results[6]);
 	tickmode(&primarystate);
+	process_data(&primarystate);
 	send_data(&primarystate);
 	tc_clear_overflow(&TCC0);
 }

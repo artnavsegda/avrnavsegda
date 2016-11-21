@@ -37,6 +37,23 @@ float calculatecell(long averaged, long zerolevelavg, long celllevelavg, long ce
 	);
 }
 
+void process_data(struct mysettingsstruct *mysettings, struct mydatastate *mystate)
+{
+	if (mystate->currentmode == TOTALMERCURY)
+	{
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTCALIBRATION)==1)
+		entermode(PRECALIBRATIONDELAY,mystate);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTZEROTEST)==1)
+		entermode(ZERODELAY,mystate);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY)==1)
+		entermode(ELEMENTALMERCURYDELAY,mystate);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOSTARTPURGE)==1)
+		entermode(PURGE,mystate);
+		if (i2c_read(&TWIE, 0x08, REQUESTTOENDPURGE)==1)
+		exitmode(PURGE,mystate);
+	}
+}
+
 void send_data(struct mydatastate *mystate)
 {
 	printf("\033[2Jtime to exit mode: %d\r",mystate->timetoexitmode);

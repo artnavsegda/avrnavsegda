@@ -52,9 +52,6 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 		case STARTLEVEL:
 		break;
 		case ZERODELAY:
-			//printf("enabling green relay\n\r");
-			pca9557_set_pin_low(mystate->x19_relay.address, mystate->x19_relay.pin_number);
-			LED_On(LED3);
 		break;
 		case ZEROTEST:
 		break;
@@ -77,22 +74,13 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 	switch(modetoexit)
 	{
 		case STARTLEVEL:
-			pca9557_set_pin_dir(mystate->x19_relay.address, mystate->x19_relay.pin_number, PCA9557_DIR_OUTPUT);
-			pca9557_set_pin_dir(mystate->x20_relay.address, mystate->x20_relay.pin_number, PCA9557_DIR_OUTPUT);
-			//printf("\n\rHello ATMEL World!\n\r");
-			pca9557_set_pin_high(mystate->x19_relay.address, mystate->x19_relay.pin_number);
-			LED_Off(LED2);
-			pca9557_set_pin_high(mystate->x20_relay.address, mystate->x20_relay.pin_number);
-			LED_Off(LED3);
+			printf("\n\rHello ATMEL World!\n\r");
 		break;
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
 			mystate->zerolevelavg = oversample(&secondstage,modeseconds(ZEROTEST))/modeseconds(ZEROTEST);
 			//printf("zerolevelavg is %u\n\r", mystate->zerolevelavg);
-			pca9557_set_pin_high(mystate->x19_relay.address, mystate->x19_relay.pin_number);
-			//printf("disabling green relay\n\r");
-			LED_Off(LED3);
 		break;
 		case CELLDELAY:
 		break;

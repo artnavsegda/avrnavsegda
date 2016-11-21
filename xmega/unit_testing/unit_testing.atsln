@@ -53,6 +53,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+tc", "pca9557+tc\pc
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+serial+tc", "ad7705+pca9557+rolling+tc\ad7705+pca9557+rolling+serial+tc.cproj", "{D8CA7AE5-2228-43B8-B557-E5B442B1297C}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+pca9557+rolling+serial+sequencer+tc", "ad7705+pca9557+rolling+serial+sequencer+tc\ad7705+pca9557+rolling+serial+sequencer+tc.cproj", "{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -159,6 +161,10 @@ Global
 		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Debug|AVR.Build.0 = Debug|AVR
 		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Release|AVR.ActiveCfg = Release|AVR
 		{D8CA7AE5-2228-43B8-B557-E5B442B1297C}.Release|AVR.Build.0 = Release|AVR
+		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Debug|AVR.ActiveCfg = Debug|AVR
+		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Debug|AVR.Build.0 = Debug|AVR
+		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Release|AVR.ActiveCfg = Release|AVR
+		{83AA852D-2D2F-4757-AC22-1AAA7CE1D06F}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

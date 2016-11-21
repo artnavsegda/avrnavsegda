@@ -18,10 +18,11 @@ enum modelist sequence(enum modelist modetosequence)
 		case STARTLEVEL: return ZERODELAY;
 		case ZERODELAY:	return ZEROTEST;
 		case ZEROTEST: return PRECALIBRATIONDELAY;
-		case CELLDELAY: return CELLLEVEL;
-		case CELLLEVEL:	return TOTALMERCURYDELAY;
+		case PRECALIBRATIONDELAY: return CALIBRATION;
+		case CALIBRATION: return POSTCALIBRATIONDELAY;
+		case POSTCALIBRATIONDELAY: return TOTALMERCURYDELAY;
 		case TOTALMERCURYDELAY:	return TOTALMERCURY;
-		case TOTALMERCURY: return TOTALMERCURY;
+		case TOTALMERCURY: return ZERODELAY;
 		default: return STARTLEVEL;
 	}
 	return modetosequence;
@@ -34,8 +35,9 @@ int modeseconds(enum modelist modeneed)
 		case STARTLEVEL: return 10;
 		case ZERODELAY: return 10;
 		case ZEROTEST: return 10;
-		case CELLDELAY: return 10;
-		case CELLLEVEL:	return 10;
+		case PRECALIBRATIONDELAY: return 10;
+		case CALIBRATION: return 10;
+		case POSTCALIBRATIONDELAY: return 10;
 		case TOTALMERCURYDELAY: return 10;
 		case TOTALMERCURY: return 10;
 		default: return 10;
@@ -58,10 +60,14 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 		break;
 		case ZEROTEST:
 		break;
-		case CELLDELAY:
-			drv8832_turn(mystate->settings.cell, DRV8832_LEFT);
+		case PRECALIBRATIONDELAY:
+			//printf("enabling red relay\n\r");
+			pca9557_set_pin_low(mystate->x20_relay.address, mystate->x20_relay.pin_number);
+			LED_On(LED2);
 		break;
-		case CELLLEVEL:
+		case CALIBRATION:
+		break;
+		case POSTCALIBRATIONDELAY:
 		break;
 		case TOTALMERCURYDELAY:
 		break;
@@ -94,12 +100,16 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 			//printf("disabling green relay\n\r");
 			LED_Off(LED3);
 		break;
-		case CELLDELAY:
+		case PRECALIBRATIONDELAY:
 		break;
-		case CELLLEVEL:
-			mystate->celllevelavg = oversample(measurment_averaging_massive,modeseconds(CELLLEVEL));
-			mystate->celltempavg = oversample(temperature_averaging_massive,modeseconds(CELLLEVEL));
-			drv8832_turn(mystate->settings.cell, DRV8832_RIGHT);
+		case CALIBRATION:
+			mystate->coefficent = oversample(&secondstage,modeseconds(CALIBRATION))/modeseconds(CALIBRATION);
+			//printf("coefficent is %u\n\r", mystate->coefficent);
+			pca9557_set_pin_high(mystate->x20_relay.address, mystate->x20_relay.pin_number);
+			//printf("disabling red relay\n\r");
+			LED_Off(LED2);
+		break;
+		case POSTCALIBRATIONDELAY:
 		break;
 		case TOTALMERCURYDELAY:
 		break;

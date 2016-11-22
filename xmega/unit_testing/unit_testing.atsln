@@ -61,6 +61,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832", "ad770
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+modbus+rolling+sequencer+settings+tc", "ad7705+adc+drv8832+modbus+rolling+sequencer+settings+tc\ad7705+adc+drv8832+modbus+rolling+sequencer+settings+tc.cproj", "{57FB9923-5619-442D-B9C9-0BEE8FC7297D}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "settings", "settings\settings.cproj", "{40A2429B-9522-4C96-9ECA-B8D88198DA1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -183,6 +185,10 @@ Global
 		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Debug|AVR.Build.0 = Debug|AVR
 		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Release|AVR.ActiveCfg = Release|AVR
 		{57FB9923-5619-442D-B9C9-0BEE8FC7297D}.Release|AVR.Build.0 = Release|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.ActiveCfg = Debug|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.Build.0 = Debug|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.ActiveCfg = Release|AVR
+		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

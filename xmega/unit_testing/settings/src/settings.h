@@ -1,6 +1,29 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+enum pca9557_direction {
+	PCA9557_DIR_INPUT,
+	PCA9557_DIR_OUTPUT,
+};
+
+struct pca9557_pin {
+	uint8_t address;
+	uint8_t pin_number;
+};
+
+enum drv8832_direction {
+	DRV8832_LEFT,
+	DRV8832_RIGHT,
+	DRV8832_UNKNOWN,
+};
+
+struct drv8832 {
+	struct pca9557_pin left_out;
+	struct pca9557_pin right_out;
+	struct pca9557_pin left_in;
+	struct pca9557_pin right_in;
+};
+
 #define I2C_IPADDRESS 100
 #define I2C_MACADDRESS 101
 #define I2C_LENGTHTABLE 102
@@ -56,7 +79,7 @@ struct jumptablestruct {
 	enum modelist postcalibrationdelay;
 };
 
-struct mydatastruct {
+struct mysettingsstruct {
 	uint8_t ip[4];
 	uint8_t mac[6];
 	struct lengthtablestruct length_table;
@@ -68,6 +91,8 @@ struct mydatastruct {
 	float standard_concentration;
 	float c_twentie_five;
 	float kfactor;
+	struct pca9557_pin ignition;
+	struct drv8832 cell;
 };
 
 

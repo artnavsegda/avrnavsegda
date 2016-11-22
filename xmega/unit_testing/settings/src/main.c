@@ -6,7 +6,7 @@
 
 int main (void)
 {
-	struct mydatastruct mysettings;
+	struct mysettingsstruct mysettings;
 	char string[20];
 	/* Insert system clock initialization code here (sysclk_init()). */
 

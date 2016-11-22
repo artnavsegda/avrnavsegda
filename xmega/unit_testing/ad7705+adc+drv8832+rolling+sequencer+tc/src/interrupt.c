@@ -46,11 +46,13 @@ void tc_callback(void)
 	static struct mydatastate primarystate = {
 		.timetoexitmode = 10,
 		.currentmode = STARTLEVEL,
-		.cell = {
-			.left_out = { .address = 0x18, .pin_number = 7 },
-			.right_out = { .address = 0x18, .pin_number = 6 },
-			.left_in = { .address = 0x18, .pin_number = 5 },
-			.right_in = { .address = 0x18, .pin_number = 4 }
+		.settings = {
+			.cell = {
+				.left_out = { .address = 0x18, .pin_number = 7 },
+				.right_out = { .address = 0x18, .pin_number = 6 },
+				.left_in = { .address = 0x18, .pin_number = 5 },
+				.right_in = { .address = 0x18, .pin_number = 4 }
+			}
 		}
 	};
 	LED_Toggle(LED0);

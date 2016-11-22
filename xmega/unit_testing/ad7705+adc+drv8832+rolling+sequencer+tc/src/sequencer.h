@@ -20,6 +20,14 @@ enum modelist {
  POSTCALIBRATIONDELAY = 33
 };
 
+struct mysettingsstruct
+{
+	float c_twentie_five;
+	float kfactor;
+	struct pca9557_pin ignition;
+	struct drv8832 cell;
+};
+
 struct mydatastate
 {
 	int timetoexitmode;
@@ -29,9 +37,7 @@ struct mydatastate
 	uint16_t celllevelavg;
 	uint16_t celltempavg;
 	uint16_t measurment;
-	struct drv8832 cell;
-	float c_twentie_five;
-	float kfactor;
+	struct mysettingsstruct settings;
 };
 
 void tickmode(struct mydatastate *primarystate);

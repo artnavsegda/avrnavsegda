@@ -52,13 +52,14 @@ void entermode(enum modelist modetoenter, struct mydatastate *mystate)
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
+			pca9557_set_pin_level(mystate->settings.ignition.address,mystate->settings.ignition.pin_number,true);
 		break;
 		case ZERODELAY:
 		break;
 		case ZEROTEST:
 		break;
 		case CELLDELAY:
-			drv8832_turn(mystate->cell, DRV8832_LEFT);
+			drv8832_turn(mystate->settings.cell, DRV8832_LEFT);
 		break;
 		case CELLLEVEL:
 		break;
@@ -77,6 +78,7 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 	{
 		case STARTLEVEL:
 			printf("\n\rHello ATMEL World!\n\r");
+			pca9557_set_pin_level(mystate->settings.ignition.address,mystate->settings.ignition.pin_number,false);
 		break;
 		case ZERODELAY:
 		break;
@@ -89,7 +91,7 @@ void exitmode(enum modelist modetoexit, struct mydatastate *mystate)
 		case CELLLEVEL:
 			mystate->celllevelavg = oversample(&secondstage,modeseconds(CELLLEVEL));
 			mystate->celltempavg = oversample(&temperature_averaging_massive,modeseconds(CELLLEVEL));
-			drv8832_turn(mystate->cell, DRV8832_RIGHT);
+			drv8832_turn(mystate->settings.cell, DRV8832_RIGHT);
 		break;
 		case TOTALMERCURYDELAY:
 		break;

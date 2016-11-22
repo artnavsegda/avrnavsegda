@@ -43,7 +43,7 @@ void send_data(struct mydatastate *mystate)
 	printf("current mode: %d\r",mystate->currentmode);
 
 	if (mystate->currentmode == TOTALMERCURY)
-		printf("calculated value is %f\r", calculatecell(adcdata,mystate->zerolevelavg,mystate->celllevelavg,mystate->celltempavg,mystate->c_twentie_five,mystate->kfactor));
+		printf("calculated value is %f\r", calculatecell(adcdata,mystate->zerolevelavg,mystate->celllevelavg,mystate->celltempavg,mystate->settings.c_twentie_five,mystate->settings.kfactor));
 
 	printf("%6lX", oversample(&firststage,16)/16);
 	printf("%6lX", oversample(&firststage,32)/32);

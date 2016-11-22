@@ -37,7 +37,7 @@ float calculatecell(long averaged, long zerolevelavg, long celllevelavg, long ce
 	);
 }
 
-void process_data(struct mysettingsstruct *mysettings, struct mydatastate *mystate)
+/*void process_data(struct mysettingsstruct *mysettings, struct mydatastate *mystate)
 {
 	if (mystate->currentmode == TOTALMERCURY)
 	{
@@ -52,7 +52,7 @@ void process_data(struct mysettingsstruct *mysettings, struct mydatastate *mysta
 		if (i2c_read(&TWIE, 0x08, REQUESTTOENDPURGE)==1)
 		exitmode(PURGE,mystate);
 	}
-}
+}*/
 
 void send_data(struct mydatastate *mystate)
 {

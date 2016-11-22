@@ -48,7 +48,7 @@ void process_settings(struct mysettingsstruct *settings)
 		memcpy(settings->ip,&default_settings.ip,sizeof(temporary_settings.ip));*/
 	sync_array(I2C_IPADDRESS,settings->ip,&default_settings.ip);
 	sync_array(I2C_MACADDRESS,settings->ip,&default_settings.ip);
-	//sync_array(I2C_LENGTHTABLE,(uint8_t *)settings->length_table,(uint8_t *)&default_settings.length_table);
+	sync_array(I2C_LENGTHTABLE,(uint8_t *)settings->length_table,(uint8_t *)&default_settings.length_table);
 	//sync_array(I2C_JUMPTABLE,(uint8_t *)settings->jump_table,(uint8_t *)&default_settings.jump_table);
 	//sync_array(I2C_AD7705_SETUP_REGISTER,settings->ad7705_setup_register,&default_settings.ad7705_setup_register);
 	//sync_array(I2C_AD7705_CLOCK_REGISTER,settings->ad7705_clock_register,&default_settings.ad7705_clock_register);

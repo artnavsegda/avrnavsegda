@@ -63,6 +63,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+drv8832+modbus+r
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "settings", "settings\settings.cproj", "{40A2429B-9522-4C96-9ECA-B8D88198DA1C}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sensors", "sensors\sensors.cproj", "{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -189,6 +191,10 @@ Global
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Debug|AVR.Build.0 = Debug|AVR
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.ActiveCfg = Release|AVR
 		{40A2429B-9522-4C96-9ECA-B8D88198DA1C}.Release|AVR.Build.0 = Release|AVR
+		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Debug|AVR.Build.0 = Debug|AVR
+		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Release|AVR.ActiveCfg = Release|AVR
+		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

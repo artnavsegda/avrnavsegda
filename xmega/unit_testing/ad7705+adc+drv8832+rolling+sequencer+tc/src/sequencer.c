@@ -19,7 +19,7 @@ enum modelist sequence(enum modelist modetosequence)
 	{
 		case STARTLEVEL: return ZERODELAY;
 		case ZERODELAY:	return ZEROTEST;
-		case ZEROTEST: return PRECALIBRATIONDELAY;
+		case ZEROTEST: return CELLDELAY;
 		case CELLDELAY: return CELLLEVEL;
 		case CELLLEVEL:	return TOTALMERCURYDELAY;
 		case TOTALMERCURYDELAY:	return TOTALMERCURY;

@@ -52,6 +52,24 @@ void tc_callback(void)
 				.right_out = { .address = 0x18, .pin_number = 6 },
 				.left_in = { .address = 0x18, .pin_number = 5 },
 				.right_in = { .address = 0x18, .pin_number = 4 }
+			},
+			.length_table = {
+				.startlevel = 10,
+				.celldelay = 10,
+				.celllevel = 10,
+				.zerodelay = 10,
+				.zerotest = 10,
+				.totalmercurydelay = 10,
+				.totalmercury = 10
+			},
+			.jump_table = {
+				.startlevel = ZERODELAY,
+				.zerodelay = ZEROTEST,
+				.zerotest = CELLDELAY,
+				.celldelay = CELLLEVEL,
+				.celllevel = TOTALMERCURYDELAY,
+				.totalmercurydelay = TOTALMERCURY,
+				.totalmercury = TOTALMERCURY,
 			}
 		}
 	};

@@ -20,12 +20,46 @@ enum modelist {
  POSTCALIBRATIONDELAY = 33
 };
 
+struct lengthtablestruct {
+	int startlevel;
+	int celldelay;
+	int celllevel;
+	int zerodelay;
+	int zerotest;
+	int purge;
+	int totalmercurydelay;
+	int totalmercury;
+	int elementalmercurydelay;
+	int elementalmercury;
+	int precalibrationdelay;
+	int calibration;
+	int postcalibrationdelay;
+};
+
+struct jumptablestruct {
+	enum modelist startlevel;
+	enum modelist celldelay;
+	enum modelist celllevel;
+	enum modelist zerodelay;
+	enum modelist zerotest;
+	enum modelist purge;
+	enum modelist totalmercurydelay;
+	enum modelist totalmercury;
+	enum modelist elementalmercurydelay;
+	enum modelist elementalmercury;
+	enum modelist precalibrationdelay;
+	enum modelist calibration;
+	enum modelist postcalibrationdelay;
+};
+
 struct mysettingsstruct
 {
 	float c_twentie_five;
 	float kfactor;
 	struct pca9557_pin ignition;
 	struct drv8832 cell;
+	struct lengthtablestruct length_table;
+	struct jumptablestruct jump_table;
 };
 
 struct mydatastate

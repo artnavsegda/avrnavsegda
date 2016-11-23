@@ -32,9 +32,13 @@
 
 int main (void)
 {
+	sensor_t barometer; 
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
+	sensor_bus_init(&TWIE, 400000);
 
 	/* Insert application code here, after the board has been initialized. */
+	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
+	sensor_set_state(&barometer, SENSOR_STATE_HIGHEST_POWER);
 }

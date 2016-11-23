@@ -36,7 +36,7 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
-	sensor_bus_init(&TWIE, 400000);
+	sensor_bus_init(&TWIE, 50000);
 
 	/* Insert application code here, after the board has been initialized. */
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);

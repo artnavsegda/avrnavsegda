@@ -30,7 +30,7 @@ struct mysettingsstruct default_settings = {
 	}
 };
 
-void sync_array(uint8_t memory, uint8_t *desination, uint8_t *defaults)
+void sync_array(uint8_t memory, void *desination, void *defaults)
 {
 	void *temporary = malloc(sizeof(desination));
 	if (i2c_read_array(&TWIE,0x08,memory,sizeof(desination),temporary) == STATUS_OK)
@@ -43,13 +43,13 @@ void process_settings(struct mysettingsstruct *settings)
 {
 	/*struct mysettingsstruct temporary_settings;
 	if (i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,temporary_settings.ip) == STATUS_OK)
-		memcpy(settings->ip,&temporary_settings.ip,sizeof(temporary_settings.ip));
+		memcpy(&settings->ip,&temporary_settings.ip,sizeof(temporary_settings.ip));
 	else
-		memcpy(settings->ip,&default_settings.ip,sizeof(temporary_settings.ip));*/
-	sync_array(I2C_IPADDRESS,settings->ip,&default_settings.ip);
-	sync_array(I2C_MACADDRESS,settings->ip,&default_settings.ip);
-	sync_array(I2C_LENGTHTABLE,(uint8_t *)settings->length_table,(uint8_t *)&default_settings.length_table);
-	//sync_array(I2C_JUMPTABLE,(uint8_t *)settings->jump_table,(uint8_t *)&default_settings.jump_table);
-	//sync_array(I2C_AD7705_SETUP_REGISTER,settings->ad7705_setup_register,&default_settings.ad7705_setup_register);
-	//sync_array(I2C_AD7705_CLOCK_REGISTER,settings->ad7705_clock_register,&default_settings.ad7705_clock_register);
+		memcpy(&settings->ip,&default_settings.ip,sizeof(temporary_settings.ip));*/
+	sync_array(I2C_IPADDRESS,&settings->ip,&default_settings.ip);
+	sync_array(I2C_MACADDRESS,&settings->ip,&default_settings.ip);
+	sync_array(I2C_LENGTHTABLE,&settings->length_table,&default_settings.length_table);
+	sync_array(I2C_JUMPTABLE,&settings->jump_table,&default_settings.jump_table);
+	sync_array(I2C_AD7705_SETUP_REGISTER,&settings->ad7705_setup_register,&default_settings.ad7705_setup_register);
+	sync_array(I2C_AD7705_CLOCK_REGISTER,&settings->ad7705_clock_register,&default_settings.ad7705_clock_register);
 }

@@ -95,6 +95,8 @@ struct mysettingsstruct {
 	struct drv8832 cell;
 };
 
+void sync_array(uint8_t memory, void *desination, void *defaults);
+void process_settings(struct mysettingsstruct *settings);
 
 
 #endif /* SETTINGS_H_ */

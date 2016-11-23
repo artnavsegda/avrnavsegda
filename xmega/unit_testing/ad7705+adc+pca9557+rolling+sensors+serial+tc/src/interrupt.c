@@ -56,7 +56,7 @@ void tc_callback(void)
 	LED_Toggle(LED0);
 	tc_clear_overflow(&TCC0);
 	struct ra915struct ra915data = {
-		.marker = 0xA1
+		.marker = 0xA5
 	};
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
 }

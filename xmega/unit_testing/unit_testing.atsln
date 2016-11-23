@@ -65,6 +65,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "settings", "settings\settin
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sensors", "sensors\sensors.cproj", "{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+pca9557+rolling+sensors+serial+tc", "ad7705+adc+pca9557+rolling+sensors+serial+tc\ad7705+adc+pca9557+rolling+sensors+serial+tc.cproj", "{04DB85B4-ACC6-48DF-9980-208D17EE1FB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -195,6 +197,10 @@ Global
 		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Debug|AVR.Build.0 = Debug|AVR
 		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Release|AVR.ActiveCfg = Release|AVR
 		{CF9ACDA4-C510-4D07-A895-AD3ACE7DDCC8}.Release|AVR.Build.0 = Release|AVR
+		{04DB85B4-ACC6-48DF-9980-208D17EE1FB4}.Debug|AVR.ActiveCfg = Debug|AVR
+		{04DB85B4-ACC6-48DF-9980-208D17EE1FB4}.Debug|AVR.Build.0 = Debug|AVR
+		{04DB85B4-ACC6-48DF-9980-208D17EE1FB4}.Release|AVR.ActiveCfg = Release|AVR
+		{04DB85B4-ACC6-48DF-9980-208D17EE1FB4}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

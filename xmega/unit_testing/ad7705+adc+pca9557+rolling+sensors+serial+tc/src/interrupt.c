@@ -2,14 +2,11 @@
 #include <stdio.h>
 #include "ad7705.h"
 #include "interrupt.h"
-#include "sequencer.h"
-#include "modbus.h"
 #include "rolling.h"
 
 extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];
 uint16_t adcdata;
-struct massive firststage, secondstage, temperature_averaging_massive;
 
 void adc_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
@@ -35,48 +32,31 @@ void ad7705_callback(void)
 {
 	LED_Toggle(LED1);
 	if (ad7705_get_communication_register(&SPIC, &SPI_ADC) == 8)
-	{
 		adcdata = ad7705_get_data_register(&SPIC, &SPI_ADC);
-		increment(&firststage,adcdata);
-	}
 }
+
+struct ra915struct {
+	uint8_t marker;
+	uint16_t pmt_current;
+	uint16_t flow_rate;
+	uint16_t pmt_voltage;
+	int concentration;
+	uint16_t bypass_pressure;
+	uint16_t t_analytical_cell;
+	uint16_t t_selftest_cell;
+	uint16_t pressure_analytical_cell;
+	uint16_t vacuum;
+	uint16_t dilution_pressure;
+	uint8_t status;
+	uint8_t checksum;
+};
 
 void tc_callback(void)
 {
-	static struct mydatastate primarystate = {
-		.timetoexitmode = 10,
-		.currentmode = STARTLEVEL,
-		.settings = {
-			.cell = {
-				.left_out = { .address = 0x18, .pin_number = 7 },
-				.right_out = { .address = 0x18, .pin_number = 6 },
-				.left_in = { .address = 0x18, .pin_number = 5 },
-				.right_in = { .address = 0x18, .pin_number = 4 }
-			},
-			.length_table = {
-				.startlevel = 10,
-				.celldelay = 10,
-				.celllevel = 10,
-				.zerodelay = 10,
-				.zerotest = 10,
-				.totalmercurydelay = 10,
-				.totalmercury = 10
-			},
-			.jump_table = {
-				.startlevel = ZERODELAY,
-				.zerodelay = ZEROTEST,
-				.zerotest = CELLDELAY,
-				.celldelay = CELLLEVEL,
-				.celllevel = TOTALMERCURYDELAY,
-				.totalmercurydelay = TOTALMERCURY,
-				.totalmercury = TOTALMERCURY,
-			}
-		}
-	};
 	LED_Toggle(LED0);
-	increment(&secondstage,oversample(&firststage,64)/64);
-	increment(&temperature_averaging_massive,adc_scan_results[6]);
-	tickmode(&primarystate);
-	send_data(&primarystate);
 	tc_clear_overflow(&TCC0);
+	struct ra915struct ra915data = {
+		.marker = 0xA1
+	};
+	usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
 }

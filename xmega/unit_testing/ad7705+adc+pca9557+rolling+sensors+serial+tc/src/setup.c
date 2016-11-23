@@ -9,7 +9,7 @@ struct spi_device SPI_ADC = {
 };
 
 const usart_serial_options_t usart_serial_options = {
-	.baudrate     = 57600,
+	.baudrate     = 9600,
 	.charlength   = USART_CHSIZE_8BIT_gc,
 	.paritytype   = USART_PMODE_DISABLED_gc,
 	.stopbits     = false
@@ -74,7 +74,7 @@ void tc_configure(void)
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
-	tc_set_resolution(&TCC0, 31250);
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV4_gc);
 }
 
 void twi_configure(void)

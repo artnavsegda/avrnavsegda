@@ -58,5 +58,6 @@ void tc_callback(void)
 	struct ra915struct ra915data = {
 		.marker = 0xA5
 	};
+	ra915data.concentration = adcdata - 0x7FFF;
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
 }

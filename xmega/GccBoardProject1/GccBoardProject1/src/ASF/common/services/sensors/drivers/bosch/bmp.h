@@ -81,7 +81,7 @@ extern "C" {
 /* BMP_CHIP_ID (0xd0) */
 
 #define BMP085_ID_VAL              (0x55)   /* BMP085 chip id value */
-#define BMP085_VER_VAL             (0x01)   /* BMP085 chip version value */
+#define BMP085_VER_VAL             (0x02)   /* BMP085 chip version value */
 
 #define BMP180_ID_VAL              (0x55)   /* BMP180 chip id value */
 #define BMP180_VER_VAL             (0x02)   /* BMP180 chip version value */

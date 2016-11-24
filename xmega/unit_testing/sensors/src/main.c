@@ -33,6 +33,8 @@
 int main (void)
 {
 	sensor_t barometer; 
+	sensor_data_t press_data = { .scaled = true };
+	sensor_data_t temp_data = { .scaled = true };
 	/* Insert system clock initialization code here (sysclk_init()). */
 
 	board_init();
@@ -41,4 +43,11 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
 	sensor_set_state(&barometer, SENSOR_STATE_HIGHEST_POWER);
+
+	while (true) {
+		LED_Toggle(LED1);
+		sensor_get_pressure(&barometer, &press_data);
+		sensor_get_temperature(&barometer, &temp_data);
+		delay_ms(500);
+	}
 }

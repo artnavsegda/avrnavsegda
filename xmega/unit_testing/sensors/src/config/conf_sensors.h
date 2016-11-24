@@ -116,7 +116,7 @@
 #   define CONFIG_TWI_MASTER_IF     (TWIC)
 #   define CONFIG_SPI_MASTER_IF     (SPIC)
 #elif (BOARD == XMEGA_A3BU_XPLAINED)
-#   define CONFIG_TWI_MASTER_IF     (TWIC)
+#   define CONFIG_TWI_MASTER_IF     (TWIE)
 #   define CONFIG_SPI_MASTER_IF     (SPIC)
 #elif (BOARD == UC3_L0_XPLAINED)
 #   define CONFIG_TWI_MASTER_IF     (AVR32_TWIM0)
@@ -135,11 +135,11 @@
 #define CONFIG_SPI_BAUDRATE         (12000000)
 #define CONFIG_SPI_OFFSET           (0)
 
-#define CONF_SENSOR_BUS_TWI
-#define INCLUDE_BMP085
-#define bmp085_orientation       {AXIS_NONE, AXIS_NONE, AXIS_NONE}
-#define bmp085_sigint            (IOPORT_CREATE_PIN(PORTC,3))
-#define bmp085_sigout            (IOPORT_CREATE_PIN(PORTC,2))
+#   define CONF_SENSOR_BUS_TWI
+#   define INCLUDE_BMP085
+#   define bmp085_orientation       {AXIS_NONE, AXIS_NONE, AXIS_NONE}
+#   define bmp085_sigint            (IOPORT_CREATE_PIN(PORTC,3))
+#   define bmp085_sigout            (IOPORT_CREATE_PIN(PORTC,2))
 
 #undef CONF_EVENT_COUNTERS          /**< Development and Debugging Facilities */
 /** @} */

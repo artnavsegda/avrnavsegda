@@ -1,29 +1,15 @@
 #include <asf.h>
 #include "setup.h"
 #include <avr/io.h>
+#include "drv8832.h"
 
 void processcontrolbyte(uint8_t controlbyte)
 {
-	if ( _BV(1) )//ign
-	{
-
-	}
-	if ( _BV(2) )//pca
-	{
-
-	}
-	if ( _BV(3) )//drv
-	{
-
-	}
-	if ( _BV(4) )//pca
-	{
-
-	}
-	if ( _BV(5) )//pca
-	{
-
-	}
+	pca9557_set_pin_level(servo.right_out.address,servo.right_out.pin_number, controlbyte & _BV(1));//ign
+	pca9557_set_pin_level(servo.right_out.address,servo.right_out.pin_number, controlbyte & _BV(2));
+	drv8832_turn(&cell,controlbyte & _BV(3));
+	pca9557_set_pin_level(servo.right_out.address,servo.right_out.pin_number, controlbyte & _BV(4));
+	pca9557_set_pin_level(servo.right_out.address,servo.right_out.pin_number, controlbyte & _BV(5));
 }
 
 int main (void)

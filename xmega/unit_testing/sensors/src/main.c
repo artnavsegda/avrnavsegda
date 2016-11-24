@@ -1,33 +1,3 @@
-/**
- * \file
- *
- * \brief Empty user application template
- *
- */
-
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * Bare minimum empty user application template
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# "Insert system clock initialization code here" comment
- * -# Minimal main function that starts with a call to board_init()
- * -# "Insert application code here" comment
- *
- */
-
-/*
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <asf.h>
 #include "stdio.h"
 #include "sensor.h"
@@ -35,9 +5,9 @@
 
 int main (void)
 {
-	sensor_t barometer;             /* Pressure sensor device descriptor */
-	sensor_data_t press_data;       /* Pressure data */
-	sensor_data_t temp_data;        /* Temperature data */
+	sensor_t barometer;
+	sensor_data_t press_data = { .scaled = true };
+	sensor_data_t temp_data = { .scaled = true };
 	char string_buf[20];
 	/* Insert system clock initialization code here (sysclk_init()). */
 
@@ -45,7 +15,8 @@ int main (void)
 	sysclk_init();
 	ioport_init();
 	gfx_mono_init();
-	sensor_bus_init(&TWIE, 400000);
+	twi_options_t twi_options = { .speed = 400000, .chip = 0 };
+	twi_master_setup(&TWIE, &twi_options);
 	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
 
 	/* Insert application code here, after the board has been initialized. */
@@ -61,8 +32,6 @@ int main (void)
 	}
 
 	/* Initialize sensor data structure flags for scaled vs. raw data */
-	press_data.scaled = true;
-	temp_data.scaled = true;
 
 	while (true) {
 		sensor_get_pressure(&barometer, &press_data);

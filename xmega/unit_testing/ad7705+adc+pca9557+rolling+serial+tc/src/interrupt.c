@@ -43,7 +43,17 @@ void tc_callback(void)
 	struct ra915struct frame = {
 		.marker = 0xA5
 	};
+	frame.data.pmt_current = adc_scan_results[0];
+	frame.data.flow_rate = adc_scan_results[1];
+	frame.data.pmt_voltage = adc_scan_results[2];
 	frame.data.concentration = adcdata - 0x7FFF;
+	frame.data.bypass_pressure = adc_scan_results[3];
+	frame.data.t_analytical_cell = adc_scan_results[4];
+	frame.data.t_selftest_cell = adc_scan_results[5];
+	frame.data.pressure_analytical_cell = adc_scan_results[6];
+	frame.data.vacuum = adc_scan_results[7];
+	frame.data.dilution_pressure = adc_scan_results[8];
+
 	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
 	//printf(" %d ",frame.checksum);

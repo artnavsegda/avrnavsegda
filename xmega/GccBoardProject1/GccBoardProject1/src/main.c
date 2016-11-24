@@ -13,7 +13,7 @@ int main (void)
 		.marker = 0xA5
 	};
 	//ra915data.data.concentration = adcdata - 0x7FFF;
-	frame.checksum = genchecksum(&frame.data);
+	frame.checksum = genchecksum((uint8_t *)&frame.data);
 	//usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
 
 	//bit_is_set(CPU_SREG,CPU_V_bp);

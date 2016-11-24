@@ -3,6 +3,7 @@
 #include "ad7705.h"
 #include "interrupt.h"
 #include "rolling.h"
+#include "ra915.h"
 
 extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];
@@ -35,33 +36,14 @@ void ad7705_callback(void)
 		adcdata = ad7705_get_data_register(&SPIC, &SPI_ADC);
 }
 
-struct ra915data {
-	uint16_t pmt_current;
-	uint16_t flow_rate;
-	uint16_t pmt_voltage;
-	int concentration;
-	uint16_t bypass_pressure;
-	uint16_t t_analytical_cell;
-	uint16_t t_selftest_cell;
-	uint16_t pressure_analytical_cell;
-	uint16_t vacuum;
-	uint16_t dilution_pressure;
-	uint8_t status;
-};
-
-struct ra915struct {
-	uint8_t marker;
-	struct ra915data data;
-	uint8_t checksum;
-};
-
 void tc_callback(void)
 {
 	LED_Toggle(LED0);
 	tc_clear_overflow(&TCC0);
-	struct ra915struct ra915data = {
+	struct ra915struct frame = {
 		.marker = 0xA5
 	};
-	ra915data.data.concentration = adcdata - 0x7FFF;
-	usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
+	frame.data.concentration = adcdata - 0x7FFF;
+	frame.checksum = genchecksum((uint8_t *)&frame.data);
+	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
 }

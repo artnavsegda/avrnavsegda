@@ -4,6 +4,8 @@
 #include "interrupt.h"
 #include "pca9557.h"
 
+sensor_t barometer;
+
 struct spi_device SPI_ADC = {
 	.id = SPIC_SS
 };
@@ -61,6 +63,11 @@ void ioport_configure(void)
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }
 
+void sensor_configure(void)
+{
+	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
+}
+
 void spi_configure(void)
 {
 	spi_master_setup_device(&SPIC, &SPI_ADC, SPI_MODE_3, 50000, 0);
@@ -97,6 +104,7 @@ void setup_configure(void)
 	adc_configure(&ADCB);
 	spi_configure();
 	twi_configure();
+	sensor_configure();
 	tc_configure();
 	interrupt_configure();
 }

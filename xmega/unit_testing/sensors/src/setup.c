@@ -13,8 +13,8 @@ void setup_init(void)
 
 void twi_configure(void)
 {
-	twi_options_t twi_options = { .speed = 400000, .chip = 0 };
-	twi_master_setup(&TWIE, &twi_options);
+	twi_master_options_t opt = { .speed = 50000 };
+	twi_master_setup(&TWIE, &opt);
 }
 
 void sensor_configure(void)

@@ -52,6 +52,9 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
+// From module: ADC - XMEGA A/AU Implementation
+#include <adc.h>
+
 // From module: CPU specific features
 #include <ccp.h>
 #include <xmega_reset_cause.h>
@@ -80,14 +83,31 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: SPI - Serial Peripheral Interface
+#include <spi.h>
+
+// From module: SPI - XMEGA implementation
+#include <spi_master.h>
+#include <spi_master.h>
+
 // From module: Sensors - Common Sensor Service
 #include <sensor.h>
+
+// From module: Sleep Controller driver
+#include <sleep.h>
+
+// From module: Sleep manager - XMEGA A/AU/B/D implementation
+#include <sleepmgr.h>
+#include <xmega/sleepmgr.h>
 
 // From module: Standard serial I/O (stdio) - XMEGA implementation
 #include <stdio_serial.h>
 
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
+
+// From module: TC - Timer Counter
+#include <tc.h>
 
 // From module: TWI - Two-Wire Interface - XMEGA implementation
 #include <twi_master.h>

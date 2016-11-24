@@ -21,6 +21,6 @@ struct ra915struct {
 	uint8_t checksum;
 };
 
-uint8_t genchecksum(uint8_t *massive);
+uint8_t genchecksum(uint8_t *massive, int sizeofmassive);
 
 #endif /* RA915_H_ */

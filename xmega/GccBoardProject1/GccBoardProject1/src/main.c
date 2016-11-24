@@ -1,6 +1,4 @@
 #include <asf.h>
-#include <avr/io.h>
-#include "ra915.h"
 #include "setup.h"
 
 int main (void)
@@ -9,14 +7,12 @@ int main (void)
 
 	setup_init();
 	setup_configure();
+	setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
-	struct ra915struct frame = {
-		.marker = 0xA5
-	};
-	//ra915data.data.concentration = adcdata - 0x7FFF;
-	frame.checksum = genchecksum((uint8_t *)&frame.data);
-	//usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
-
-	//bit_is_set(CPU_SREG,CPU_V_bp);
+	//do nothing as timer counter working inside interrupt itself
+	do {
+		/* Go to sleep, everything is handled by interrupts. */
+		//sleepmgr_enter_sleep();
+	} while (1);
 }

@@ -1,4 +1,5 @@
 #include <asf.h>
+#include <avr/io.h>
 #include "ra915.h"
 
 int main (void)
@@ -11,7 +12,9 @@ int main (void)
 	struct ra915struct ra915data = {
 		.marker = 0xA5
 	};
-	ra915data.data.concentration = adcdata - 0x7FFF;
+	//ra915data.data.concentration = adcdata - 0x7FFF;
 	ra915data.checksum = gencheksum(&ra915data.data);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&ra915data, 23);
+
+	bit_is_set(CPU_SREG,CPU_V_bp);
 }

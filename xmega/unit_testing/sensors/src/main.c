@@ -11,6 +11,10 @@ int main (void)
 	char string_buf[20];
 	/* Insert system clock initialization code here (sysclk_init()). */
 
+	setup_init();
+	setup_configure();
+	setup_enable();
+
 	board_init();
 	sysclk_init();
 	ioport_init();

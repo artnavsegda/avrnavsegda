@@ -44,6 +44,7 @@ void tc_callback(void)
 		.marker = 0xA5
 	};
 	frame.data.concentration = adcdata - 0x7FFF;
-	frame.checksum = genchecksum((uint8_t *)&frame.data);
+	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
+	//printf(" %d ",frame.checksum);
 }

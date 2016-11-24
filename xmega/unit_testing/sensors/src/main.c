@@ -1,11 +1,13 @@
 #include <asf.h>
+#include "setup.h"
 #include "stdio.h"
 #include "sensor.h"
 #include "sensor_bus.h"
 
+extern sensor_t barometer;
+
 int main (void)
 {
-	sensor_t barometer;
 	sensor_data_t press_data = { .scaled = true };
 	sensor_data_t temp_data = { .scaled = true };
 	char string_buf[20];
@@ -13,15 +15,7 @@ int main (void)
 
 	setup_init();
 	setup_configure();
-	setup_enable();
-
-	board_init();
-	sysclk_init();
-	ioport_init();
-	gfx_mono_init();
-	twi_options_t twi_options = { .speed = 400000, .chip = 0 };
-	twi_master_setup(&TWIE, &twi_options);
-	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
+	//setup_enable();
 
 	/* Insert application code here, after the board has been initialized. */
 

@@ -1,3 +1,7 @@
+#include <asf.h>
+
+sensor_t barometer;
+
 void setup_init(void)
 {
 	board_init();
@@ -14,7 +18,7 @@ void twi_configure(void)
 
 void sensor_configure(void)
 {
-
+	sensor_attach(&barometer, SENSOR_TYPE_BAROMETER, 0, 0);
 }
 
 void setup_configure(void)

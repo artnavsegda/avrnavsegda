@@ -6,8 +6,8 @@ struct ra915data {
 	uint16_t flow_rate;
 	uint16_t pmt_voltage;
 	int concentration;
-	uint16_t bypass_pressure;
-	uint16_t t_analytical_cell;
+	uint16_t bypass_pressure; // digital
+	uint16_t t_analytical_cell; // digital
 	uint16_t t_selftest_cell;
 	uint16_t pressure_analytical_cell;
 	uint16_t vacuum;

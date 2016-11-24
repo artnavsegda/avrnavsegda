@@ -12,6 +12,5 @@ void spi_configure(void);
 void adc_configure(ADC_t *adc);
 void adcch_configure(ADC_t *adc, uint8_t ch_mask);
 void setup_configure(void);
-void sensor_configure(void);
 
 #endif /* SETUP_H_ */

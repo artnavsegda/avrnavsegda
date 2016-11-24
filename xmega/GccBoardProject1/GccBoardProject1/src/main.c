@@ -1,12 +1,14 @@
 #include <asf.h>
 #include <avr/io.h>
 #include "ra915.h"
+#include "setup.h"
 
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 
-	board_init();
+	setup_init();
+	setup_configure();
 
 	/* Insert application code here, after the board has been initialized. */
 	struct ra915struct frame = {

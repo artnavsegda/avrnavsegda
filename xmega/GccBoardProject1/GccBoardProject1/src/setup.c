@@ -8,7 +8,7 @@ void setup_init(void)
 	board_init();
 	sysclk_init();
 	ioport_init();
-	gfx_mono_init();
+	//gfx_mono_init();
 }
 
 void twi_configure(void)

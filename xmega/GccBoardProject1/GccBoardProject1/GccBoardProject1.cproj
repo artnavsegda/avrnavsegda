@@ -306,6 +306,9 @@
     <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ra915.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ra915.h">
       <SubType>compile</SubType>
     </Compile>

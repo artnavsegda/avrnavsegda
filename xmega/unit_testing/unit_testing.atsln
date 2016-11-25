@@ -67,6 +67,14 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "ad7705+adc+pca9557+rolling+
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sensors", "sensors\sensors.cproj", "{647161FE-59ED-4CB8-A6F9-BC6717708F03}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "i2c_master", "i2c_master\i2c_master.cproj", "{874D2B87-9777-42F3-9A78-88B13980696B}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "i2c+sensors", "i2c+sensors\i2c+sensors.cproj", "{925364B9-A24C-4562-B1D5-2FE90B30B8A2}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+sensors", "pca9557+sensors\pca9557+sensors.cproj", "{3C20114D-E518-460F-A8CA-F08468A77A56}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+sensors+tc", "pca9557+sensors+tc\pca9557+sensors+tc.cproj", "{2E68C854-3A5A-4A20-96F9-1F254DEB0833}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -201,6 +209,22 @@ Global
 		{647161FE-59ED-4CB8-A6F9-BC6717708F03}.Debug|AVR.Build.0 = Debug|AVR
 		{647161FE-59ED-4CB8-A6F9-BC6717708F03}.Release|AVR.ActiveCfg = Release|AVR
 		{647161FE-59ED-4CB8-A6F9-BC6717708F03}.Release|AVR.Build.0 = Release|AVR
+		{874D2B87-9777-42F3-9A78-88B13980696B}.Debug|AVR.ActiveCfg = Debug|AVR
+		{874D2B87-9777-42F3-9A78-88B13980696B}.Debug|AVR.Build.0 = Debug|AVR
+		{874D2B87-9777-42F3-9A78-88B13980696B}.Release|AVR.ActiveCfg = Release|AVR
+		{874D2B87-9777-42F3-9A78-88B13980696B}.Release|AVR.Build.0 = Release|AVR
+		{925364B9-A24C-4562-B1D5-2FE90B30B8A2}.Debug|AVR.ActiveCfg = Debug|AVR
+		{925364B9-A24C-4562-B1D5-2FE90B30B8A2}.Debug|AVR.Build.0 = Debug|AVR
+		{925364B9-A24C-4562-B1D5-2FE90B30B8A2}.Release|AVR.ActiveCfg = Release|AVR
+		{925364B9-A24C-4562-B1D5-2FE90B30B8A2}.Release|AVR.Build.0 = Release|AVR
+		{3C20114D-E518-460F-A8CA-F08468A77A56}.Debug|AVR.ActiveCfg = Debug|AVR
+		{3C20114D-E518-460F-A8CA-F08468A77A56}.Debug|AVR.Build.0 = Debug|AVR
+		{3C20114D-E518-460F-A8CA-F08468A77A56}.Release|AVR.ActiveCfg = Release|AVR
+		{3C20114D-E518-460F-A8CA-F08468A77A56}.Release|AVR.Build.0 = Release|AVR
+		{2E68C854-3A5A-4A20-96F9-1F254DEB0833}.Debug|AVR.ActiveCfg = Debug|AVR
+		{2E68C854-3A5A-4A20-96F9-1F254DEB0833}.Debug|AVR.Build.0 = Debug|AVR
+		{2E68C854-3A5A-4A20-96F9-1F254DEB0833}.Release|AVR.ActiveCfg = Release|AVR
+		{2E68C854-3A5A-4A20-96F9-1F254DEB0833}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

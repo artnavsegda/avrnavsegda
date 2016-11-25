@@ -332,6 +332,18 @@
     <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\pca9557.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\pca9557.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>

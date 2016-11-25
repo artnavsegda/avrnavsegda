@@ -20,7 +20,7 @@ void tc_configure(void)
 	tc_enable(&TCC0);
 	tc_set_overflow_interrupt_callback(&TCC0, tc_callback);
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
-	tc_write_period(&TCC0, 31250/16);
+	tc_write_period(&TCC0, 31250/8);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
 	tc_set_resolution(&TCC0, 31250);
 }

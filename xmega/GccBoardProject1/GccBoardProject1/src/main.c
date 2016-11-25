@@ -1,6 +1,7 @@
 #include <asf.h>
 #include "setup.h"
 #include "pca9557.h"
+#include "ra915.h"
 
 int main (void)
 {
@@ -14,5 +15,6 @@ int main (void)
 	do {
 		/* Go to sleep, everything is handled by interrupts. */
 		//sleepmgr_enter_sleep();
+		ra915recieve();
 	} while (1);
 }

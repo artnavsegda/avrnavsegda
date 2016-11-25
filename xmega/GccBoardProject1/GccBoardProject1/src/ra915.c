@@ -39,9 +39,13 @@ void ra915recieve(void)
 {
 	uint8_t frame[5];
 	uint8_t controlbyte;
-	if (usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,5) == STATUS_OK)
+	if (usart_getchar(&USARTC0) == 0xB5)
 	{
-		if (frame[0] == 0xB5)
+		LED_Toggle(LED2);
+		irqflags_t flags = cpu_irq_save();
+		usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,4);
+		cpu_irq_restore(flags);
+		if (frame[0] == frame[3])
 		{
 			usart_serial_putchar(&USARTC0,0xB5);
 			controlbyte = frame[1];

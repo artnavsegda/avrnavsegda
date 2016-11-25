@@ -3,6 +3,7 @@
 #include "setup.h"
 #include "interrupt.h"
 #include "pca9557.h"
+#include "ra915.h"
 
 sensor_t barometer;
 
@@ -44,7 +45,7 @@ void adc_configure(ADC_t *adc)
 	adc_read_configuration(adc, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_OFF, ADC_RES_12, ADC_REF_VCC);
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
-	adc_set_clock_rate(&adc_conf, 200000UL);
+	adc_set_clock_rate(&adc_conf, 2000UL);
 	adc_write_configuration(adc, &adc_conf);
 	adc_set_callback(adc, &adc_callback);
 	adcch_configure(adc,ADC_CH0);
@@ -81,7 +82,7 @@ void tc_configure(void)
 	tc_set_wgm(&TCC0, TC_WG_NORMAL);
 	tc_write_period(&TCC0, 31250);
 	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO);
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV4_gc);
+	//tc_write_clock_source(&TCC0, TC_CLKSEL_DIV4_gc);
 }
 
 void twi_configure(void)
@@ -109,18 +110,33 @@ void setup_configure(void)
 	interrupt_configure();
 }
 
+void pca9557_configure(void)
+{
+	pca9557_set_pin_dir(0x1a, 0, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 1, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 2, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 3, PCA9557_DIR_OUTPUT);
+	//pca9557_set_pin_dir(0x1a, 4, PCA9557_DIR_OUTPUT);
+	//pca9557_set_pin_dir(0x1a, 5, PCA9557_DIR_OUTPUT);
+	//pca9557_set_pin_dir(0x1a, 6, PCA9557_DIR_OUTPUT);
+	//pca9557_set_pin_dir(0x1a, 7, PCA9557_DIR_OUTPUT);
+}
+
 void setup_enable(void)
 {
 	twi_master_enable(&TWIE);
 	pca9557_init(0x18);
 	pca9557_init(0x19);
 	pca9557_init(0x1a);
+	//pca9557_configure();
+	ra915init();
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);
 	adc_start_conversion(&ADCB, ADC_CH0);
 	spi_enable(&SPIC);
 	ad7705_enable();
+	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
 }
 
 void ad7705_enable(void)

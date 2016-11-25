@@ -35,6 +35,21 @@ void ra915init(void)
 	pca9557_set_pin_dir(watlow5.address, watlow5.pin_number, PCA9557_DIR_INPUT);
 }
 
+void ra915recieve(void)
+{
+	uint8_t frame[5];
+	uint8_t controlbyte;
+	if (usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,5) == STATUS_OK)
+	{
+		if (frame[0] == 0xB5)
+		{
+			usart_serial_putchar(&USARTC0,0xB5);
+			controlbyte = frame[1];
+			processcontrolbyte(controlbyte);
+		}
+	}
+}
+
 void processcontrolbyte(uint8_t controlbyte)
 {
 	pca9557_set_pin_level(ignition.address,ignition.pin_number,controlbyte & _BV(1)); // ign

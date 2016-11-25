@@ -4,6 +4,7 @@
 #include "interrupt.h"
 #include "rolling.h"
 #include "ra915.h"
+#include "pca9557.h"
 
 extern struct spi_device SPI_ADC;
 int16_t adc_scan_results[16];
@@ -39,7 +40,6 @@ void ad7705_callback(void)
 void tc_callback(void)
 {
 	LED_Toggle(LED0);
-	tc_clear_overflow(&TCC0);
 	struct ra915struct frame = {
 		.marker = 0xA5
 	};
@@ -57,4 +57,11 @@ void tc_callback(void)
 	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
 	//printf(" %d ",frame.checksum);
+
+	static int i = 0;
+	pca9557_toggle_pin_level(0x1a, i++);
+	if (i == 8)
+	i = 0;
+
+	tc_clear_overflow(&TCC0);
 }

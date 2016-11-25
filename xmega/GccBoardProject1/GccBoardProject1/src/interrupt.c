@@ -41,9 +41,7 @@ void tc_callback(void)
 {
 	LED_Toggle(LED0);
 	tc_clear_overflow(&TCC0);
-	struct ra915struct frame = {
-		.marker = 0xA5
-	};
+	struct ra915struct frame = { .marker = 0xA5	};
 	sensor_data_t press_data = { .scaled = true };
 	sensor_data_t temp_data = { .scaled = false };
 
@@ -60,6 +58,7 @@ void tc_callback(void)
 	frame.data.pressure_analytical_cell = press_data.pressure.value/10;
 	frame.data.vacuum = adc_scan_results[5];
 	frame.data.dilution_pressure = adc_scan_results[6];
+	frame.data.status = generatestatusbyte();
 
 	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);

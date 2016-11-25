@@ -22,5 +22,6 @@ struct ra915struct {
 };
 
 uint8_t genchecksum(uint8_t *massive, int sizeofmassive);
+void processcontrolbyte(uint8_t controlbyte);
 
 #endif /* RA915_H_ */

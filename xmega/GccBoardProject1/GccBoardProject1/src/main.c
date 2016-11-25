@@ -12,6 +12,7 @@ int main (void)
 	setup_init();
 	setup_configure();
 	setup_enable();
+	ra915init();
 
 	/* Insert application code here, after the board has been initialized. */
 	//do nothing as timer counter working inside interrupt itself

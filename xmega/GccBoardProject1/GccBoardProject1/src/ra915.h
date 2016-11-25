@@ -21,6 +21,7 @@ struct ra915struct {
 	uint8_t checksum;
 };
 
+void ra915init(void);
 uint8_t genchecksum(uint8_t *massive, int sizeofmassive);
 void processcontrolbyte(uint8_t controlbyte);
 uint8_t generatestatusbyte(void);

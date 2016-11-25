@@ -3,18 +3,37 @@
 #include "pca9557.h"
 #include "drv8832.h"
 
-struct drv8832 cell;
+struct drv8832 cell = {
+	.left_out = { .address = 0x18, .pin_number = 7 },
+	.right_out = { .address = 0x18, .pin_number = 6 },
+	.left_in = { .address = 0x18, .pin_number = 5 },
+	.right_in = { .address = 0x18, .pin_number = 4 }
+};
 
-struct pca9557_pin elemental;
-struct pca9557_pin calibration;
-struct pca9557_pin zero;
-struct pca9557_pin ignition;
+struct pca9557_pin elemental = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin calibration = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin zero = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin ignition = { .address = 0x18, .pin_number = 7 };
 
-struct pca9557_pin watlow1;
-struct pca9557_pin watlow2;
-struct pca9557_pin watlow3;
-struct pca9557_pin watlow4;
-struct pca9557_pin watlow5;
+struct pca9557_pin watlow1 = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin watlow2 = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin watlow3 = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin watlow4 = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin watlow5 = { .address = 0x18, .pin_number = 7 };
+
+void ra915init(void)
+{
+	drv8832_init(cell);
+	pca9557_set_pin_dir(elemental.address, elemental.pin_number, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(calibration.address, calibration.pin_number, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(zero.address, zero.pin_number, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(ignition.address, ignition.pin_number, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(watlow1.address, watlow1.pin_number, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(watlow2.address, watlow2.pin_number, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(watlow3.address, watlow3.pin_number, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(watlow4.address, watlow4.pin_number, PCA9557_DIR_INPUT);
+	pca9557_set_pin_dir(watlow5.address, watlow5.pin_number, PCA9557_DIR_INPUT);
+}
 
 void processcontrolbyte(uint8_t controlbyte)
 {

@@ -10,10 +10,10 @@ struct drv8832 cell = {
 	.right_in = { .address = 0x18, .pin_number = 4 }
 };
 
-struct pca9557_pin elemental = { .address = 0x18, .pin_number = 7 };
-struct pca9557_pin calibration = { .address = 0x18, .pin_number = 7 };
-struct pca9557_pin zero = { .address = 0x18, .pin_number = 7 };
-struct pca9557_pin ignition = { .address = 0x18, .pin_number = 7 };
+struct pca9557_pin elemental = { .address = 0x1a, .pin_number = 0 };
+struct pca9557_pin calibration = { .address = 0x1a, .pin_number = 1 };
+struct pca9557_pin zero = { .address = 0x1a, .pin_number = 2 };
+struct pca9557_pin ignition = { .address = 0x1a, .pin_number = 3 };
 
 struct pca9557_pin watlow1 = { .address = 0x18, .pin_number = 7 };
 struct pca9557_pin watlow2 = { .address = 0x18, .pin_number = 7 };

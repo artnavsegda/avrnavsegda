@@ -5,6 +5,7 @@
 #include "rolling.h"
 #include "ra915.h"
 #include "pca9557.h"
+#include "i2c.h"
 
 extern struct spi_device SPI_ADC;
 extern sensor_t barometer;
@@ -70,4 +71,12 @@ void tc_callback(void)
 		i = 0;*/
 
 	tc_clear_overflow(&TCC0);
+}
+
+void usart_callback(void)
+{
+	LED_Toggle(LED0);
+	uint8_t i = usart_getchar(&USARTC0);
+	i2c_send(&TWIE, 0x1a, 0x01, i);
+	usart_clear_rx_complete(&USARTC0);
 }

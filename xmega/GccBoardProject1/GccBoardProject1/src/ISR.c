@@ -12,3 +12,8 @@ ISR(PORTC_INT0_vect)
 {
 	ad7705_callback();
 }
+
+ISR(USARTC0_RXC_vect)
+{
+	usart_callback();
+}

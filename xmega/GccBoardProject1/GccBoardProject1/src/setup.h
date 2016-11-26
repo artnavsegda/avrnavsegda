@@ -14,5 +14,6 @@ void adcch_configure(ADC_t *adc, uint8_t ch_mask);
 void setup_configure(void);
 void sensor_configure(void);
 void pca9557_configure(void);
+void usart_configure(void);
 
 #endif /* SETUP_H_ */

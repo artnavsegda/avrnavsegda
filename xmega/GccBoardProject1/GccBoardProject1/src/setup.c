@@ -25,7 +25,6 @@ void setup_init(void)
 	board_init();
 	ioport_init();
 	spi_master_init(&SPIC);
-	stdio_serial_init(&USARTC0, &usart_serial_options);
 }
 
 void adcch_configure(ADC_t *adc, uint8_t ch_mask)
@@ -98,8 +97,15 @@ void interrupt_configure(void)
 	cpu_irq_enable();
 }
 
+void usart_configure(void)
+{
+	stdio_serial_init(&USARTC0, &usart_serial_options);
+	usart_set_rx_interrupt_level(&USARTC0, USART_INT_LVL_LO);
+}
+
 void setup_configure(void)
 {
+	usart_configure();
 	ioport_configure();
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);

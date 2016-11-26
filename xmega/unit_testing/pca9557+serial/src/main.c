@@ -1,10 +1,13 @@
 #include <asf.h>
 #include "setup.h"
+#include "i2c.h"
 
 ISR(USARTC0_RXC_vect)
 {
 	LED_Toggle(LED0);
-	usart_putchar(&USARTC0, usart_getchar(&USARTC0));
+	uint8_t i = usart_getchar(&USARTC0);
+	usart_putchar(&USARTC0, i);
+	i2c_send(&TWIE, 0x1a, 0x01, i);
 	usart_clear_rx_complete(&USARTC0);
 	while (!usart_tx_is_complete(&USARTC0)) {
 	}

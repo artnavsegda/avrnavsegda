@@ -85,7 +85,7 @@ void usart_callback(void)
 	}
 	else if (control == true)
 	{
-		i2c_send(&TWIE, 0x1a, 0x01, i);
+		processcontrolbyte(i);
 		control = false;
 	}
 	else

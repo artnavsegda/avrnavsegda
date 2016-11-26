@@ -35,25 +35,6 @@ void ra915init(void)
 	pca9557_set_pin_dir(watlow5.address, watlow5.pin_number, PCA9557_DIR_INPUT);
 }
 
-void ra915recieve(void)
-{
-	uint8_t frame[5];
-	uint8_t controlbyte;
-	if (usart_getchar(&USARTC0) == 0xB5)
-	{
-		LED_Toggle(LED2);
-		irqflags_t flags = cpu_irq_save();
-		usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,4);
-		cpu_irq_restore(flags);
-		if (frame[0] == frame[3])
-		{
-			usart_serial_putchar(&USARTC0,0xB5);
-			controlbyte = frame[1];
-			processcontrolbyte(controlbyte);
-		}
-	}
-}
-
 void processcontrolbyte(uint8_t controlbyte)
 {
 	pca9557_set_pin_level(ignition.address,ignition.pin_number,controlbyte & _BV(1)); // ign

@@ -122,10 +122,10 @@ void pca9557_configure(void)
 	pca9557_set_pin_dir(0x1a, 1, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, 2, PCA9557_DIR_OUTPUT);
 	pca9557_set_pin_dir(0x1a, 3, PCA9557_DIR_OUTPUT);
-	//pca9557_set_pin_dir(0x1a, 4, PCA9557_DIR_OUTPUT);
-	//pca9557_set_pin_dir(0x1a, 5, PCA9557_DIR_OUTPUT);
-	//pca9557_set_pin_dir(0x1a, 6, PCA9557_DIR_OUTPUT);
-	//pca9557_set_pin_dir(0x1a, 7, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 4, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 5, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 6, PCA9557_DIR_OUTPUT);
+	pca9557_set_pin_dir(0x1a, 7, PCA9557_DIR_OUTPUT);
 }
 
 void setup_enable(void)
@@ -134,8 +134,8 @@ void setup_enable(void)
 	pca9557_init(0x18);
 	pca9557_init(0x19);
 	pca9557_init(0x1a);
-	//pca9557_configure();
-	ra915init();
+	pca9557_configure();
+	//ra915init();
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH0);
 	adc_enable(&ADCB);

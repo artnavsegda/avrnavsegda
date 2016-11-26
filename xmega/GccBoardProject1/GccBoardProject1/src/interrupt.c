@@ -75,8 +75,20 @@ void tc_callback(void)
 
 void usart_callback(void)
 {
+	static bool control;
 	LED_Toggle(LED0);
 	uint8_t i = usart_getchar(&USARTC0);
-	i2c_send(&TWIE, 0x1a, 0x01, i);
+	if (i == 0xB5)
+	{
+		control = true;
+		usart_putchar(&USARTC0,i);
+	}
+	else if (control == true)
+	{
+		i2c_send(&TWIE, 0x1a, 0x01, i);
+		control = false;
+	}
+	else
+		control = false;
 	usart_clear_rx_complete(&USARTC0);
 }

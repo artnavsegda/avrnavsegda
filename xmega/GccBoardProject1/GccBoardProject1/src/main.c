@@ -15,6 +15,5 @@ int main (void)
 	do {
 		/* Go to sleep, everything is handled by interrupts. */
 		//sleepmgr_enter_sleep();
-		ra915recieve();
 	} while (1);
 }

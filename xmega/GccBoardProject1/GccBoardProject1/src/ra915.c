@@ -64,3 +64,24 @@ uint8_t genchecksum(uint8_t *massive, int sizeofmassive)
 		checksum = checksum + massive[i];
 	return checksum;
 }
+
+void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t temperature)
+{
+	struct ra915struct frame = { .marker = 0xA5	};
+
+	frame.data.pmt_current = internaladc[0];
+	frame.data.flow_rate = internaladc[1];
+	frame.data.pmt_voltage = internaladc[2];
+	frame.data.concentration = ad7705adc;
+	frame.data.bypass_pressure = internaladc[3];
+	frame.data.t_analytical_cell = temperature;
+	frame.data.t_selftest_cell = internaladc[4];
+	frame.data.pressure_analytical_cell = pressure;
+	frame.data.vacuum = internaladc[5];
+	frame.data.dilution_pressure = internaladc[6];
+	frame.data.status = generatestatusbyte();
+
+	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
+
+	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
+}

@@ -63,6 +63,9 @@ void tc_callback(void)
 
 	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
+
+	//ra915frame(adcdata - 0x7FFF, adc_scan_results, press_data.pressure.value/10, temp_data.temperature.value);
+
 	//printf(" %u ",press_data.pressure.value);
 
 	/*static int i = 0;

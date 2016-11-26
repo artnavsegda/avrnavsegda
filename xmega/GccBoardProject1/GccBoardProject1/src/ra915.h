@@ -26,5 +26,6 @@ void ra915recieve(void);
 uint8_t genchecksum(uint8_t *massive, int sizeofmassive);
 void processcontrolbyte(uint8_t controlbyte);
 uint8_t generatestatusbyte(void);
+void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t temperature);
 
 #endif /* RA915_H_ */

@@ -3,6 +3,29 @@
 #include "pca9557.h"
 #include "drv8832.h"
 
+/*
+
+asr[0] = ADCA0 = PA0 = J3-1 = AD7705_RESET
+asr[1] = ADCA1 = PA1 = J3-2 = X11_6
+asr[2] = ADCA2 = PA2 = J3-3 = X11_5
+asr[3] = ADCA3 = PA3 = J3-4 = DISPLAY_RESET
+asr[4] = ADCA4 = PA4 == ADC4 = J2-5 = VACUUM
+asr[5] = ADCA5 = PA5 == ADC5 = J2-6 = DILUTION
+asr[6] = ADCA6 = PA6 == ADC6 = J2-7 = BYPASS_PRESSURE
+asr[7] = ADCA7 = PA7 == ADC7 = J2-8 = P4
+
+asr[8] = ADCB0 = PB0 = ADC0 = J2-1 = PMT_CURR
+asr[9] = ADCB1 = PB1 = ADC1 = J2-2 = PMT_V
+asr[10] = ADCB2 = PB2 = ADC2 = J2-3 = FLOW
+asr[11] = ADCB3 = PB3 = ADC3 = J2-4 = T_S_C
+asr[12] = ADCB4 = PB4 = J3-5 = X11_4
+asr[13] = ADCB5 = PB5 = J3-6 = X11_3
+asr[14] = ADCB6 = PB6 = J3-7 = X11_2
+asr[15] = ADCB7 = PB7 = J3-8 = X11_1
+
+*/
+
+
 struct drv8832 cell = {
 	.left_out = { .address = 0x18, .pin_number = 7 },
 	.right_out = { .address = 0x18, .pin_number = 6 },
@@ -69,9 +92,9 @@ void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t
 {
 	struct ra915struct frame = { .marker = 0xA5	};
 
-	frame.data.pmt_current = internaladc[0];
-	frame.data.flow_rate = internaladc[1];
-	frame.data.pmt_voltage = internaladc[2];
+	frame.data.pmt_current = internaladc[8];
+	frame.data.flow_rate = internaladc[10];
+	frame.data.pmt_voltage = internaladc[9];
 	frame.data.concentration = ad7705adc;
 	frame.data.bypass_pressure = internaladc[3];
 	frame.data.t_analytical_cell = temperature;

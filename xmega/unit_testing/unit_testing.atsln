@@ -77,6 +77,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+sensors+tc", "pca95
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pca9557+serial", "pca9557+serial\pca9557+serial.cproj", "{488100B8-8C8A-45E7-8BBC-E2C4B73946A5}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "blank", "blank\blank.cproj", "{0AA87A9E-F36E-44F4-A5F6-AE9958C3D1C9}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "usbserial", "usbserial\usbserial.cproj", "{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -231,6 +235,14 @@ Global
 		{488100B8-8C8A-45E7-8BBC-E2C4B73946A5}.Debug|AVR.Build.0 = Debug|AVR
 		{488100B8-8C8A-45E7-8BBC-E2C4B73946A5}.Release|AVR.ActiveCfg = Release|AVR
 		{488100B8-8C8A-45E7-8BBC-E2C4B73946A5}.Release|AVR.Build.0 = Release|AVR
+		{0AA87A9E-F36E-44F4-A5F6-AE9958C3D1C9}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0AA87A9E-F36E-44F4-A5F6-AE9958C3D1C9}.Debug|AVR.Build.0 = Debug|AVR
+		{0AA87A9E-F36E-44F4-A5F6-AE9958C3D1C9}.Release|AVR.ActiveCfg = Release|AVR
+		{0AA87A9E-F36E-44F4-A5F6-AE9958C3D1C9}.Release|AVR.Build.0 = Release|AVR
+		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Debug|AVR.Build.0 = Debug|AVR
+		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Release|AVR.ActiveCfg = Release|AVR
+		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

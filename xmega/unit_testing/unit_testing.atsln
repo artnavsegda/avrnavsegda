@@ -81,6 +81,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "blank", "blank\blank.cproj"
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "usbserial", "usbserial\usbserial.cproj", "{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "display", "display\display.cproj", "{673AFB70-BE72-46AC-9D30-E7CC932A59DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -243,6 +245,10 @@ Global
 		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Debug|AVR.Build.0 = Debug|AVR
 		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Release|AVR.ActiveCfg = Release|AVR
 		{0BB151FC-6F33-4ADF-B1ED-96C56ECCCC63}.Release|AVR.Build.0 = Release|AVR
+		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Debug|AVR.ActiveCfg = Debug|AVR
+		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Debug|AVR.Build.0 = Debug|AVR
+		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Release|AVR.ActiveCfg = Release|AVR
+		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

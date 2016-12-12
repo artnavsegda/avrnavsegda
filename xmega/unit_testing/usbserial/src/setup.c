@@ -7,6 +7,8 @@ void setup_init(void)
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	board_init();
+	sleepmgr_init();
+	gfx_mono_init();
 }
 
 void ioport_configure(void)

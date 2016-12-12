@@ -20,10 +20,10 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
@@ -31,8 +31,9 @@
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.usb.class.device" value="Add" config="cdc_stdio" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.gfx_mono.font" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -108,6 +109,40 @@
     <file path="src/ASF/common/utils/stdio/stdio_usb/stdio_usb.h" framework="" version="3.31.0" source="common\utils\stdio\stdio_usb\stdio_usb.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/usb/usb_device.c" framework="" version="3.31.0" source="xmega\drivers\usb\usb_device.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/usb/usb_device.h" framework="" version="3.31.0" source="xmega\drivers\usb\usb_device.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/components/display/st7565r/st7565r.c" framework="" version="3.31.0" source="common\components\display\st7565r\st7565r.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/components/display/st7565r/st7565r.h" framework="" version="3.31.0" source="common\components\display\st7565r\st7565r.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_st7565r.h" framework="" version="3.31.0" source="common\components\display\st7565r\module_config\conf_st7565r.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono.h" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/sysfont.c" framework="" version="3.31.0" source="common\services\gfx_mono\sysfont.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_text.c" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_text.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/docsrc/gfx_mono_overview.png" framework="" version="3.31.0" source="common\services\gfx_mono\docsrc\gfx_mono_overview.png" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/sysfont.h" framework="" version="3.31.0" source="common\services\gfx_mono\sysfont.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_text.h" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_text.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_sysfont.h" framework="" version="3.31.0" source="common\services\gfx_mono\module_config\conf_sysfont.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/pmic/pmic.h" framework="" version="3.31.0" source="xmega\drivers\pmic\pmic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/spi/spi.c" framework="" version="3.31.0" source="xmega\drivers\spi\spi.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/spi/spi.h" framework="" version="3.31.0" source="xmega\drivers\spi\spi.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.31.0" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/delay/xmega/cycle_counter.h" framework="" version="3.31.0" source="common\services\delay\xmega\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_generic.c" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_generic.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_generic.h" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_generic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_framebuffer.c" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_framebuffer.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_framebuffer.h" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_framebuffer.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/tools/dump_display_over_serial.py" framework="" version="3.31.0" source="common\services\gfx_mono\tools\dump_display_over_serial.py" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/tools/bitmap.py" framework="" version="3.31.0" source="common\services\gfx_mono\tools\bitmap.py" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/tools/readme.txt" framework="" version="3.31.0" source="common\services\gfx_mono\tools\readme.txt" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_c12832_a1z.c" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_c12832_a1z.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/gfx_mono/gfx_mono_c12832_a1z.h" framework="" version="3.31.0" source="common\services\gfx_mono\gfx_mono_c12832_a1z.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/xmega_spi/spi_master.c" framework="" version="3.31.0" source="common\services\spi\xmega_spi\spi_master.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/spi_master.h" framework="" version="3.31.0" source="common\services\spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/xmega_spi/spi_master.h" framework="" version="3.31.0" source="common\services\spi\xmega_spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_spi_master.h" framework="" version="3.31.0" source="common\services\spi\xmega_spi\module_config\conf_spi_master.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/xmega_usart_spi/usart_spi.c" framework="" version="3.31.0" source="common\services\spi\xmega_usart_spi\usart_spi.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/xmega_usart_spi/usart_spi.h" framework="" version="3.31.0" source="common\services\spi\xmega_usart_spi\usart_spi.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/spi/usart_spi.h" framework="" version="3.31.0" source="common\services\spi\usart_spi.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/Config/conf_usart_spi.h" framework="" version="3.31.0" source="common\services\spi\xmega_usart_spi\module_config\conf_usart_spi.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/usart/usart.c" framework="" version="3.31.0" source="xmega\drivers\usart\usart.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/xmega/drivers/usart/usart.h" framework="" version="3.31.0" source="xmega\drivers\usart\usart.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.31.0/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -118,6 +153,20 @@
   <board id="board.xmega_a3bu_xplained" value="Add" config="" content-id="Atmel.ASF" />
 </framework-data>
     </AsfFrameworkConfig>
+    <avrtool>com.atmel.avrdbg.tool.ispmk2</avrtool>
+    <avrtoolinterface>PDI</avrtoolinterface>
+    <avrtoolserialnumber>000200212345</avrtoolserialnumber>
+    <avrdeviceexpectedsignature>0x1E9843</avrdeviceexpectedsignature>
+    <com_atmel_avrdbg_tool_ispmk2>
+      <ToolOptions>
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>PDI</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.ispmk2</ToolType>
+      <ToolNumber>000200212345</ToolNumber>
+      <ToolName>AVRISP mkII</ToolName>
+    </com_atmel_avrdbg_tool_ispmk2>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -134,6 +183,7 @@
       <Value>CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA</Value>
       <Value>BOARD=XMEGA_A3BU_XPLAINED</Value>
       <Value>IOPORT_XMEGA_COMPAT</Value>
+      <Value>GFX_MONO_C12832_A1Z=1</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -160,6 +210,14 @@
       <Value>../src/ASF/common/services/usb/udc</Value>
       <Value>../src/ASF/common/utils/stdio/stdio_usb</Value>
       <Value>../src/ASF/xmega/drivers/usb</Value>
+      <Value>../src/ASF/common/components/display/st7565r</Value>
+      <Value>../src/ASF/common/services/gfx_mono</Value>
+      <Value>../src/ASF/xmega/drivers/pmic</Value>
+      <Value>../src/ASF/xmega/drivers/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
+      <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/xmega/drivers/usart</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -199,6 +257,14 @@
       <Value>../src/ASF/common/services/usb/udc</Value>
       <Value>../src/ASF/common/utils/stdio/stdio_usb</Value>
       <Value>../src/ASF/xmega/drivers/usb</Value>
+      <Value>../src/ASF/common/components/display/st7565r</Value>
+      <Value>../src/ASF/common/services/gfx_mono</Value>
+      <Value>../src/ASF/xmega/drivers/pmic</Value>
+      <Value>../src/ASF/xmega/drivers/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
+      <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/xmega/drivers/usart</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
 </AvrGcc>
@@ -219,6 +285,7 @@
       <Value>CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA</Value>
       <Value>BOARD=XMEGA_A3BU_XPLAINED</Value>
       <Value>IOPORT_XMEGA_COMPAT</Value>
+      <Value>GFX_MONO_C12832_A1Z=1</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -245,6 +312,14 @@
       <Value>../src/ASF/common/services/usb/udc</Value>
       <Value>../src/ASF/common/utils/stdio/stdio_usb</Value>
       <Value>../src/ASF/xmega/drivers/usb</Value>
+      <Value>../src/ASF/common/components/display/st7565r</Value>
+      <Value>../src/ASF/common/services/gfx_mono</Value>
+      <Value>../src/ASF/xmega/drivers/pmic</Value>
+      <Value>../src/ASF/xmega/drivers/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
+      <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/xmega/drivers/usart</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -285,6 +360,14 @@
       <Value>../src/ASF/common/services/usb/udc</Value>
       <Value>../src/ASF/common/utils/stdio/stdio_usb</Value>
       <Value>../src/ASF/xmega/drivers/usb</Value>
+      <Value>../src/ASF/common/components/display/st7565r</Value>
+      <Value>../src/ASF/common/services/gfx_mono</Value>
+      <Value>../src/ASF/xmega/drivers/pmic</Value>
+      <Value>../src/ASF/xmega/drivers/spi</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/common/services/spi/xmega_spi</Value>
+      <Value>../src/ASF/common/services/spi</Value>
+      <Value>../src/ASF/xmega/drivers/usart</Value>
     </ListValues>
   </avrgcc.assembler.general.IncludePaths>
   <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -296,15 +379,26 @@
     <Folder Include="src\ASF\" />
     <Folder Include="src\ASF\common\" />
     <Folder Include="src\ASF\common\boards\" />
+    <Folder Include="src\ASF\common\components\" />
+    <Folder Include="src\ASF\common\components\display\" />
+    <Folder Include="src\ASF\common\components\display\st7565r\" />
     <Folder Include="src\ASF\common\services\" />
     <Folder Include="src\ASF\common\services\clock\" />
     <Folder Include="src\ASF\common\services\clock\xmega\" />
+    <Folder Include="src\ASF\common\services\delay\" />
+    <Folder Include="src\ASF\common\services\delay\xmega\" />
+    <Folder Include="src\ASF\common\services\gfx_mono\" />
+    <Folder Include="src\ASF\common\services\gfx_mono\docsrc\" />
+    <Folder Include="src\ASF\common\services\gfx_mono\tools\" />
     <Folder Include="src\ASF\common\services\gpio\" />
     <Folder Include="src\ASF\common\services\gpio\xmega_gpio\" />
     <Folder Include="src\ASF\common\services\ioport\" />
     <Folder Include="src\ASF\common\services\ioport\xmega\" />
     <Folder Include="src\ASF\common\services\sleepmgr\" />
     <Folder Include="src\ASF\common\services\sleepmgr\xmega\" />
+    <Folder Include="src\ASF\common\services\spi\" />
+    <Folder Include="src\ASF\common\services\spi\xmega_spi\" />
+    <Folder Include="src\ASF\common\services\spi\xmega_usart_spi\" />
     <Folder Include="src\ASF\common\services\usb\" />
     <Folder Include="src\ASF\common\services\usb\class\" />
     <Folder Include="src\ASF\common\services\usb\class\cdc\" />
@@ -321,7 +415,10 @@
     <Folder Include="src\ASF\xmega\drivers\" />
     <Folder Include="src\ASF\xmega\drivers\cpu\" />
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
+    <Folder Include="src\ASF\xmega\drivers\pmic\" />
     <Folder Include="src\ASF\xmega\drivers\sleep\" />
+    <Folder Include="src\ASF\xmega\drivers\spi\" />
+    <Folder Include="src\ASF\xmega\drivers\usart\" />
     <Folder Include="src\ASF\xmega\drivers\usb\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
@@ -330,6 +427,72 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ASF\common\components\display\st7565r\st7565r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\components\display\st7565r\st7565r.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gfx_mono\docsrc\gfx_mono_overview.png">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gfx_mono\gfx_mono.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\delay\delay.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\delay\xmega\cycle_counter.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\gfx_mono\gfx_mono_c12832_a1z.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\gfx_mono_c12832_a1z.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\gfx_mono\gfx_mono_framebuffer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\gfx_mono_framebuffer.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\gfx_mono\gfx_mono_generic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\gfx_mono_generic.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\gfx_mono\gfx_mono_text.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\gfx_mono_text.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\gfx_mono\sysfont.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\sysfont.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\spi\spi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\spi\usart_spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\spi\xmega_spi\spi_master.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\spi\xmega_spi\spi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\spi\xmega_usart_spi\usart_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\spi\xmega_usart_spi\usart_spi.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\common\services\usb\class\cdc\device\udi_cdc.c">
       <SubType>compile</SubType>
     </Compile>
@@ -342,9 +505,45 @@
     <Compile Include="src\ASF\common\utils\stdio\stdio_usb\stdio_usb.c">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="src\ASF\common\services\gfx_mono\tools\bitmap.py">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gfx_mono\tools\dump_display_over_serial.py">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gfx_mono\tools\readme.txt">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\xmega\drivers\pmic\pmic.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\xmega\drivers\spi\spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\drivers\spi\spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\xmega\drivers\usart\usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\xmega\drivers\usart\usart.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\xmega\drivers\usb\usb_device.c">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="src\config\conf_st7565r.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_sysfont.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_spi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_usart_spi.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\setup.c">
       <SubType>compile</SubType>
     </Compile>

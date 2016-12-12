@@ -94,6 +94,7 @@
 
 // From module: SPI - XMEGA implementation
 #include <spi_master.h>
+#include <spi_master.h>
 
 // From module: ST7565R LCD controller
 #include <st7565r.h>
@@ -107,9 +108,6 @@
 // From module: Sleep manager - XMEGA A/AU/B/D implementation
 #include <sleepmgr.h>
 #include <xmega/sleepmgr.h>
-
-// From module: Standard serial I/O (stdio) - XMEGA implementation
-#include <stdio_serial.h>
 
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include <sysclk.h>
@@ -127,11 +125,21 @@
 #include <twim.h>
 #include <twis.h>
 
-// From module: USART - Serial interface - XMEGA implementation
-#include <serial.h>
-
 // From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
 #include <usart.h>
+
+// From module: USB CDC Protocol
+#include <usb_protocol_cdc.h>
+
+// From module: USB Device CDC (Single Interface Device)
+#include <udi_cdc.h>
+
+// From module: USB Device CDC Standard I/O (stdio) - AVR implementation
+#include <stdio_usb.h>
+
+// From module: USB Device Stack Core (Common API)
+#include <udc.h>
+#include <udd.h>
 
 // From module: XMEGA compiler driver
 #include <compiler.h>

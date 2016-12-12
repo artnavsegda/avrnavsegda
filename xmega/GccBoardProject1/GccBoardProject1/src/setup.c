@@ -11,13 +11,6 @@ struct spi_device SPI_ADC = {
 	.id = SPIC_SS
 };
 
-const usart_serial_options_t usart_serial_options = {
-	.baudrate     = 9600,
-	.charlength   = USART_CHSIZE_8BIT_gc,
-	.paritytype   = USART_PMODE_DISABLED_gc,
-	.stopbits     = false
-};
-
 void setup_init(void)
 {
 	pmic_init();
@@ -97,15 +90,8 @@ void interrupt_configure(void)
 	cpu_irq_enable();
 }
 
-void usart_configure(void)
-{
-	stdio_serial_init(&USARTC0, &usart_serial_options);
-	usart_set_rx_interrupt_level(&USARTC0, USART_INT_LVL_LO);
-}
-
 void setup_configure(void)
 {
-	usart_configure();
 	ioport_configure();
 	adc_configure(&ADCA);
 	adc_configure(&ADCB);
@@ -142,6 +128,7 @@ void setup_enable(void)
 	adc_start_conversion(&ADCB, ADC_CH0);
 	spi_enable(&SPIC);
 	ad7705_enable();
+	udc_start();
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV64_gc);
 }
 

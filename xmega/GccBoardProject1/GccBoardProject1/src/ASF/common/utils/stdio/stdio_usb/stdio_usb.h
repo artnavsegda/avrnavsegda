@@ -1,13 +1,12 @@
 /**
- *
  * \file
  *
- * \brief Common Standard I/O Serial Management.
+ * \brief USB Standard I/O Serial Management.
  *
- * This file defines a useful set of functions for the Stdio Serial interface on AVR
- * and SAM devices.
+ * This file defines a useful set of functions for the Stdio Serial
+ * interface on AVR devices.
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,87 +42,82 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-
-#ifndef _STDIO_SERIAL_H_
-#define _STDIO_SERIAL_H_
+#ifndef _stdio_usb_h_
+#define _stdio_usb_h_
 
 /**
- * \defgroup group_common_utils_stdio_stdio_serial Standard serial I/O (stdio)
+ * \defgroup group_common_utils_stdio_stdio_usb USB/CDC Standard I/O (stdio)
  * \ingroup group_common_utils_stdio
  *
- * Common standard serial I/O management driver that
- * implements a stdio serial interface on AVR and SAM devices.
+ * Standard I/O (stdio) management component that implements a stdio
+ * USB CDC interface on AVR devices.
  *
  * \{
  */
 
-#include <stdio.h>
-#include "compiler.h"
-#ifndef SAMD20
-# include "sysclk.h"
-#endif
-#include "serial.h"
+#include <compiler.h>
 
-#if (XMEGA || MEGA_RF) && defined(__GNUC__)
-	extern int _write (char c, int *f);
-	extern int _read (int *f);
-#endif
+#include <stdio.h>
+
+#include <udc.h>
+#include <udi_cdc.h>
+
+extern int _write (char c, int *f);
+extern int _read (int *f);
 
 
 //! Pointer to the base of the USART module instance to use for stdio.
 extern volatile void *volatile stdio_base;
 //! Pointer to the external low level write function.
 extern int (*ptr_put)(void volatile*, char);
-
 //! Pointer to the external low level read function.
 extern void (*ptr_get)(void volatile*, char*);
 
-/*! \brief Initializes the stdio in Serial Mode.
+/*! \brief Sends a character with the USART.
  *
- * \param usart       Base address of the USART instance.
- * \param opt         Options needed to set up RS232 communication (see \ref usart_options_t).
+ * \param usart   Base address of the USART instance.
+ * \param data    Character to write.
  *
+ * \return Status.
+ *   \retval  0  The character was written.
+ *   \retval -1  The function timed out before the transmitter became ready.
  */
-static inline void stdio_serial_init(volatile void *usart, const usart_serial_options_t *opt)
-{
-	stdio_base = (void *)usart;
-	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
-	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
-# if (XMEGA || MEGA_RF)
-	usart_serial_init((USART_t *)usart,opt);
-# elif UC3
-	usart_serial_init(usart,(usart_serial_options_t *)opt);
-# elif SAM
-	usart_serial_init((Usart *)usart,(usart_serial_options_t *)opt);
-# else
-#  error Unsupported chip type
-# endif
+int stdio_usb_putchar (volatile void * usart, char data);
 
-# if defined(__GNUC__)
-#  if (XMEGA || MEGA_RF)
-	// For AVR GCC libc print redirection uses fdevopen.
-	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
-#  endif
-#  if UC3 || SAM
-	// For AVR32 and SAM GCC
-	// Specify that stdout and stdin should not be buffered.
-	setbuf(stdout, NULL);
-	setbuf(stdin, NULL);
-	// Note: Already the case in IAR's Normal DLIB default configuration
-	// and AVR GCC library:
-	// - printf() emits one character at a time.
-	// - getchar() requests only 1 byte to exit.
-#  endif
-# endif
-}
+/*! \brief Waits until a character is received, and returns it.
+ *
+ * \param usart   Base address of the USART instance.
+ * \param data    Data to read
+ *
+ * \return Nothing.
+ */
+void stdio_usb_getchar (void volatile * usart, char * data);
+
+/*! \brief Enables the stdio in USB Serial Mode.
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
+bool stdio_usb_enable(void);
+
+/*! \brief Disables the stdio in USB Serial Mode.
+ *
+ * \return Nothing.
+ */
+void stdio_usb_disable(void);
+
+/*! \brief Initializes the stdio in USB Serial Mode.
+ *
+ * \return Nothing.
+ */
+void stdio_usb_init(void);
 
 /**
  * \}
  */
 
-#endif  // _STDIO_SERIAL_H_
+#endif  // _stdio_usb_h_

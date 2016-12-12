@@ -53,7 +53,7 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
 
 /* Fbus = Fsys / (2 ^ BUS_div) */
-#define CONFIG_SYSCLK_PSADIV          SYSCLK_PSADIV_1
+#define CONFIG_SYSCLK_PSADIV          SYSCLK_PSADIV_2
 #define CONFIG_SYSCLK_PSBCDIV         SYSCLK_PSBCDIV_1_1
 
 //#define CONFIG_PLL0_SOURCE          PLL_SRC_XOSC
@@ -92,8 +92,8 @@
  * to a higher frequency via the internal PLL module) must be used instead.
  */
 #define CONFIG_USBCLK_SOURCE                USBCLK_SRC_RCOSC
-//#define CONFIG_OSC_RC32_CAL                 48000000UL
-//#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
+#define CONFIG_OSC_RC32_CAL                 48000000UL
+#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
 
 /* Use to enable and select RTC clock source */
 //#define CONFIG_RTC_SOURCE           SYSCLK_RTCSRC_ULP

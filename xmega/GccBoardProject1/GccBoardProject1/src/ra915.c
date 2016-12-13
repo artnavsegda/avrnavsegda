@@ -96,11 +96,11 @@ void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t
 	frame.data.flow_rate = internaladc[10];
 	frame.data.pmt_voltage = internaladc[9];
 	frame.data.concentration = ad7705adc;
-	frame.data.bypass_pressure = internaladc[3];
+	frame.data.bypass_pressure = internaladc[6];
 	frame.data.t_analytical_cell = temperature;
-	frame.data.t_selftest_cell = internaladc[4];
+	frame.data.t_selftest_cell = internaladc[11];
 	frame.data.pressure_analytical_cell = pressure;
-	frame.data.vacuum = internaladc[5];
+	frame.data.vacuum = internaladc[4];
 	frame.data.dilution_pressure = internaladc[6];
 	frame.data.status = generatestatusbyte();
 

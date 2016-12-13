@@ -49,9 +49,9 @@ void tc_callback(void)
 	sensor_get_pressure(&barometer, &press_data);
 	sensor_get_temperature(&barometer, &temp_data);
 
-	frame.data.pmt_current = adc_scan_results[0];
-	frame.data.flow_rate = adc_scan_results[1];
-	frame.data.pmt_voltage = adc_scan_results[2];
+	frame.data.pmt_current = adc_scan_results[8];
+	frame.data.flow_rate = adc_scan_results[10];
+	frame.data.pmt_voltage = adc_scan_results[9];
 	frame.data.concentration = adcdata - 0x7FFF;
 	frame.data.bypass_pressure = adc_scan_results[3];
 	frame.data.t_analytical_cell = temp_data.temperature.value;

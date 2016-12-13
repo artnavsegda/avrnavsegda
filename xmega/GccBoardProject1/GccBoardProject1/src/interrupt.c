@@ -110,12 +110,12 @@ void my_callback_rx_notify(uint8_t port)
 {
 	if (expect == MARKER)
 	{
-		if (udi_cdc_is_rx_ready)
+		if (udi_cdc_is_rx_ready())
 		{
 			marker = udi_cdc_getc();
 			if (strchr(markers,marker)!=NULL)
 			{
-				if (udi_cdc_is_rx_ready)
+				if (udi_cdc_is_rx_ready())
 				{
 					fillbuffer = udi_cdc_get_nb_received_data();
 					udi_cdc_read_buf(buffer,fillbuffer);
@@ -130,7 +130,7 @@ void my_callback_rx_notify(uint8_t port)
 	}
 	else if (expect == CONTENT)
 	{
-		if (udi_cdc_is_rx_ready)
+		if (udi_cdc_is_rx_ready())
 		{
 			fillbuffer = udi_cdc_get_nb_received_data();
 			udi_cdc_read_buf(buffer,fillbuffer);

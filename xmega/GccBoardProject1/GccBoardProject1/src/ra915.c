@@ -58,6 +58,24 @@ void ra915init(void)
 	pca9557_set_pin_dir(watlow5.address, watlow5.pin_number, PCA9557_DIR_INPUT);
 }
 
+void process_ra915_request(int marker,uint8_t *buffer,int fillbuffer)
+{
+	switch (marker)
+	{
+		case 0xB5:
+			if (fillbuffer == 4)
+			{
+				if (buffer[3] == genchecksum(buffer,4))
+				{
+					processcontrolbyte(buffer[0]);
+				}
+			}
+		break;
+		default:
+		break;
+	}
+}
+
 void processcontrolbyte(uint8_t controlbyte)
 {
 	pca9557_set_pin_level(ignition.address,ignition.pin_number,controlbyte & _BV(1)); // ign

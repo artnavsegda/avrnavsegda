@@ -1,5 +1,6 @@
 #include <asf.h>
 #include <stdio.h>
+#include <string.h>
 #include "ad7705.h"
 #include "interrupt.h"
 #include "rolling.h"
@@ -62,7 +63,8 @@ void tc_callback(void)
 	frame.data.status = generatestatusbyte();
 
 	frame.checksum = genchecksum((uint8_t *)&frame.data,21);
-	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
+	//usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
+	udi_cdc_write_buf((uint8_t *)&frame,23);
 
 	//ra915frame(adcdata - 0x7FFF, adc_scan_results, press_data.pressure.value/10, temp_data.temperature.value);
 
@@ -94,4 +96,51 @@ void usart_callback(void)
 	else
 		control = false;
 	usart_clear_rx_complete(&USARTC0);
+}
+
+uint8_t buffer[100];
+int fillbuffer = 0;
+#define MARKER true
+#define CONTENT false
+bool expect = MARKER;
+int marker;
+char markers[] = "\xB5";
+
+void my_callback_rx_notify(uint8_t port)
+{
+	if (expect == MARKER)
+	{
+		if (udi_cdc_is_rx_ready())
+		{
+			marker = udi_cdc_getc();
+			if (strchr(markers,marker)!=NULL)
+			{
+				if (udi_cdc_is_rx_ready())
+				{
+					fillbuffer = udi_cdc_get_nb_received_data();
+					udi_cdc_read_buf(buffer,fillbuffer);
+					//process_ra915_request(marker,buffer,fillbuffer);
+				}
+				else
+				{
+					expect = CONTENT;
+				}
+			}
+		}
+	}
+	else if (expect == CONTENT)
+	{
+		if (udi_cdc_is_rx_ready())
+		{
+			fillbuffer = udi_cdc_get_nb_received_data();
+			udi_cdc_read_buf(buffer,fillbuffer);
+			//process_ra915_request(marker,buffer,fillbuffer);
+			expect = MARKER;
+		}
+	}
+
+
+
+	/*int i = udi_cdc_get_nb_received_data();
+	udi_cdc_read_buf(buffer,i);*/
 }

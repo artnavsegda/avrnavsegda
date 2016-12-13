@@ -58,6 +58,24 @@ void ra915init(void)
 	pca9557_set_pin_dir(watlow5.address, watlow5.pin_number, PCA9557_DIR_INPUT);
 }
 
+void process_ra915_request(int marker,uint8_t *buffer,int fillbuffer)
+{
+	switch (marker)
+	{
+		case 0xB5:
+			if (fillbuffer == 4)
+			{
+				if (buffer[3] == genchecksum(buffer,4))
+				{
+					processcontrolbyte(buffer[0]);
+				}
+			}
+		break;
+		default:
+		break;
+	}
+}
+
 void processcontrolbyte(uint8_t controlbyte)
 {
 	pca9557_set_pin_level(ignition.address,ignition.pin_number,controlbyte & _BV(1)); // ign
@@ -86,6 +104,7 @@ uint8_t genchecksum(uint8_t *massive, int sizeofmassive)
 	for (int i=0;i<sizeofmassive;i++)
 		checksum = checksum + massive[i];
 	return checksum;
+<<<<<<< HEAD
 }
 
 void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t temperature)
@@ -108,3 +127,6 @@ void ra915frame(int ad7705adc, int16_t *internaladc, uint16_t pressure, uint16_t
 
 	usart_serial_write_packet(&USARTC0, (uint8_t *)&frame, 23);
 }
+=======
+}
+>>>>>>> 9d915ab5fe6d59b6b6b616a135eb4f967b6260ce

@@ -63,13 +63,16 @@ void process_ra915_request(int marker,uint8_t *buffer,int fillbuffer)
 	switch (marker)
 	{
 		case 0xB5:
-			if (fillbuffer == 4)
-			{
-				if (buffer[3] == genchecksum(buffer,4))
-				{
+//			if (fillbuffer == 4)
+//			{
+//				if (buffer[3] == genchecksum(buffer,4))
+//				{
 					processcontrolbyte(buffer[0]);
-				}
-			}
+//				}
+//			}
+		break;
+		case 0xCA:
+			// ?\_(?)_/?
 		break;
 		default:
 		break;

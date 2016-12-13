@@ -78,7 +78,7 @@ void tc_callback(void)
 	tc_clear_overflow(&TCC0);
 }
 
-void usart_callback(void)
+/*void usart_callback(void)
 {
 	static bool control;
 	LED_Toggle(LED0);
@@ -96,8 +96,9 @@ void usart_callback(void)
 	else
 		control = false;
 	usart_clear_rx_complete(&USARTC0);
-}
+}*/
 
+/*
 uint8_t buffer[100];
 int fillbuffer = 0;
 #define MARKER true
@@ -139,8 +140,7 @@ void my_callback_rx_notify(uint8_t port)
 		}
 	}
 
-
-
-	/*int i = udi_cdc_get_nb_received_data();
-	udi_cdc_read_buf(buffer,i);*/
+	//int i = udi_cdc_get_nb_received_data();
+	//udi_cdc_read_buf(buffer,i);
 }
+*/

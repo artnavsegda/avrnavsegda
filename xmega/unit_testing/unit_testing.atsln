@@ -83,6 +83,10 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "usbserial", "usbserial\usbs
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "display", "display\display.cproj", "{673AFB70-BE72-46AC-9D30-E7CC932A59DA}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "spi", "spi\spi.cproj", "{6E6B8459-19DD-4E1C-AA1D-5F575B5173F2}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "spi_usart", "spi_usart\spi_usart.cproj", "{D6230665-5373-4E59-8F1F-13D0934CF297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -249,6 +253,14 @@ Global
 		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Debug|AVR.Build.0 = Debug|AVR
 		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Release|AVR.ActiveCfg = Release|AVR
 		{673AFB70-BE72-46AC-9D30-E7CC932A59DA}.Release|AVR.Build.0 = Release|AVR
+		{6E6B8459-19DD-4E1C-AA1D-5F575B5173F2}.Debug|AVR.ActiveCfg = Debug|AVR
+		{6E6B8459-19DD-4E1C-AA1D-5F575B5173F2}.Debug|AVR.Build.0 = Debug|AVR
+		{6E6B8459-19DD-4E1C-AA1D-5F575B5173F2}.Release|AVR.ActiveCfg = Release|AVR
+		{6E6B8459-19DD-4E1C-AA1D-5F575B5173F2}.Release|AVR.Build.0 = Release|AVR
+		{D6230665-5373-4E59-8F1F-13D0934CF297}.Debug|AVR.ActiveCfg = Debug|AVR
+		{D6230665-5373-4E59-8F1F-13D0934CF297}.Debug|AVR.Build.0 = Debug|AVR
+		{D6230665-5373-4E59-8F1F-13D0934CF297}.Release|AVR.ActiveCfg = Release|AVR
+		{D6230665-5373-4E59-8F1F-13D0934CF297}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -87,6 +87,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "spi", "spi\spi.cproj", "{6E
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "spi_usart", "spi_usart\spi_usart.cproj", "{D6230665-5373-4E59-8F1F-13D0934CF297}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "blink", "blink\blink.cproj", "{E25371BC-3022-4223-AAC6-502E31F5FE94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -261,6 +263,10 @@ Global
 		{D6230665-5373-4E59-8F1F-13D0934CF297}.Debug|AVR.Build.0 = Debug|AVR
 		{D6230665-5373-4E59-8F1F-13D0934CF297}.Release|AVR.ActiveCfg = Release|AVR
 		{D6230665-5373-4E59-8F1F-13D0934CF297}.Release|AVR.Build.0 = Release|AVR
+		{E25371BC-3022-4223-AAC6-502E31F5FE94}.Debug|AVR.ActiveCfg = Debug|AVR
+		{E25371BC-3022-4223-AAC6-502E31F5FE94}.Debug|AVR.Build.0 = Debug|AVR
+		{E25371BC-3022-4223-AAC6-502E31F5FE94}.Release|AVR.ActiveCfg = Release|AVR
+		{E25371BC-3022-4223-AAC6-502E31F5FE94}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

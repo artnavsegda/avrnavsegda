@@ -1,0 +1,5 @@
+main
+	SPIC_Init
+		SPIC_Init_Advanced
+	SPIC_Write
+	SPIC_Read

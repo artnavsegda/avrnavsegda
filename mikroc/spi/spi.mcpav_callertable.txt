@@ -1,5 +1,10 @@
 main
+	UARTC0_Write_Text
+		UARTC0_Write
 	SPIC_Init
 		SPIC_Init_Advanced
 	SPIC_Write
 	SPIC_Read
+	UARTC0_Write
+	__CC2DW
+	UARTC0_Init

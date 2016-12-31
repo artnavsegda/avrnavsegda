@@ -143,7 +143,7 @@
   <documentation help="http://asf.atmel.com/docs/3.32.0/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
   <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.22.0" />
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.24.2" />
   </dependencies>
   <project id="common.applications.user_application.xmega_a3bu_xplained" value="Add" config="" content-id="Atmel.ASF" />
   <board id="board.xmega_a3bu_xplained" value="Add" config="" content-id="Atmel.ASF" />

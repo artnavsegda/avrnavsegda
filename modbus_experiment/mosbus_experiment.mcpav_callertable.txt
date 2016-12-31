@@ -249,6 +249,7 @@ main
 				SPI_Ethernet_setRxReadAddress
 				SPI_Ethernet_UserTCP
 					SPI_Ethernet_getByte
+					SPI_Ethernet_putByte
 					PrintOut
 					UART_Write_Text
 			SPI_Ethernet_setBitReg

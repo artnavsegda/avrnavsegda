@@ -1,6 +1,6 @@
-#line 1 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
-#line 1 "c:/users/artna/desktop/modbus_experiment/__ethenc28j60.h"
-#line 119 "c:/users/artna/desktop/modbus_experiment/__ethenc28j60.h"
+#line 1 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 1 "c:/users/art navsegda/coding/avrnavsegda/modbus_experiment/__ethenc28j60.h"
+#line 119 "c:/users/art navsegda/coding/avrnavsegda/modbus_experiment/__ethenc28j60.h"
 typedef struct
  {
  unsigned char valid;
@@ -24,7 +24,7 @@ typedef struct {
  unsigned canCloseTCP: 1;
  unsigned isBroadcast: 1;
 } TEthPktFlags;
-#line 146 "c:/users/artna/desktop/modbus_experiment/__ethenc28j60.h"
+#line 146 "c:/users/art navsegda/coding/avrnavsegda/modbus_experiment/__ethenc28j60.h"
 extern void SPI_Ethernet_Init(unsigned char *resetPort, unsigned char resetBit, unsigned char *CSport, unsigned char CSbit, unsigned char *mac, unsigned char *ip, unsigned char fullDuplex);
 extern unsigned char SPI_Ethernet_doPacket();
 extern void SPI_Ethernet_putByte(unsigned char b);
@@ -35,18 +35,18 @@ extern void SPI_Ethernet_getBytes(unsigned char *ptr, unsigned int addr, unsigne
 extern unsigned int SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags * flags);
 extern unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags * flags);
 extern void SPI_Ethernet_confNetwork(char *ipMask, char *gwIpAddr, char *dnsIpAddr);
-#line 7 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 7 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
 sfr sbit SPI_Ethernet_Rst at PORTC_OUT.B1;
 sfr sbit SPI_Ethernet_CS at PORTC_OUT.B0;
 sfr sbit SPI_Ethernet_Rst_Direction at PORTC_DIR.B1;
 sfr sbit SPI_Ethernet_CS_Direction at PORTC_DIR.B0;
-#line 16 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 16 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
 unsigned char myMacAddr[6] = {0x00, 0x14, 0xA5, 0x76, 0x19, 0x3f} ;
 unsigned char myIpAddr[4] = {192, 168, 1, 150} ;
 unsigned char gwIpAddr[4] = {192, 168, 1, 1 } ;
 unsigned char ipMask[4] = {255, 255, 255, 0 } ;
 unsigned char dnsIpAddr[4] = {192, 168, 1, 1 } ;
-#line 29 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 29 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
 void PrintHandler(char c)
 {
  UART_Write(c);
@@ -75,6 +75,7 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
  for(i = 0;i < reqLength; i++)
  {
  buf[i] = SPI_Ethernet_getByte();
+ Spi_Ethernet_putByte(buf[i]);
 
  PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]);
 
@@ -82,14 +83,17 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
 
  UART_Write_Text("\r\n");
 
- return(0);
+
+
+ return(reqLength);
+
 }
 
 unsigned int SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int destPort, unsigned int reqLength, TEthPktFlags *flags)
 {
  return(0);
 }
-#line 75 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 79 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
 void main()
 {
  OSC_CTRL = 0x02;
@@ -97,7 +101,7 @@ void main()
  ;
  CPU_CCP = 0xD8;
  CLK_CTRL = 1;
-#line 90 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 94 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
  PORTC_DIR.B7 = 1;
  PORTC_DIR.B5 = 1;
  PORTC_DIR.B6 = 0;
@@ -122,8 +126,8 @@ void main()
 
  while(1)
  {
-#line 117 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 121 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
  SPI_Ethernet_doPacket() ;
-#line 124 "C:/Users/artna/Desktop/modbus_experiment/modbus_experiment.c"
+#line 128 "C:/Users/Art Navsegda/Coding/avrnavsegda/modbus_experiment/modbus_experiment.c"
  }
 }

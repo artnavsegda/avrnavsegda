@@ -54,14 +54,18 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         for(i = 0;i < reqLength; i++)
         {
                 buf[i] = SPI_Ethernet_getByte();
+                Spi_Ethernet_putByte(buf[i]);//send back all recieved modbus packets
         //        PrintOut(PrintHandler, "%c ", buf[i]);
                 PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]);
         //        PrintOut(PrintHandler, "%u ", (unsigned int)buf[i]);
         }
         // sprintf("\n\r");
         UART_Write_Text("\r\n");
+        
+        
  
-        return(0);
+        return(reqLength);
+        //return(0);
 }
 
 unsigned int  SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int destPort, unsigned int reqLength, TEthPktFlags *flags)

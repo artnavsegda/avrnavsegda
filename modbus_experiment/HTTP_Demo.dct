@@ -3772,7 +3772,6 @@ spmlvl0
 spmlvl0_bit
 spmlvl1
 spmlvl1_bit
-sprintf
 srcdir0
 srcdir0_bit
 srcdir0_dma_ch1_addrctrl_bit

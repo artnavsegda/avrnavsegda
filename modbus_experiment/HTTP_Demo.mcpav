@@ -6,17 +6,23 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=modbus_experiment.c
+Value=HTTP_Demo.c
 [USE_EEPROM]
-Value=0
-[USE_HEAP]
-Value=0
-[HEAP_SIZE]
 Value=0
 [EEPROM_DEFINITION]
 Value=
 [BOOT_TYPE]
 Value=0
+[USE_HEAP]
+Value=0
+[HEAP_SIZE]
+Value=2000
+[EXPANDED NODES]
+Node1=Sources
+Node2=Image Files
+Node3=Active Comments Files
+Node4=Output Files
+Count=4
 [FILES]
 Count=1
 File0=modbus_experiment.c
@@ -48,7 +54,7 @@ Count=0
 [PLDS]
 Count=0
 [Useses]
-Count=9
+Count=8
 File0=HTTP_Demo
 File1=SPI
 File2=C_String
@@ -57,6 +63,6 @@ File4=C_Type
 File5=SPI_Ethernet
 File6=PrintOut
 File7=UART
-File8=Sprintf
 [EXPANDED_NODES]
-Count=0
+Node0=Sources
+Count=1

@@ -4,9 +4,9 @@
 #define Spi_Ethernet_FULLDUPLEX     0x01  // full duplex
 
 // mE ehternet NIC pinout
-sfr sbit SPI_Ethernet_Rst at PORTC_OUT.B1;
+sfr sbit SPI_Ethernet_Rst at PORTA_OUT.B0;
 sfr sbit SPI_Ethernet_CS  at PORTC_OUT.B0;
-sfr sbit SPI_Ethernet_Rst_Direction at PORTC_DIR.B1;
+sfr sbit SPI_Ethernet_Rst_Direction at PORTA_DIR.B0;
 sfr sbit SPI_Ethernet_CS_Direction  at PORTC_DIR.B0;
 // end ethernet NIC definitions
 
@@ -49,17 +49,15 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                 return(0) ;
         }
 
-        //SPI_Ethernet_getBytes(buf, ERDPT, reqLength);
+        SPI_Ethernet_getBytes(buf, ERDPT, reqLength);
 
         for(i = 0;i < reqLength; i++)
         {
-                buf[i] = SPI_Ethernet_getByte();
-        //        PrintOut(PrintHandler, "%c ", buf[i]);
-                PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]);
-        //        PrintOut(PrintHandler, "%u ", (unsigned int)buf[i]);
+        //sprintf("0x%02X ",buf[i];
+                PrintOut(PrintHandler, "%#2X ");
         }
         // sprintf("\n\r");
-        UART_Write_Text("\r\n");
+        UART_Write_Text("\n\r");
  
         return(0);
 }
@@ -98,8 +96,7 @@ void    main()
         UARTC0_Init(115200);
         UART_Set_Active(&UARTC0_Read, &UARTC0_Write, &UARTC0_Data_Ready, &UARTC0_Tx_Idle);
         
-        UART_Write_Text("Starting\r\n");
-        PrintOut(PrintHandler, "Testing output\r\n");
+        UART_Write_Text("Starting\n\r");
         
         SPIC_Init_Advanced(_SPI_MASTER, _SPI_FCY_DIV16, _SPI_CLK_LO_LEADING);
         SPI_Set_Active(&SPIC_Read,&SPIC_Write);

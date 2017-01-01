@@ -32,32 +32,32 @@ void PrintHandler(char c)
 }
 
 struct askreadregstruct {
-	unsigned short firstreg;
-	unsigned short regnumber;
+        unsigned short firstreg;
+        unsigned short regnumber;
 };
 
 struct reqreadcoilsstruct {
-	unsigned char bytestofollow;
-	unsigned char coils[256];
+        unsigned char bytestofollow;
+        unsigned char coils[256];
 };
 
 struct reqreadwordstruct {
-	unsigned char bytestofollow;
-	unsigned short registers[127];
+        unsigned char bytestofollow;
+        unsigned short registers[127];
 };
 
 struct writeregstruct {
-	unsigned short regaddress;
-	unsigned short regvalue;
+        unsigned short regaddress;
+        unsigned short regvalue;
 };
 
 union pdudataunion {
-	struct askreadregstruct askreadregs;
-	struct reqreadcoilsstruct reqreadcoils;
-	struct reqreadwordstruct reqreadholdings;
-	struct writeregstruct writereg;
-	unsigned short words[128];
-	unsigned char bytes[256];
+        struct askreadregstruct askreadregs;
+        struct reqreadcoilsstruct reqreadcoils;
+        struct reqreadwordstruct reqreadholdings;
+        struct writeregstruct writereg;
+        unsigned short words[128];
+        unsigned char bytes[256];
 };
 
 struct pduframestruct {
@@ -118,8 +118,8 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                case 1:
                case 2:
                       PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
-                      askframe.pdu.values.reqreadcoils.bytestofollow = askframe.pdu.values.askreadregs.regnumber / 8;
-                      if ((askframe.pdu.values.askreadregs.regnumber % 8)>0)
+                      askframe.pdu.values.reqreadcoils.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) / 8;
+                      if ((BSWAP_16(askframe.pdu.values.askreadregs.regnumber) % 8)>0)
                          askframe.pdu.values.reqreadcoils.bytestofollow++;
                       askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
                break;

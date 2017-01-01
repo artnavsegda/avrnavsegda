@@ -105,9 +105,9 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         }
         UART_Write_Text("\r\n");
         
-        PrintOut(PrintHandler, "TS id: %x\r\n", askframe.tsid);
-        PrintOut(PrintHandler, "Protocol id: %x\r\n", askframe.protoid);
-        PrintOut(PrintHandler, "Length: %x\r\n", askframe.length);
+        PrintOut(PrintHandler, "TS id: %x\r\n", askframe.tsid); // need to swap bytes
+        PrintOut(PrintHandler, "Protocol id: %x\r\n", askframe.protoid); // need to swap bytes
+        PrintOut(PrintHandler, "Length: %x\r\n", askframe.length); // need to swap bytes
  
         //return(reqLength);//send back all recieved bytes
         return(0);

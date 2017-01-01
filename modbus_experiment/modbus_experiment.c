@@ -77,10 +77,12 @@ struct mbframestruct askframe;
 
 unsigned char buf[100];
 
+#define BSWAP_16(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+
 unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags *flags)
 {
         int i;
-        unsigned int    len;            // my reply length
+        unsigned int len;            // my reply length
 
         // should we close tcp socket after response is sent?
         // library closes tcp socket by default if canClose flag is not reset here
@@ -105,9 +107,34 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         }
         UART_Write_Text("\r\n");
         
-        PrintOut(PrintHandler, "TS id: %x\r\n", askframe.tsid); // need to swap bytes
-        PrintOut(PrintHandler, "Protocol id: %x\r\n", askframe.protoid); // need to swap bytes
-        PrintOut(PrintHandler, "Length: %x\r\n", askframe.length); // need to swap bytes
+        PrintOut(PrintHandler, "TS id: %d\r\n", BSWAP_16(askframe.tsid));
+        PrintOut(PrintHandler, "Protocol id: %d\r\n", BSWAP_16(askframe.protoid));
+        PrintOut(PrintHandler, "Length PDU unit: %d\r\n", BSWAP_16(askframe.length));
+        PrintOut(PrintHandler, "Unit id: %d\r\n", BSWAP_16(askframe.pdu.unitid));
+        PrintOut(PrintHandler, "Function code: %d\r\n", BSWAP_16(askframe.pdu.fncode));
+
+        switch (askframe.pdu.fncode)
+        {
+               case 1:
+               case 2:
+                      PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
+                      askframe.pdu.values.reqreadcoils.bytestofollow = askframe.pdu.values.askreadregs.regnumber / 8;
+                      if ((askframe.pdu.values.askreadregs.regnumber % 8)>0)
+                         askframe.pdu.values.reqreadcoils.bytestofollow++;
+                      askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
+               break;
+               case 3:
+               case 4:
+                      PrintOut(PrintHandler, "Numer of H/I registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
+                      askframe.pdu.values.reqreadholdings.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) * 2;
+                      askframe.length = BSWAP_16(askframe.pdu.values.reqreadholdings.bytestofollow + 3);
+               break;
+               default:
+               break;
+        }
+        
+        len = BSWAP_16(askframe.length) + 16;
+        PrintOut(PrintHandler, "Reply length: %d\r\n", len);
  
         //return(reqLength);//send back all recieved bytes
         return(0);

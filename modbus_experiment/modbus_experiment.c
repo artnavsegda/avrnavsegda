@@ -32,8 +32,8 @@ void PrintHandler(char c)
 }
 
 struct askreadregstruct {
-        unsigned short firstreg;
-        unsigned short regnumber;
+        unsigned int firstreg;
+        unsigned int regnumber;
 };
 
 struct reqreadcoilsstruct {
@@ -43,12 +43,12 @@ struct reqreadcoilsstruct {
 
 struct reqreadwordstruct {
         unsigned char bytestofollow;
-        unsigned short registers[127];
+        unsigned int registers[127];
 };
 
 struct writeregstruct {
-        unsigned short regaddress;
-        unsigned short regvalue;
+        unsigned int regaddress;
+        unsigned int regvalue;
 };
 
 union pdudataunion {
@@ -56,7 +56,7 @@ union pdudataunion {
         struct reqreadcoilsstruct reqreadcoils;
         struct reqreadwordstruct reqreadholdings;
         struct writeregstruct writereg;
-        unsigned short words[128];
+        unsigned int words[128];
         unsigned char bytes[256];
 };
 
@@ -67,15 +67,13 @@ struct pduframestruct {
 };
 
 struct mbframestruct {
-        unsigned short tsid;
-        unsigned short protoid;
-        unsigned short length;
+        unsigned int tsid;
+        unsigned int protoid;
+        unsigned int length;
         struct pduframestruct pdu;
 };
 
 struct mbframestruct askframe;
-
-unsigned char buf[100];
 
 #define BSWAP_16(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
@@ -98,20 +96,22 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
 
         for(i = 0;i < reqLength; i++)
         {
+        //        buf[i] = SPI_Ethernet_getByte();
                 ((char *)&askframe)[i] = SPI_Ethernet_getByte();
-                buf[i] = SPI_Ethernet_getByte();
         //        Spi_Ethernet_putByte(buf[i]);//send back all recieved modbus packets
         //        PrintOut(PrintHandler, "%c ", buf[i]); // print ascii chars
-                PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]); // print hex bytes
+        //        PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]); // print hex bytes
+                PrintOut(PrintHandler, "%#02x ", (unsigned int)((char *)&askframe)[i]); // print hex bytes
         //        PrintOut(PrintHandler, "%u ", (unsigned int)buf[i]); // print unsigned numbers
         }
         UART_Write_Text("\r\n");
         
-        PrintOut(PrintHandler, "TS id: %d\r\n", BSWAP_16(askframe.tsid));
-        PrintOut(PrintHandler, "Protocol id: %d\r\n", BSWAP_16(askframe.protoid));
-        PrintOut(PrintHandler, "Length PDU unit: %d\r\n", BSWAP_16(askframe.length));
-        PrintOut(PrintHandler, "Unit id: %d\r\n", BSWAP_16(askframe.pdu.unitid));
-        PrintOut(PrintHandler, "Function code: %d\r\n", BSWAP_16(askframe.pdu.fncode));
+        PrintOut(PrintHandler, "TS id: %u\r\n", BSWAP_16(askframe.tsid));
+        PrintOut(PrintHandler, "Protocol id: %u\r\n", BSWAP_16(askframe.protoid));
+        PrintOut(PrintHandler, "Length PDU unit: %u\r\n", BSWAP_16(askframe.length));
+        
+        PrintOut(PrintHandler, "Unit id: %u\r\n", (unsigned int)askframe.pdu.unitid);
+        PrintOut(PrintHandler, "Function code: %u\r\n", (unsigned int)askframe.pdu.fncode);
 
         switch (askframe.pdu.fncode)
         {
@@ -135,9 +135,12 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         
         len = BSWAP_16(askframe.length) + 6;
         PrintOut(PrintHandler, "Reply length: %d\r\n", len);
+        
+        SPI_Ethernet_putBytes((unsigned char *)&askframe,len);
  
         //return(reqLength);//send back all recieved bytes
-        return(0);
+        return(len);
+        //return(0);
 }
 
 unsigned int  SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int destPort, unsigned int reqLength, TEthPktFlags *flags)

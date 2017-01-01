@@ -133,7 +133,7 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                break;
         }
         
-        len = BSWAP_16(askframe.length) + 16;
+        len = BSWAP_16(askframe.length) + 6;
         PrintOut(PrintHandler, "Reply length: %d\r\n", len);
  
         //return(reqLength);//send back all recieved bytes

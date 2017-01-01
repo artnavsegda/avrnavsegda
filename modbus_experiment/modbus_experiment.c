@@ -129,6 +129,13 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                       askframe.pdu.values.reqreadholdings.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) * 2;
                       askframe.length = BSWAP_16(askframe.pdu.values.reqreadholdings.bytestofollow + 3);
                break;
+               case 5:
+               case 6:
+                      //same as request
+               break;
+               case 15:
+               case 16:
+                      askframe.length = BSWAP_16(6);
                default:
                break;
         }

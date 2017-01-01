@@ -4,9 +4,9 @@
 #define Spi_Ethernet_FULLDUPLEX     0x01  // full duplex
 
 // mE ehternet NIC pinout
-sfr sbit SPI_Ethernet_Rst at PORTC_OUT.B1;
+sfr sbit SPI_Ethernet_Rst at PORTA_OUT.B0;
 sfr sbit SPI_Ethernet_CS  at PORTC_OUT.B0;
-sfr sbit SPI_Ethernet_Rst_Direction at PORTC_DIR.B1;
+sfr sbit SPI_Ethernet_Rst_Direction at PORTA_DIR.B0;
 sfr sbit SPI_Ethernet_CS_Direction  at PORTC_DIR.B0;
 // end ethernet NIC definitions
 
@@ -31,6 +31,49 @@ void PrintHandler(char c)
         UART_Write(c);
 }
 
+struct askreadregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+};
+
+struct reqreadcoilsstruct {
+	unsigned char bytestofollow;
+	unsigned char coils[256];
+};
+
+struct reqreadwordstruct {
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
+union pdudataunion {
+	struct askreadregstruct askreadregs;
+	struct reqreadcoilsstruct reqreadcoils;
+	struct reqreadwordstruct reqreadholdings;
+	struct writeregstruct writereg;
+	unsigned short words[128];
+	unsigned char bytes[256];
+};
+
+struct pduframestruct {
+        unsigned char unitid;
+        unsigned char fncode;
+        union pdudataunion values;
+};
+
+struct mbframestruct {
+        unsigned short tsid;
+        unsigned short protoid;
+        unsigned short length;
+        struct pduframestruct pdu;
+};
+
+struct mbframestruct askframe;
 
 unsigned char buf[100];
 
@@ -53,6 +96,7 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
 
         for(i = 0;i < reqLength; i++)
         {
+                ((char *)&askframe)[i] = SPI_Ethernet_getByte();
                 buf[i] = SPI_Ethernet_getByte();
                 Spi_Ethernet_putByte(buf[i]);//send back all recieved modbus packets
         //        PrintOut(PrintHandler, "%c ", buf[i]);

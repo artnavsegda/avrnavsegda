@@ -92,24 +92,25 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                 return(0) ;
         }
 
-        //SPI_Ethernet_getBytes(buf, ERDPT, reqLength);
+        PrintOut(PrintHandler, "Recieved %d bytes\r\n", reqLength);
 
         for(i = 0;i < reqLength; i++)
         {
                 ((char *)&askframe)[i] = SPI_Ethernet_getByte();
                 buf[i] = SPI_Ethernet_getByte();
-                Spi_Ethernet_putByte(buf[i]);//send back all recieved modbus packets
-        //        PrintOut(PrintHandler, "%c ", buf[i]);
-                PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]);
-        //        PrintOut(PrintHandler, "%u ", (unsigned int)buf[i]);
+        //        Spi_Ethernet_putByte(buf[i]);//send back all recieved modbus packets
+        //        PrintOut(PrintHandler, "%c ", buf[i]); // print ascii chars
+                PrintOut(PrintHandler, "%#02x ", (unsigned int)buf[i]); // print hex bytes
+        //        PrintOut(PrintHandler, "%u ", (unsigned int)buf[i]); // print unsigned numbers
         }
-        // sprintf("\n\r");
         UART_Write_Text("\r\n");
         
-        
+        PrintOut(PrintHandler, "TS id: %x\r\n", askframe.tsid);
+        PrintOut(PrintHandler, "Protocol id: %x\r\n", askframe.protoid);
+        PrintOut(PrintHandler, "Length: %x\r\n", askframe.length);
  
-        return(reqLength);
-        //return(0);
+        //return(reqLength);//send back all recieved bytes
+        return(0);
 }
 
 unsigned int  SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int destPort, unsigned int reqLength, TEthPktFlags *flags)

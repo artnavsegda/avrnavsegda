@@ -1,0 +1,6 @@
+main
+	TWIE_Start
+	TWIE_Write
+	TWIE_Stop
+	Delay_100ms
+	TWIE_Init

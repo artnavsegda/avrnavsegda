@@ -1,10 +1,13 @@
 sbit Chip_Select at PORTC_OUT.B4;
 sbit Chip_Select_Direction at PORTC_DIR.B4;
+sbit ad7707_drdy at PORTC_IN.B1;
+sbit ad7707_drdy_direction at PORTC_DIR.B1;
 
 
 void main() {
-	int x, y;
- 	Chip_Select_Direction = 1; // ad7705 cs
+        int x, y;
+        Chip_Select_Direction = 1; // ad7705 cs
+        //ad7707_drdy_direction = 0;
         delay_ms(100);
 
         UARTC0_Init(9600);
@@ -26,19 +29,22 @@ void main() {
         SPIC_Write(0x04);
         Chip_Select = 1;
      
-	while(1)
-	{
-		delay_ms(100);
-		
-                Chip_Select = 1;
-                SPIC_Write(0x38);
-                x = SPIC_Read(0xFF);
-                y = SPIC_Read(0xFF);
-                Chip_Select = 0;
+        while(1)
+        {
+                delay_ms(100);
+                
+                if (PORTC_IN.B1 == 1)
+                {
+                  Chip_Select = 1;
+                  SPIC_Write(0x38);
+                  x = SPIC_Read(0xFF);
+                  y = SPIC_Read(0xFF);
+                  Chip_Select = 0;
+                }
                 
                 delay_ms(100);
        
-		UARTC0_Write(x);
-		UARTC0_Write(y);
-	}
+                UARTC0_Write(x);
+                UARTC0_Write(y);
+        }
 }

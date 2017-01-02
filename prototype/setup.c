@@ -31,6 +31,7 @@ void IOPort_Init(void)
         PORTC_DIR.B0 = 1;
         PORTC_DIR.B1 = 1;
         PORTD_DIR.B4 = 1;
+        PORTC_DIR.B4 = 1; // ad7705 cs
 }
 
 void Interrupt_Init(void)

@@ -77,7 +77,7 @@ struct mbframestruct askframe;
 
 #define BSWAP_16(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
-unsigned int table[100] = {0xABCD, 0xDEAD};
+unsigned int table[100] = {0xABCD, 0xDEAD, 0x0000};
 unsigned int amount = 100;
 
 unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags *flags)
@@ -174,6 +174,12 @@ unsigned int  SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remot
         return(0);
 }
 
+int tick;
+
+void Timer0Overflow_ISR() org IVT_ADDR_TCC0_OVF {
+        tick = 1;
+}
+
 /*
  * main entry
  */
@@ -199,12 +205,19 @@ void    main()
         PORTB_OUT.B6 = 0;
         PORTC_DIR.B0 = 1;
         PORTC_DIR.B1 = 1;
+        PORTD_DIR.B4 = 1;
         
         UARTC0_Init(115200);
         UART_Set_Active(&UARTC0_Read, &UARTC0_Write, &UARTC0_Data_Ready, &UARTC0_Tx_Idle);
         
         UART_Write_Text("Starting\r\n");
         PrintOut(PrintHandler, "Testing output\r\n");
+        
+        PMIC_CTRL = 4;                    // Enable medium level interrupts
+        CPU_SREG.B7 = 1;                  // Enable global interrupts
+
+        Timer_Init(&TCC0, 1000000);
+         Timer_Interrupt_Enable(&TCC0);
         
         SPIC_Init_Advanced(_SPI_MASTER, _SPI_FCY_DIV16, _SPI_CLK_LO_LEADING);
         SPI_Set_Active(&SPIC_Read,&SPIC_Write);
@@ -221,10 +234,11 @@ void    main()
                  */
                 SPI_Ethernet_doPacket() ;   // process incoming Ethernet packets
 
-                /*
-                 * add your stuff here if needed
-                 * Spi_Ethernet_doPacket() must be called as often as possible
-                 * otherwise packets could be lost
-                 */
+                if (tick == 1)
+                {
+                        PORTD_OUTTGL.B4 = 1;
+                        table[2]++;
+                        tick = 0;
+                }
         }
 }

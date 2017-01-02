@@ -30,8 +30,7 @@ void IOPort_Init(void)
         PORTB_OUT.B6 = 0;
         PORTC_DIR.B0 = 1;
         PORTC_DIR.B1 = 1;
-        PORTD_DIRSET = 0xFF;              // Set PORTD as output
-        PORTD_OUTCLR = 0xFF;              // Clear PORTD
+        PORTD_DIR.B4 = 1;
 }
 
 void Interrupt_Init(void)

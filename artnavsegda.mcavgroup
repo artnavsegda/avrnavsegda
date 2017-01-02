@@ -1,0 +1,6 @@
+[PROJECTS]
+Count=2
+Project0=prototype\prototype.mcpav
+Project1=modbus_experiment\mosbus_experiment.mcpav
+[ActiveProject]
+Index=0

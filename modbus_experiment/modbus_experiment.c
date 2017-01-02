@@ -122,12 +122,18 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                       if ((BSWAP_16(askframe.pdu.values.askreadregs.regnumber) % 8)>0)
                          askframe.pdu.values.reqreadcoils.bytestofollow++;
                       askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
+		      // fill all requested coil bytes with zeroes
+		      for (i = 0; i < askframe.pdu.values.reqreadcoils.bytestofollow; i++)
+                          askframe.pdu.values.reqreadcoils.coils[i] = 0x00;
                break;
                case 3:
                case 4:
                       PrintOut(PrintHandler, "Numer of H/I registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
                       askframe.pdu.values.reqreadholdings.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) * 2;
                       askframe.length = BSWAP_16(askframe.pdu.values.reqreadholdings.bytestofollow + 3);
+                      // fill every requested register with 0xABCD
+                      for (i = 0; i < BSWAP_16(askframe.pdu.values.askreadregs.regnumber);i++)
+                          askframe.pdu.values.reqreadholdings.registers[i] = BSWAP_16(0xABCD);
                break;
                case 5:
                case 6:

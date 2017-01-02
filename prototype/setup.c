@@ -30,14 +30,14 @@ void IOPort_Init(void)
         PORTB_OUT.B6 = 0;
         PORTC_DIR.B0 = 1;
         PORTC_DIR.B1 = 1;
-	PORTD_DIRSET = 0xFF;              // Set PORTD as output
-	PORTD_OUTCLR = 0xFF;              // Clear PORTD
+        PORTD_DIRSET = 0xFF;              // Set PORTD as output
+        PORTD_OUTCLR = 0xFF;              // Clear PORTD
 }
 
 void Interrupt_Init(void)
 {
-	PMIC_CTRL = 4;                    // Enable medium level interrupts
-	CPU_SREG.B7 = 1;                  // Enable global interrupts
+        PMIC_CTRL = 4;                    // Enable medium level interrupts
+        CPU_SREG.B7 = 1;                  // Enable global interrupts
 }
 
 void Prototype_Init(void)
@@ -51,6 +51,9 @@ void Prototype_Init(void)
         // uart init
         UARTC0_Init(115200);
         UART_Set_Active(&UARTC0_Read, &UARTC0_Write, &UARTC0_Data_Ready, &UARTC0_Tx_Idle);
+        
+        // i2c init
+        TWIE_Init(100000);
         
         // spi init
         SPIC_Init_Advanced(_SPI_MASTER, _SPI_FCY_DIV16, _SPI_CLK_LO_LEADING);
@@ -66,5 +69,5 @@ void Prototype_Init(void)
         
         // timer init
         Timer_Init(&TCC0, 1000000);
-	Timer_Interrupt_Enable(&TCC0);
+        Timer_Interrupt_Enable(&TCC0);
 }

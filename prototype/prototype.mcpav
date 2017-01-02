@@ -18,11 +18,12 @@ Value=
 [BOOT_TYPE]
 Value=0
 [FILES]
-Count=4
+Count=5
 File0=prototype.c
 File1=setup.c
 File2=ethernet.c
 File3=interrupt.c
+File4=i2c.c
 [BINARIES]
 Count=0
 [IMAGES]
@@ -47,10 +48,11 @@ Path3=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\GT64KW\
 Count=1
 Path0=C:\Users\artna\Documents\GitHub\avrnavsegda\prototype\
 [HEADERS]
-Count=3
+Count=4
 File0=prototype.h
 File1=modbus.h
 File2=setup.h
+File3=i2c.h
 [PLDS]
 Count=0
 [Useses]

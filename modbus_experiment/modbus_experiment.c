@@ -93,7 +93,7 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
 
         // should we close tcp socket after response is sent?
         // library closes tcp socket by default if canClose flag is not reset here
-        // *canClose = 0; // 0 - do not close socket
+        flags->canCloseTCP = 0; // 0 - do not close socket
         // otherwise - close socket
 
         if(localPort != 502)             // I listen only to web request on port 80
@@ -233,7 +233,7 @@ void ad7705_init(void)
  */
 void    main()
 {
-	int i;
+        int i;
         OSC_CTRL = 0x02;                 // 32MHz internal RC oscillator
         while(RC32MRDY_bit == 0)
               ;
@@ -273,7 +273,7 @@ void    main()
         SPIC_Init_Advanced(_SPI_MASTER, _SPI_FCY_DIV16, _SPI_CLK_LO_LEADING);
         SPI_Set_Active(&SPIC_Read,&SPIC_Write);
         
-	ad7705_init();
+        ad7705_init();
         
         Spi_Rd_Ptr = SPIC_Read;
         SPI_Ethernet_Init(myMacAddr, myIpAddr, Spi_Ethernet_FULLDUPLEX) ;
@@ -286,9 +286,9 @@ void    main()
                 /*
                  * if necessary, test the return value to get error code
                  */
-                ad7705_Chip_Select = 1;
+                //ad7705_Chip_Select = 1;
                 SPI_Ethernet_doPacket() ;   // process incoming Ethernet packets
-                ad7705_Chip_Select = 0;
+                //ad7705_Chip_Select = 0;
                 
                 if (ad7707_drdy == 0)
                 {

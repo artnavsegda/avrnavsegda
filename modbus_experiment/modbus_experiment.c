@@ -55,11 +55,27 @@ struct writeregstruct {
         unsigned int regvalue;
 };
 
+struct writemulticoilstruct {
+	unsigned int firstreg;
+	unsigned int regnumber;
+	unsigned char bytestofollow;
+	unsigned char coils[256];
+};
+
+struct writemultiregstruct {
+	unsigned int firstreg;
+	unsigned int regnumber;
+	unsigned char bytestofollow;
+	unsigned int registers[127];
+};
+
 union pdudataunion {
         struct askreadregstruct askreadregs;
         struct reqreadcoilsstruct reqreadcoils;
         struct reqreadwordstruct reqreadholdings;
         struct writeregstruct writereg;
+	struct writemulticoilstruct writemulticoil;
+	struct writemultiregstruct writemultireg;
         unsigned int words[128];
         unsigned char bytes[256];
 };
@@ -123,44 +139,50 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         PrintOut(PrintHandler, "Function code: %u\r\n", (unsigned int)askframe.pdu.fncode);
 
         switch (askframe.pdu.fncode)
-        {
-               case 1:
-               case 2:
-                      PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
-                      askframe.pdu.values.reqreadcoils.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) / 8;
-                      if ((BSWAP_16(askframe.pdu.values.askreadregs.regnumber) % 8)>0)
-                         askframe.pdu.values.reqreadcoils.bytestofollow++;
-                      askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
-                      // fill all requested coil bytes with zeroes
-                      for (i = 0; i < askframe.pdu.values.reqreadcoils.bytestofollow; i++)
-                          askframe.pdu.values.reqreadcoils.coils[i] = 0x00;
-               break;
-               case 3:
-               case 4:
-                      firstrequest = BSWAP_16(askframe.pdu.values.askreadregs.firstreg);
-                      PrintOut(PrintHandler, "Requesing register starting from:: %d\r\n", firstrequest);
-                      requestnumber = BSWAP_16(askframe.pdu.values.askreadregs.regnumber);
-                      PrintOut(PrintHandler, "Numer of H/I registers requested: %d\r\n", requestnumber);
-                      askframe.pdu.values.reqreadholdings.bytestofollow = requestnumber * 2;
-                      askframe.length = BSWAP_16(askframe.pdu.values.reqreadholdings.bytestofollow + 3);
-                      // fill every requested register with 0xABCD
-                      for (i = 0; i < requestnumber;i++)
-                      {
-                          if(firstrequest+i < amount) // if requested register within allocated range
-                              askframe.pdu.values.reqreadholdings.registers[i] = BSWAP_16(table[firstrequest+i]);
-                          else
-                              askframe.pdu.values.reqreadholdings.registers[i] = BSWAP_16(0x0000); // fill up with zeroes
-                      }
-               break;
-               case 5:
-               case 6:
-                      //same as request
-               break;
-               case 15:
-               case 16:
-                      askframe.length = BSWAP_16(6);
-               default:
-               break;
+	{
+		case 1:
+                case 2:
+                        PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
+                        askframe.pdu.values.reqreadcoils.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) / 8;
+                        if ((BSWAP_16(askframe.pdu.values.askreadregs.regnumber) % 8)>0)
+                           askframe.pdu.values.reqreadcoils.bytestofollow++;
+                        askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
+                        // fill all requested coil bytes with zeroes
+                        for (i = 0; i < askframe.pdu.values.reqreadcoils.bytestofollow; i++)
+                            askframe.pdu.values.reqreadcoils.coils[i] = 0x00;
+                break;
+                case 3:
+                case 4:
+                        firstrequest = BSWAP_16(askframe.pdu.values.askreadregs.firstreg);
+                        PrintOut(PrintHandler, "Requesing register starting from:: %d\r\n", firstrequest);
+                        requestnumber = BSWAP_16(askframe.pdu.values.askreadregs.regnumber);
+                        PrintOut(PrintHandler, "Numer of H/I registers requested: %d\r\n", requestnumber);
+                        askframe.pdu.values.reqreadholdings.bytestofollow = requestnumber * 2;
+                        askframe.length = BSWAP_16(askframe.pdu.values.reqreadholdings.bytestofollow + 3);
+                        // fill every requested register with 0xABCD
+                        for (i = 0; i < requestnumber;i++)
+                        {
+                            if(firstrequest+i < amount) // if requested register within allocated range
+                                askframe.pdu.values.reqreadholdings.registers[i] = BSWAP_16(table[firstrequest+i]);
+                            else
+                                askframe.pdu.values.reqreadholdings.registers[i] = BSWAP_16(0x0000); // fill up with zeroes
+                        }
+                break;
+                case 5:
+                        //same as request
+                break;
+                case 6:
+			if (BSWAP_16(askframe.pdu.values.writereg.regaddress) < amount)
+			        table[BSWAP_16(askframe.pdu.values.writereg.regaddress)] = BSWAP_16(askframe.pdu.values.writereg.regvalue);
+                break;
+                case 15:
+                case 16:
+                        for (i = 0; i < BSWAP_16(askframe.pdu.values.writemultireg.regnumber);i++)
+                                if (BSWAP_16(askframe.pdu.values.writemultireg.firstreg)+i < amount)
+                                        table[BSWAP_16(askframe.pdu.values.writemultireg.firstreg)+i] = BSWAP_16(askframe.pdu.values.writemultireg.registers[i]);
+                        askframe.length = BSWAP_16(6);
+                default:
+                break;
         }
         
         len = BSWAP_16(askframe.length) + 6;

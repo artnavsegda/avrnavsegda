@@ -7,6 +7,14 @@ __cfcs2s
 __cs2s
 __flash_size
 __fzins
+_adc_12bit
+_adc_8bit
+_adc_external_ref_a
+_adc_external_ref_b
+_adc_internal_ref_1v
+_adc_internal_ref_vcc
+_adc_signed
+_adc_unsigned
 _doprntout
 _spi_clk_hi_leading
 _spi_clk_hi_trailing
@@ -74,9 +82,15 @@ ackact_bit
 ackact_twic_slave_ctrlb_bit
 ackact_twie_master_ctrlc_bit
 ackact_twie_slave_ctrlb_bit
+ad7705_chip_select
+ad7705_chip_select_direction
+ad7705_init
+ad7707_drdy
 adc
 adc_bit
+adc_get_sample_ptr
 adc_pr_prpb_bit
+adc_set_active
 adca_cal
 adca_ch0_ctrl
 adca_ch0_intctrl
@@ -126,8 +140,12 @@ adca_cmp
 adca_ctrla
 adca_ctrlb
 adca_evctrl
+adca_get_sample
+adca_init
+adca_init_advanced
 adca_intflags
 adca_prescaler
+adca_read
 adca_refctrl
 adca_temp
 adcb_cal
@@ -179,8 +197,12 @@ adcb_cmp
 adcb_ctrla
 adcb_ctrlb
 adcb_evctrl
+adcb_get_sample
+adcb_init
+adcb_init_advanced
 adcb_intflags
 adcb_prescaler
+adcb_read
 adcb_refctrl
 adcb_temp
 addr0
@@ -228,6 +250,7 @@ aes_intctrl
 aes_key
 aes_state
 aes_status
+amount
 ap
 ap_bit
 ap_twie_slave_status_bit
@@ -240,6 +263,8 @@ apif_twie_slave_status_bit
 arblost
 arblost_bit
 arblost_twie_master_status_bit
+askframe
+askreadregs
 attach
 attach_bit
 auto_
@@ -439,7 +464,6 @@ bsel7_usartd0_baudctrla_bit
 bsel7_usartd1_baudctrla_bit
 bsel7_usarte0_baudctrla_bit
 bsel7_usartf0_baudctrla_bit
-buf
 bufovf
 bufovf_bit
 bufovf_usartc1_status_bit
@@ -498,6 +522,9 @@ bytem1_tce0_ctrle_bit
 bytem1_tce2_ctrle_bit
 bytem1_tcf0_ctrle_bit
 bytem1_tcf2_ctrle_bit
+bytes
+bytestofollow
+bytestofollow
 bytetohex
 bytetostr
 c
@@ -1138,6 +1165,7 @@ cmpd_bit
 cmpd_tcd0_ctrlc_bit
 cmpd_tce0_ctrlc_bit
 cmpd_tcf0_ctrlc_bit
+coils
 coll
 coll_bit
 coll_twie_slave_status_bit
@@ -1678,6 +1706,7 @@ fifowp3
 fifowp3_bit
 fifowp4
 fifowp4_bit
+firstreg
 fload
 fload_bit
 float_fpadd
@@ -1712,6 +1741,7 @@ floattostr
 flush
 flush_adcb_ctrla_bit
 flush_bit
+fncode
 fprm
 fprm_bit
 freerun
@@ -2541,6 +2571,7 @@ lcmpdintlvl1_tce2_intctrlb_bit
 lcmpdintlvl1_tcf2_intctrlb_bit
 leftadj
 leftadj_bit
+length
 lock_
 lock_bit
 lockbit_lockbits
@@ -3041,6 +3072,7 @@ ovfintlvl1_tce1_intctrla_bit
 ovfintlvl1_tcf0_intctrla_bit
 pdirf
 pdirf_bit
+pdu
 per0
 per0_bit
 per1
@@ -3343,6 +3375,7 @@ prod_signatures_usbcal1
 prod_signatures_usbrcosc
 prod_signatures_usbrcosca
 prod_signatures_wafnum
+protoid
 psadiv0
 psadiv0_bit
 psadiv1
@@ -3439,11 +3472,17 @@ refsel1_dacb_ctrlc_bit
 refsel2
 refsel2_adcb_refctrl_bit
 refsel2_bit
+regaddress
+registers
+regnumber
+regvalue
 repeat_
 repeat__dma_ch1_ctrla_bit
 repeat__dma_ch2_ctrla_bit
 repeat__dma_ch3_ctrla_bit
 repeat_bit
+reqreadcoils
+reqreadholdings
 reset_
 reset__dma_ch0_ctrla_bit
 reset__dma_ch1_ctrla_bit
@@ -3462,6 +3501,7 @@ resolution0_bit
 resolution1
 resolution1_adcb_ctrlb_bit
 resolution1_bit
+result
 resume_
 resume_bit
 resumeif
@@ -3755,6 +3795,7 @@ spic_init
 spic_init_advanced
 spic_intctrl
 spic_read
+spic_read_bytes
 spic_status
 spic_write
 spid_ctrl
@@ -3918,6 +3959,7 @@ synccnt
 synccnt_bit
 t
 t_bit
+table
 tc0
 tc0_bit
 tc0_pr_prpd_bit
@@ -3960,6 +4002,7 @@ tc1_bit
 tc1_pr_prpd_bit
 tc1_pr_prpe_bit
 tc1_pr_prpf_bit
+tcc0
 tcc0_cca
 tcc0_ccabuf
 tcc0_ccabufh
@@ -4004,6 +4047,7 @@ tcc0_perbufl
 tcc0_perh
 tcc0_perl
 tcc0_temp
+tcc1
 tcc1_cca
 tcc1_ccabuf
 tcc1_ccabufh
@@ -4056,6 +4100,7 @@ tcc2_lcmpc
 tcc2_lcmpd
 tcc2_lcnt
 tcc2_lper
+tcd0
 tcd0_cca
 tcd0_ccabuf
 tcd0_ccabufh
@@ -4100,6 +4145,7 @@ tcd0_perbufl
 tcd0_perh
 tcd0_perl
 tcd0_temp
+tcd1
 tcd1_cca
 tcd1_ccabuf
 tcd1_ccabufh
@@ -4152,6 +4198,7 @@ tcd2_lcmpc
 tcd2_lcmpd
 tcd2_lcnt
 tcd2_lper
+tce0
 tce0_cca
 tce0_ccabuf
 tce0_ccabufh
@@ -4196,6 +4243,7 @@ tce0_perbufl
 tce0_perh
 tce0_perl
 tce0_temp
+tce1
 tce1_cca
 tce1_ccabuf
 tce1_ccabufh
@@ -4248,6 +4296,7 @@ tce2_lcmpc
 tce2_lcmpd
 tce2_lcnt
 tce2_lper
+tcf0
 tcf0_cca
 tcf0_ccabuf
 tcf0_ccabufh
@@ -4315,12 +4364,17 @@ tcf2_lper
 tempref
 tempref_adcb_refctrl_bit
 tempref_bit
+tick
 timeout0
 timeout0_bit
 timeout0_twie_master_ctrlb_bit
 timeout1
 timeout1_bit
 timeout1_twie_master_ctrlb_bit
+timer_init
+timer_interrupt_disable
+timer_interrupt_enable
+timer0overflow_isr
 tolower
 toscsel
 toscsel_bit
@@ -4389,6 +4443,7 @@ trnintlvl1_bit
 trnintlvl1_dma_ch1_ctrlb_bit
 trnintlvl1_dma_ch2_ctrlb_bit
 trnintlvl1_dma_ch3_ctrlb_bit
+tsid
 twi
 twi_bit
 twi_pr_prpd_bit
@@ -4519,6 +4574,7 @@ uartf0_write_text
 unfif
 unfif_bit
 unfif_usb_intflagsaset_bit
+unitid
 uresume
 uresume_bit
 usart0
@@ -4611,6 +4667,7 @@ usbsrc1
 usbsrc1_bit
 v
 v_bit
+values
 vbat_backup0
 vbat_backup1
 vbat_ctrl
@@ -4738,6 +4795,7 @@ wintmode0_bit
 wintmode1
 wintmode1_acb_winctrl_bit
 wintmode1_bit
+words
 wordtohex
 wordtostr
 wordtostrwithzeros
@@ -4752,6 +4810,7 @@ wper3_bit
 wrcol
 wrcol_bit
 wrcol_spid_status_bit
+writereg
 wstate0
 wstate0_acb_status_bit
 wstate0_bit

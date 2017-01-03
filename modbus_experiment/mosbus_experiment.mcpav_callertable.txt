@@ -75,8 +75,19 @@ main
 			UARTD1_Write
 			UARTE0_Write
 			UARTF0_Write
+	Timer_Init
+		Get_Fosc_kHz
+		float_ulong2fp
+		float_fpdiv1
+		float_fpmul1
+		float_fpint
+		Div_32x32_U
+		HWMul_32x32
+	Timer_Interrupt_Enable
 	SPIC_Init_Advanced
 	SPI_Set_Active
+	ad7705_init
+		SPIC_Write
 	SPI_Ethernet_Init
 		SPI_Ethernet_delay
 			Delay_500us
@@ -248,12 +259,24 @@ main
 				SPI_Ethernet_writeAddr
 				SPI_Ethernet_setRxReadAddress
 				SPI_Ethernet_UserTCP
-					SPI_Ethernet_getByte
-					SPI_Ethernet_putByte
 					PrintOut
+					SPI_Ethernet_getByte
 					UART_Write_Text
+					SPI_Ethernet_putBytes
 			SPI_Ethernet_setBitReg
 			SPIC_Read
 			SPID_Read
+	SPIC_Write
+	SPIC_Read_Bytes
+		SPIC_Read
+	ADCA_Read
+		ADCA_Init
+			ADCA_Init_Advanced
+		ADCA_Get_Sample
+	ADCB_Read
+		ADCB_Init
+			ADCB_Init_Advanced
+		ADCB_Get_Sample
 	__CC2DW
 	UARTC0_Init
+Timer0Overflow_ISR

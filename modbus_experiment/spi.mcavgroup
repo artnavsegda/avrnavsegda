@@ -1,0 +1,6 @@
+[PROJECTS]
+Count=2
+Project0=..\mikroc\spi\spi.mcpav
+Project1=mosbus_experiment.mcpav
+[ActiveProject]
+Index=1

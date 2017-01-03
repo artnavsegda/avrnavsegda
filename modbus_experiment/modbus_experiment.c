@@ -10,6 +10,10 @@ sfr sbit SPI_Ethernet_Rst_Direction at PORTA_DIR.B0;
 sfr sbit SPI_Ethernet_CS_Direction  at PORTC_DIR.B0;
 // end ethernet NIC definitions
 
+sbit ad7705_Chip_Select at PORTC_OUT.B4;
+sbit ad7705_Chip_Select_Direction at PORTC_DIR.B4;
+sbit ad7707_drdy at PORTC_IN.B1;
+
 /***********************************
  * RAM variables
  */
@@ -180,11 +184,56 @@ void Timer0Overflow_ISR() org IVT_ADDR_TCC0_OVF {
         tick = 1;
 }
 
+unsigned int result;
+
+void SPIC_Read_Bytes(char *buffer, unsigned NoBytes)
+{
+        int i;
+        for (i = 0; i < NoBytes; i++)
+                buffer[i] = SPIC_Read(0xFF);
+}
+
+void ad7705_init(void)
+{
+        SPI_Ethernet_CS = 1;
+        ad7705_Chip_Select = 0;
+
+        SPIC_Write(0xFF);
+        SPIC_Write(0xFF);
+        SPIC_Write(0xFF);
+        SPIC_Write(0xFF);
+        SPIC_Write(0xFF);
+
+        delay_ms(10);
+
+        SPIC_Write(0x20);
+        SPIC_Write(0x0C);
+        SPIC_Write(0x10);
+        SPIC_Write(0x04);
+
+        delay_ms(10);
+
+        SPIC_Write(0x60);
+        SPIC_Write(0x18);
+        SPIC_Write(0x3A);
+        SPIC_Write(0x00);
+
+        delay_ms(10);
+
+        SPIC_Write(0x70);
+        SPIC_Write(0x89);
+        SPIC_Write(0x78);
+        SPIC_Write(0xD7);
+        ad7705_Chip_Select = 1;
+        SPI_Ethernet_CS = 0;
+}
+
 /*
  * main entry
  */
 void    main()
 {
+	int i;
         OSC_CTRL = 0x02;                 // 32MHz internal RC oscillator
         while(RC32MRDY_bit == 0)
               ;
@@ -204,8 +253,10 @@ void    main()
         PORTB_DIR.B6 = 0;
         PORTB_OUT.B6 = 0;
         PORTC_DIR.B0 = 1;
-        PORTC_DIR.B1 = 1;
+        PORTC_DIR.B1 = 0;
         PORTD_DIR.B4 = 1;
+        //PORTD_DIR.B5 = 1;
+        //ad7705_Chip_Select_Direction = 1;
         
         UARTC0_Init(115200);
         UART_Set_Active(&UARTC0_Read, &UARTC0_Write, &UARTC0_Data_Ready, &UARTC0_Tx_Idle);
@@ -217,10 +268,13 @@ void    main()
         CPU_SREG.B7 = 1;                  // Enable global interrupts
 
         Timer_Init(&TCC0, 1000000);
-         Timer_Interrupt_Enable(&TCC0);
+        Timer_Interrupt_Enable(&TCC0);
         
         SPIC_Init_Advanced(_SPI_MASTER, _SPI_FCY_DIV16, _SPI_CLK_LO_LEADING);
         SPI_Set_Active(&SPIC_Read,&SPIC_Write);
+        
+	ad7705_init();
+        
         Spi_Rd_Ptr = SPIC_Read;
         SPI_Ethernet_Init(myMacAddr, myIpAddr, Spi_Ethernet_FULLDUPLEX) ;
 
@@ -232,13 +286,30 @@ void    main()
                 /*
                  * if necessary, test the return value to get error code
                  */
+                ad7705_Chip_Select = 1;
                 SPI_Ethernet_doPacket() ;   // process incoming Ethernet packets
+                ad7705_Chip_Select = 0;
+                
+                if (ad7707_drdy == 0)
+                {
+                        //PORTD_OUTTGL.B5 = 1;
+                        ad7705_Chip_Select = 0;
+                        SPIC_Write(0x38);
+                        SPIC_Read_Bytes((unsigned char *)&result,2);
+                        ad7705_Chip_Select = 1;
+                }
 
                 if (tick == 1)
                 {
                         PORTD_OUTTGL.B4 = 1;
                         table[2]++;
+                        table[3] = BSWAP_16(result);
+                        for (i = 0; i<8;i++)
+                                table[4+i] = ADCA_Read(i);
+                        for (i = 0; i<8;i++)
+                                table[12+i] = ADCB_Read(i);
                         tick = 0;
+                        //PrintOut(PrintHandler, "cs0 %x\r\n", BSWAP_16(result));
                 }
         }
 }

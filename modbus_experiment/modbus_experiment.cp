@@ -77,11 +77,27 @@ struct writeregstruct {
  unsigned int regvalue;
 };
 
+struct writemulticoilstruct {
+ unsigned int firstreg;
+ unsigned int regnumber;
+ unsigned char bytestofollow;
+ unsigned char coils[256];
+};
+
+struct writemultiregstruct {
+ unsigned int firstreg;
+ unsigned int regnumber;
+ unsigned char bytestofollow;
+ unsigned int registers[127];
+};
+
 union pdudataunion {
  struct askreadregstruct askreadregs;
  struct reqreadcoilsstruct reqreadcoils;
  struct reqreadwordstruct reqreadholdings;
  struct writeregstruct writereg;
+ struct writemulticoilstruct writemulticoil;
+ struct writemultiregstruct writemultireg;
  unsigned int words[128];
  unsigned char bytes[256];
 };
@@ -115,7 +131,7 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
 
 
 
-
+ flags->canCloseTCP = 0;
 
 
  if(localPort != 502)
@@ -175,11 +191,17 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
  }
  break;
  case 5:
- case 6:
 
+ break;
+ case 6:
+ if ( ((((askframe.pdu.values.writereg.regaddress) >> 8) & 0xff) | (((askframe.pdu.values.writereg.regaddress) & 0xff) << 8))  < amount)
+ table[ ((((askframe.pdu.values.writereg.regaddress) >> 8) & 0xff) | (((askframe.pdu.values.writereg.regaddress) & 0xff) << 8)) ] =  ((((askframe.pdu.values.writereg.regvalue) >> 8) & 0xff) | (((askframe.pdu.values.writereg.regvalue) & 0xff) << 8)) ;
  break;
  case 15:
  case 16:
+ for (i = 0; i <  ((((askframe.pdu.values.writemultireg.regnumber) >> 8) & 0xff) | (((askframe.pdu.values.writemultireg.regnumber) & 0xff) << 8)) ;i++)
+ if ( ((((askframe.pdu.values.writemultireg.firstreg) >> 8) & 0xff) | (((askframe.pdu.values.writemultireg.firstreg) & 0xff) << 8)) +i < amount)
+ table[ ((((askframe.pdu.values.writemultireg.firstreg) >> 8) & 0xff) | (((askframe.pdu.values.writemultireg.firstreg) & 0xff) << 8)) +i] =  ((((askframe.pdu.values.writemultireg.registers[i]) >> 8) & 0xff) | (((askframe.pdu.values.writemultireg.registers[i]) & 0xff) << 8)) ;
  askframe.length =  ((((6) >> 8) & 0xff) | (((6) & 0xff) << 8)) ;
  default:
  break;
@@ -249,7 +271,7 @@ void ad7705_init(void)
  ad7705_Chip_Select = 1;
  SPI_Ethernet_CS = 0;
 }
-#line 234 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 256 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
 void main()
 {
  int i;
@@ -258,7 +280,7 @@ void main()
  ;
  CPU_CCP = 0xD8;
  CLK_CTRL = 1;
-#line 250 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 272 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
  PORTC_DIR.B7 = 1;
  PORTC_DIR.B5 = 1;
  PORTC_DIR.B6 = 0;
@@ -295,10 +317,9 @@ void main()
 
  while(1)
  {
-#line 289 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
- ad7705_Chip_Select = 1;
+#line 312 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
  SPI_Ethernet_doPacket() ;
- ad7705_Chip_Select = 0;
+
 
  if (ad7707_drdy == 0)
  {

@@ -6,7 +6,7 @@ Value=0
 [BUILD_TYPE]
 Value=0
 [ACTIVE_TAB]
-Value=serial.c
+Value=..\spi\spi.c
 [USE_EEPROM]
 Value=0
 [USE_HEAP]
@@ -47,8 +47,10 @@ Count=0
 [PLDS]
 Count=0
 [Useses]
-Count=1
+Count=3
 File0=UART
+File1=PrintOut
+File2=C_Type
 [EXPANDED_NODES]
 Node0=Sources
 Count=1

@@ -1,4 +1,9 @@
 #line 1 "C:/Users/artna/Documents/GitHub/avrnavsegda/mikroc/serial/serial.c"
+void PrintHandler(char c)
+{
+ UARTC0_Write(c);
+}
+
 void main() {
 
  char uart_rd;
@@ -11,7 +16,8 @@ void main() {
  UARTC0_Init(9600);
  Delay_ms(100);
 
- UARTC0_Write_Text("Hello world from here!");
+ UARTC0_Write_Text("Hello world from here!\r\n");
+ PrintOut(PrintHandler, "Testing output\r\n");
 
 
 

@@ -1,6 +1,6 @@
-#line 1 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
-#line 1 "c:/users/artna/desktop/new folder/__ethenc28j60.h"
-#line 119 "c:/users/artna/desktop/new folder/__ethenc28j60.h"
+#line 1 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
+#line 1 "c:/users/art navsegda/coding/avrnavsegda/http_demo/__ethenc28j60.h"
+#line 119 "c:/users/art navsegda/coding/avrnavsegda/http_demo/__ethenc28j60.h"
 typedef struct
  {
  unsigned char valid;
@@ -24,7 +24,7 @@ typedef struct {
  unsigned canCloseTCP: 1;
  unsigned isBroadcast: 1;
 } TEthPktFlags;
-#line 146 "c:/users/artna/desktop/new folder/__ethenc28j60.h"
+#line 146 "c:/users/art navsegda/coding/avrnavsegda/http_demo/__ethenc28j60.h"
 extern void SPI_Ethernet_Init(unsigned char *resetPort, unsigned char resetBit, unsigned char *CSport, unsigned char CSbit, unsigned char *mac, unsigned char *ip, unsigned char fullDuplex);
 extern unsigned char SPI_Ethernet_doPacket();
 extern void SPI_Ethernet_putByte(unsigned char b);
@@ -35,23 +35,23 @@ extern void SPI_Ethernet_getBytes(unsigned char *ptr, unsigned int addr, unsigne
 extern unsigned int SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags * flags);
 extern unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags * flags);
 extern void SPI_Ethernet_confNetwork(char *ipMask, char *gwIpAddr, char *dnsIpAddr);
-#line 29 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 29 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 sfr sbit SPI_Ethernet_Rst at PORTC_OUT.B0;
 sfr sbit SPI_Ethernet_CS at PORTC_OUT.B1;
 sfr sbit SPI_Ethernet_Rst_Direction at PORTC_DIR.B0;
 sfr sbit SPI_Ethernet_CS_Direction at PORTC_DIR.B1;
-#line 38 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 38 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 const code unsigned char httpHeader[] = "HTTP/1.1 200 OK\nContent-type: " ;
 const code unsigned char httpMimeTypeHTML[] = "text/html\n\n" ;
 const code unsigned char httpMimeTypeScript[] = "text/plain\n\n" ;
 unsigned char httpMethod[] = "GET /";
-#line 48 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 48 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 const code char *indexPage =
-#line 66 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 66 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 "<meta http-equiv=\"refresh\" content=\"3;url=http://192.168.20.60\"><HTML><HEAD></HEAD><BODY><h1>AVR + ENC28J60 Mini Web Server</h1><a href=/>Reload</a><script src=/s></script><table><tr><td><table border=1 style=\"font-size:20px ;font-family: terminal ;\"><tr><th colspan=2>PINC</th></tr><script>var str,i;str=\"\";for(i=0;i<8;i++){str+=\"<tr><td bgcolor=pink>BUTTON #\"+i+\"</td>\";if(PINC&(1<<i)){str+=\"<td bgcolor=red>ON\";}else {str+=\"<td bgcolor=#cccccc>OFF\";}str+=\"</td></tr>\";}document.write(str) ;</script>" ;
-#line 83 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 83 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 const char *indexPage2 = "</table></td><td><table border=1 style=\"font-size:20px ;font-family: terminal ;\"><tr><th colspan=3>PORTD</th></tr><script>var str,i;str=\"\";for(i=0;i<8;i++){str+=\"<tr><td bgcolor=yellow>LED #\"+i+\"</td>\";if(PORTD&(1<<i)){str+=\"<td bgcolor=red>ON\";}else {str+=\"<td bgcolor=#cccccc>OFF\";}str+=\"</td><td><a href=/t\"+i+\">Toggle</a></td></tr>\";}document.write(str) ;</script></table></td></tr></table>This is HTTP request #<script>document.write(REQ)</script></BODY></HTML>" ;
-#line 88 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 88 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 unsigned char myMacAddr[6] = {0x00, 0x14, 0xA5, 0x76, 0x19, 0x3f} ;
 unsigned char myIpAddr[4] = {192, 168, 1, 150} ;
 unsigned char gwIpAddr[4] = {192, 168, 1, 1 } ;
@@ -61,7 +61,7 @@ unsigned char dnsIpAddr[4] = {192, 168, 1, 1 } ;
 unsigned char getRequest[15] ;
 unsigned char dyna[29] ;
 unsigned long httpCounter = 0 ;
-#line 161 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 161 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags *flags)
  {
  unsigned int len;
@@ -140,7 +140,7 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
 
  return(len) ;
  }
-#line 250 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 250 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 unsigned int SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remotePort, unsigned int destPort, unsigned int reqLength, TEthPktFlags *flags)
  {
  unsigned int len ;
@@ -177,7 +177,7 @@ unsigned int SPI_Ethernet_UserUDP(unsigned char *remoteHost, unsigned int remote
 
  return(len) ;
  }
-#line 289 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 289 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
 void main()
  {
  OSC_CTRL = 0x02;
@@ -187,7 +187,7 @@ void main()
 
  CPU_CCP = 0xD8;
  CLK_CTRL = 1;
-#line 310 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 310 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
  PORTC_DIR.B7 = 1;
  PORTC_DIR.B5 = 1;
  PORTC_DIR.B6 = 0;
@@ -208,8 +208,8 @@ void main()
 
  while(1)
  {
-#line 333 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 333 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
  SPI_Ethernet_doPacket() ;
-#line 340 "C:/Users/artna/Desktop/New folder/HTTP_Demo.c"
+#line 340 "C:/Users/Art Navsegda/Coding/avrnavsegda/http_demo/HTTP_Demo.c"
  }
  }

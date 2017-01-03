@@ -26,8 +26,9 @@ Count=0
 Count=0
 ActiveImageIndex=-1
 [OPENED_FILES]
-Count=1
+Count=2
 File0=clockout.c
+File1=..\..\..\..\..\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Defs\ATXMEGA256A3BU.c
 [EEPROM]
 Count=0
 [ACTIVE_COMMENTS_FILES]
@@ -38,7 +39,7 @@ Count=0
 Count=4
 Path0=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Defs\
 Path1=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\
-Path2=C:\Users\artna\Documents\GitHub\avrnavsegda\mikroc\clockout\
+Path2=C:\Users\Art Navsegda\Coding\avrnavsegda\mikroc\clockout\
 Path3=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\GT64KW\
 [HEADER_PATH]
 Count=0

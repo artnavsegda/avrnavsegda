@@ -17,12 +17,6 @@ Value=0
 Value=0
 [HEAP_SIZE]
 Value=2000
-[EXPANDED NODES]
-Node1=Sources
-Node2=Image Files
-Node3=Active Comments Files
-Node4=Output Files
-Count=4
 [FILES]
 Count=1
 File0=HTTP_Demo.c
@@ -41,11 +35,11 @@ Count=0
 [OTHER_FILES]
 Count=0
 [SEARCH_PATH]
-Count=4
+Count=5
 Path0=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Defs\
 Path1=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\
-Path2=C:\Users\artna\Desktop\New folder\
-Path3=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\GT64KW\
+Path2=C:\Users\Art Navsegda\Coding\avrnavsegda\http_demo\
+Path4=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for AVR\Uses\GT64KW\
 [HEADER_PATH]
 Count=0
 [HEADERS]
@@ -61,4 +55,5 @@ File3=Conversions
 File4=C_Type
 File5=SPI_Ethernet
 [EXPANDED_NODES]
-Count=0
+Node0=Sources
+Count=1

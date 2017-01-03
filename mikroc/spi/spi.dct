@@ -7,6 +7,7 @@ __cfcs2s
 __cs2s
 __flash_size
 __fzins
+_doprntout
 _spi_clk_hi_leading
 _spi_clk_hi_trailing
 _spi_clk_lo_leading
@@ -69,6 +70,7 @@ ackact_bit
 ackact_twic_slave_ctrlb_bit
 ackact_twie_master_ctrlc_bit
 ackact_twie_slave_ctrlb_bit
+ad7707_drdy
 adc
 adc_bit
 adc_pr_prpb_bit
@@ -839,6 +841,7 @@ chif_adcb_ch1_intflags_bit
 chif_adcb_ch2_intflags_bit
 chif_adcb_ch3_intflags_bit
 chif_bit
+chip_select
 chmux0
 chmux0_bit
 chmux0_evsys_ch1mux_bit
@@ -2087,6 +2090,8 @@ inven_portr_pin7ctrl_bit
 ircom_ctrl
 ircom_rxplctrl
 ircom_txplctrl
+isalnum
+isalpha
 isc0
 isc0_bit
 isc0_porta_pin1ctrl_bit
@@ -2258,6 +2263,14 @@ isc2_portr_pin4ctrl_bit
 isc2_portr_pin5ctrl_bit
 isc2_portr_pin6ctrl_bit
 isc2_portr_pin7ctrl_bit
+iscntrl
+isdigit
+isgraph
+islower
+ispunct
+isspace
+isupper
+isxdigit
 ivsel
 ivsel_bit
 ivt_addr_aca_ac0
@@ -3264,6 +3277,8 @@ primode0
 primode0_bit
 primode1
 primode1_bit
+printhandler
+printout
 prod_signatures_adcacal0
 prod_signatures_adcacal1
 prod_signatures_adcbcal0
@@ -3617,6 +3632,7 @@ speed_bit
 sph
 spi
 spi_bit
+spi_ethernet_cs
 spi_porta_remap_bit
 spi_portb_remap_bit
 spi_portc_remap_bit
@@ -3638,6 +3654,7 @@ spic_init
 spic_init_advanced
 spic_intctrl
 spic_read
+spic_read_bytes
 spic_status
 spic_write
 spid_ctrl
@@ -4189,8 +4206,10 @@ timeout0_twie_master_ctrlb_bit
 timeout1
 timeout1_bit
 timeout1_twie_master_ctrlb_bit
+tolower
 toscsel
 toscsel_bit
+toupper
 trfreq
 trfreq_bit
 trfreq_dma_ch1_ctrla_bit

@@ -1,3 +1,8 @@
+void PrintHandler(char c)
+{
+        UARTC0_Write(c);
+}
+
 void main() {
 
      char uart_rd;
@@ -10,7 +15,8 @@ void main() {
      UARTC0_Init(9600);               // Initialize UART module at 9600 bps
      Delay_ms(100);                  // Wait for UART module to stabilize
 
-     UARTC0_Write_Text("Hello world from here!");
+     UARTC0_Write_Text("Hello world from here!\r\n");
+     PrintOut(PrintHandler, "Testing output\r\n");
 //  UARTC0_Write(13);
 //  UARTC0_Write(10);
 

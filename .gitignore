@@ -197,3 +197,11 @@ FakesAssemblies/
 
 # Atmel
 *.bin
+
+# mikroc
+*.hex
+*.ini
+*.dbg
+*.lst
+*.cp
+*.mcl

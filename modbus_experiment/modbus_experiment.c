@@ -98,6 +98,7 @@ struct mbframestruct askframe;
 #define BSWAP_16(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
 unsigned int table[100] = {0xABCD, 0xDEAD, 0x0000};
+unsigned char crmassive[100];
 unsigned int amount = 100;
 
 unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags *flags)
@@ -142,14 +143,18 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         {
                 case 1:
                 case 2:
-                        PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
-                        askframe.pdu.values.reqreadcoils.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) / 8;
-                        if ((BSWAP_16(askframe.pdu.values.askreadregs.regnumber) % 8)>0)
+                        firstrequest = BSWAP_16(askframe.pdu.values.askreadregs.firstreg);
+                        PrintOut(PrintHandler, "Requesing coils starting from:: %d\r\n", firstrequest);
+                        requestnumber = BSWAP_16(askframe.pdu.values.askreadregs.regnumber);
+                        PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", requestnumber);
+                        askframe.pdu.values.reqreadcoils.bytestofollow = requestnumber / 8;
+                        if ((requestnumber % 8)>0)
                            askframe.pdu.values.reqreadcoils.bytestofollow++;
                         askframe.length = BSWAP_16(askframe.pdu.values.reqreadcoils.bytestofollow + 3);
                         // fill all requested coil bytes with zeroes
-                        for (i = 0; i < askframe.pdu.values.reqreadcoils.bytestofollow; i++)
-                            askframe.pdu.values.reqreadcoils.coils[i] = 0x00;
+                        for (i = 0; i < requestnumber/8; i++)
+                            askframe.pdu.values.reqreadcoils.coils[i] = (crmassive[i+(firstrequest/8)] << (firstrequest%8)) | (crmassive[i+(firstrequest/8)+1] >> 8-(firstrequest%8));
+                        askframe.pdu.values.reqreadcoils.coils[requestnumber/8] = (((crmassive[(requestnumber/8)+(firstrequest/8)] << (firstrequest%8)) | (crmassive[(requestnumber/8)+(firstrequest/8)+1] >> 8-(firstrequest%8))) & (0xFF << 8-(requestnumber%8)));
                 break;
                 case 3:
                 case 4:

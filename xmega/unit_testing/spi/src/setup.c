@@ -28,12 +28,12 @@ void spi_configure(void)
 void ioport_configure(void)
 {
 	ioport_set_pin_dir(J1_PIN1, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(J1_PIN6, IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(J1_PIN4, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(J1_PIN5, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(J1_PIN7, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MISO, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(SPIC_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MOSI, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_SCK, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(J1_PIN1, IOPORT_MODE_PULLUP);
-	ioport_set_pin_mode(J1_PIN6, IOPORT_MODE_PULLUP);
+	ioport_set_pin_mode(SPIC_MISO, IOPORT_MODE_PULLUP);
 	ioport_set_pin_sense_mode(J1_PIN1, IOPORT_SENSE_FALLING);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
 }

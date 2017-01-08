@@ -1,4 +1,4 @@
-#include  "__EthEnc28j60.h"
+#include  <__EthEnc28j60.h>
 // duplex config flags
 #define Spi_Ethernet_HALFDUPLEX     0x00  // half duplex
 #define Spi_Ethernet_FULLDUPLEX     0x01  // full duplex
@@ -56,17 +56,17 @@ struct writeregstruct {
 };
 
 struct writemulticoilstruct {
-	unsigned int firstreg;
-	unsigned int regnumber;
-	unsigned char bytestofollow;
-	unsigned char coils[256];
+        unsigned int firstreg;
+        unsigned int regnumber;
+        unsigned char bytestofollow;
+        unsigned char coils[256];
 };
 
 struct writemultiregstruct {
-	unsigned int firstreg;
-	unsigned int regnumber;
-	unsigned char bytestofollow;
-	unsigned int registers[127];
+        unsigned int firstreg;
+        unsigned int regnumber;
+        unsigned char bytestofollow;
+        unsigned int registers[127];
 };
 
 union pdudataunion {
@@ -74,8 +74,8 @@ union pdudataunion {
         struct reqreadcoilsstruct reqreadcoils;
         struct reqreadwordstruct reqreadholdings;
         struct writeregstruct writereg;
-	struct writemulticoilstruct writemulticoil;
-	struct writemultiregstruct writemultireg;
+        struct writemulticoilstruct writemulticoil;
+        struct writemultiregstruct writemultireg;
         unsigned int words[128];
         unsigned char bytes[256];
 };
@@ -139,8 +139,8 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
         PrintOut(PrintHandler, "Function code: %u\r\n", (unsigned int)askframe.pdu.fncode);
 
         switch (askframe.pdu.fncode)
-	{
-		case 1:
+        {
+                case 1:
                 case 2:
                         PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", BSWAP_16(askframe.pdu.values.askreadregs.regnumber));
                         askframe.pdu.values.reqreadcoils.bytestofollow = BSWAP_16(askframe.pdu.values.askreadregs.regnumber) / 8;
@@ -172,8 +172,8 @@ unsigned int  SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remot
                         //same as request
                 break;
                 case 6:
-			if (BSWAP_16(askframe.pdu.values.writereg.regaddress) < amount)
-			        table[BSWAP_16(askframe.pdu.values.writereg.regaddress)] = BSWAP_16(askframe.pdu.values.writereg.regvalue);
+                        if (BSWAP_16(askframe.pdu.values.writereg.regaddress) < amount)
+                                table[BSWAP_16(askframe.pdu.values.writereg.regaddress)] = BSWAP_16(askframe.pdu.values.writereg.regvalue);
                 break;
                 case 15:
                 case 16:

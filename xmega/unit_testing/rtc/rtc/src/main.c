@@ -36,6 +36,9 @@ int main (void)
 
 	board_init();
 	sysclk_init();
+
+	rtc_vbat_system_check();
+
 	rtc_init(); 
 
 	/* Insert application code here, after the board has been initialized. */

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "vbat", "vbat\vbat.cproj", "{51E87CC6-BA13-4469-8982-B37C8A6CB9DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51E87CC6-BA13-4469-8982-B37C8A6CB9DC}.Debug|AVR.ActiveCfg = Debug|AVR
+		{51E87CC6-BA13-4469-8982-B37C8A6CB9DC}.Debug|AVR.Build.0 = Debug|AVR
+		{51E87CC6-BA13-4469-8982-B37C8A6CB9DC}.Release|AVR.ActiveCfg = Release|AVR
+		{51E87CC6-BA13-4469-8982-B37C8A6CB9DC}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

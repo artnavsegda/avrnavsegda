@@ -17,14 +17,10 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	
-	//if (rtc_vbat_system_check(false) != VBAT_STATUS_OK)
-	//{
-	//	rtc_init();
-	//}
-	
-	//sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_RTC);
-	PR.PRGEN &= ~PR_RTC_bm;
-	VBAT.CTRL = VBAT_ACCEN_bm;
+	if (rtc_vbat_system_check(false) != VBAT_STATUS_OK)
+	{
+		rtc_init();
+	}
 	
 	printf("MCU started\n\r");
 	

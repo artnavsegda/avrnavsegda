@@ -5,9 +5,12 @@
  *  Author: Art Navsegda
  */ 
 
+#define F_CPU 2000000UL  // 2 MHz
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <util/delay.h>
 
 static int uart_putchar(char c, FILE *stream)
 {
@@ -29,7 +32,7 @@ void init_serial(void)
 	stdout = &mystdout;
 }
 
-void init_vbat(void)
+void check_vbat(void)
 {
 	PR.PRGEN &= ~PR_RTC_bm; // enable sysclock rtc
 	if (VBAT.STATUS & VBAT_BBPWR_bm)
@@ -55,15 +58,32 @@ void init_vbat(void)
 	else
 	{
 		printf("VBAT OK\n\r");
-		VBAT.CTRL = VBAT_ACCEN_bm;
+		VBAT.CTRL |= VBAT_ACCEN_bm;
 	}
+}
+
+void init_vbat(void)
+{
+	// Enable access to VBAT
+	VBAT.CTRL |= VBAT_ACCEN_bm;
+
+	ccp_write_io((void *)&VBAT.CTRL, VBAT_RESET_bm);
+
+	VBAT.CTRL |= VBAT_XOSCFDEN_bm;
+	/* This delay is needed to give the voltage in the backup system some
+	* time to stabilize before we turn on the oscillator. If we do not
+	* have this delay we may get a failure detection.
+	*/
+	_delay_ms(2);
+	VBAT.CTRL |= VBAT_XOSCEN_bm;
+	while (!(VBAT.STATUS & VBAT_XOSCRDY_bm));
 }
 
 int main(void)
 {
 	init_serial();
 	printf("MCU started\n\r");
-	init_vbat();
+	check_vbat();
     while(1)
     {
         //TODO:: Please write your application code 

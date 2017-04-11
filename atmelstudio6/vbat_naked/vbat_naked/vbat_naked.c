@@ -67,7 +67,8 @@ void init_vbat(void)
 	// Enable access to VBAT
 	VBAT.CTRL |= VBAT_ACCEN_bm;
 
-	ccp_write_io((void *)&VBAT.CTRL, VBAT_RESET_bm);
+	CPU_CCP = 0xD8;
+	VBAT.CTRL |= VBAT_RESET_bm;
 
 	VBAT.CTRL |= VBAT_XOSCFDEN_bm;
 	/* This delay is needed to give the voltage in the backup system some

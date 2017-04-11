@@ -135,7 +135,7 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x902
+.text           0x00000000      0x994
  *(.vectors)
  .vectors       0x00000000      0x1fc c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6/crtx256a3bu.o
                 0x00000000                __vector_default
@@ -318,50 +318,52 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
                 0x0000023e                __vector_87
                 0x0000023e                __vector_65
                 0x0000023e                __vector_120
- .text          0x00000242       0xf0 rtc.o
+ .text          0x00000242      0x182 rtc.o
                 0x00000254                init_serial
                 0x00000286                init_vbat
-                0x00000304                rtc_get_time
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen_P.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
- .text          0x00000332        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(ultoa_invert.o)
-                0x00000332                . = ALIGN (0x2)
+                0x000002c8                rtc_init
+                0x00000310                status_vbat
+                0x00000396                rtc_get_time
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen_P.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .text          0x000003c4        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(ultoa_invert.o)
+                0x000003c4                . = ALIGN (0x2)
  *(.text.*)
- .text.startup  0x00000332       0x66 rtc.o
-                0x00000332                main
- .text.libgcc   0x00000398        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
- .text.libgcc   0x00000398        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
- .text.libgcc   0x00000398        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
+ .text.startup  0x000003c4       0x66 rtc.o
+                0x000003c4                main
+ .text.libgcc   0x0000042a        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .text.libgcc   0x0000042a        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000042a        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x00000398       0x24 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
-                0x00000398                printf
+                0x0000042a       0x24 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+                0x0000042a                printf
  .text.avr-libc
-                0x000003bc      0x402 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
-                0x000003bc                vfprintf
+                0x0000044e      0x402 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+                0x0000044e                vfprintf
  .text.avr-libc
-                0x000007be       0x16 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen_P.o)
-                0x000007be                strnlen_P
+                0x00000850       0x16 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen_P.o)
+                0x00000850                strnlen_P
  .text.avr-libc
-                0x000007d4       0x16 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen.o)
-                0x000007d4                strnlen
+                0x00000866       0x16 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(strnlen.o)
+                0x00000866                strnlen
  .text.avr-libc
-                0x000007ea       0x58 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
-                0x000007ea                fputc
+                0x0000087c       0x58 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+                0x0000087c                fputc
  .text.avr-libc
-                0x00000842       0xbc c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(ultoa_invert.o)
-                0x00000842                __ultoa_invert
-                0x000008fe                . = ALIGN (0x2)
+                0x000008d4       0xbc c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(ultoa_invert.o)
+                0x000008d4                __ultoa_invert
+                0x00000990                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000008fe        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
-                0x000008fe                _exit
-                0x000008fe                exit
+ .fini9         0x00000990        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+                0x00000990                _exit
+                0x00000990                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -380,11 +382,11 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000008fe        0x4 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .fini0         0x00000990        0x4 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000902                _etext = .
+                0x00000994                _etext = .
 
-.data           0x00802000       0xb4 load address 0x00000902
+.data           0x00802000       0xb4 load address 0x00000994
                 0x00802000                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00802000        0x0 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6/crtx256a3bu.o
@@ -427,8 +429,8 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
  COMMON         0x008020b4        0x6 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
                 0x008020b4                __iob
                 0x008020ba                PROVIDE (__bss_end, .)
-                0x00000902                __data_load_start = LOADADDR (.data)
-                0x000009b6                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000994                __data_load_start = LOADADDR (.data)
+                0x00000a48                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x008020ba        0x0
                 0x008020ba                PROVIDE (__noinit_start, .)
@@ -514,58 +516,58 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x11cd
+.debug_info     0x00000000     0x1236
  *(.debug_info)
- .debug_info    0x00000000      0x769 rtc.o
- .debug_info    0x00000769       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
- .debug_info    0x0000084b       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
- .debug_info    0x0000092d       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
- .debug_info    0x00000a0f      0x14f c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
- .debug_info    0x00000b5e      0x1c6 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
- .debug_info    0x00000d24      0x342 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
- .debug_info    0x00001066      0x167 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .debug_info    0x00000000      0x7d2 rtc.o
+ .debug_info    0x000007d2       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .debug_info    0x000008b4       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
+ .debug_info    0x00000996       0xe2 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
+ .debug_info    0x00000a78      0x14f c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
+ .debug_info    0x00000bc7      0x1c6 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .debug_info    0x00000d8d      0x342 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .debug_info    0x000010cf      0x167 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x69b
+.debug_abbrev   0x00000000      0x6cd
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x244 rtc.o
- .debug_abbrev  0x00000244       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
- .debug_abbrev  0x00000258       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
- .debug_abbrev  0x0000026c       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
- .debug_abbrev  0x00000280       0xc5 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
- .debug_abbrev  0x00000345      0x11c c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
- .debug_abbrev  0x00000461      0x161 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
- .debug_abbrev  0x000005c2       0xd9 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .debug_abbrev  0x00000000      0x276 rtc.o
+ .debug_abbrev  0x00000276       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .debug_abbrev  0x0000028a       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
+ .debug_abbrev  0x0000029e       0x14 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
+ .debug_abbrev  0x000002b2       0xc5 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
+ .debug_abbrev  0x00000377      0x11c c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .debug_abbrev  0x00000493      0x161 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .debug_abbrev  0x000005f4       0xd9 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
 
-.debug_line     0x00000000      0x90b
+.debug_line     0x00000000      0x93a
  *(.debug_line)
- .debug_line    0x00000000      0x1d8 rtc.o
- .debug_line    0x000001d8       0x88 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
- .debug_line    0x00000260       0x93 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
- .debug_line    0x000002f3       0x8e c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
- .debug_line    0x00000381       0xc7 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
- .debug_line    0x00000448      0x151 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
- .debug_line    0x00000599      0x291 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
- .debug_line    0x0000082a       0xe1 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .debug_line    0x00000000      0x207 rtc.o
+ .debug_line    0x00000207       0x88 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_exit.o)
+ .debug_line    0x0000028f       0x93 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_copy_data.o)
+ .debug_line    0x00000322       0x8e c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avrxmega6\libgcc.a(_clear_bss.o)
+ .debug_line    0x000003b0       0xc7 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
+ .debug_line    0x00000477      0x151 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .debug_line    0x000005c8      0x291 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .debug_line    0x00000859       0xe1 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
 
-.debug_frame    0x00000000      0x198
+.debug_frame    0x00000000      0x1bc
  *(.debug_frame)
- .debug_frame   0x00000000       0xa8 rtc.o
- .debug_frame   0x000000a8       0x34 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
- .debug_frame   0x000000dc       0x84 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
- .debug_frame   0x00000160       0x38 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .debug_frame   0x00000000       0xcc rtc.o
+ .debug_frame   0x000000cc       0x34 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .debug_frame   0x00000100       0x84 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .debug_frame   0x00000184       0x38 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
 
-.debug_str      0x00000000      0x59f
+.debug_str      0x00000000      0x5a6
  *(.debug_str)
- .debug_str     0x00000000      0x3ec rtc.o
-                                0x436 (size before relaxing)
- .debug_str     0x000003ec       0x4e c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
+ .debug_str     0x00000000      0x3f3 rtc.o
+                                0x43d (size before relaxing)
+ .debug_str     0x000003f3       0x4e c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(iob.o)
                                  0xf2 (size before relaxing)
- .debug_str     0x0000043a       0x72 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
+ .debug_str     0x00000441       0x72 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(printf.o)
                                 0x125 (size before relaxing)
- .debug_str     0x000004ac       0x9d c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
+ .debug_str     0x000004b3       0x9d c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(vfprintf_std.o)
                                 0x16b (size before relaxing)
- .debug_str     0x00000549       0x56 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
+ .debug_str     0x00000550       0x56 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/../../../../avr/lib/avrxmega6\libc.a(fputc.o)
                                  0xfb (size before relaxing)
 
 .debug_loc      0x00000000      0x7ec

@@ -17,16 +17,40 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	
-	if (rtc_vbat_system_check(false) != VBAT_STATUS_OK)
+	switch (rtc_vbat_system_check(false))
 	{
-		rtc_init();
+		case VBAT_STATUS_NO_POWER:
+			printf("No power detected on VBAT\r\n");
+			rtc_init();
+		break;
+		case VBAT_STATUS_INIT:
+			printf("The backup system must be initialized\r\n");
+			rtc_init();
+		break;
+		case VBAT_STATUS_BBPOR:
+			printf("A POR was detected on the VBAT input\r\n");
+			rtc_init();
+		break;
+		case VBAT_STATUS_BBBOD:
+			printf("A brown-out was detected on the VBAT input\r\n");
+			rtc_init();
+		break;
+		case VBAT_STATUS_XOSCFAIL:
+			printf("A failure was detected on the oscillator\r\n");
+			rtc_init();
+		break;
+		case VBAT_STATUS_OK:
+			printf("Backup system is operating and no errors were detected\r\n");
+		break;
+		default:
+		break;
 	}
 	
 	printf("MCU started\n\r");
 	
 	while (true)
 	{
-		printf("RTC time is %lu\n\r",rtc_get_time());
+		printf("RTC time is %lu\r\n",rtc_get_time());
 		delay_s(1);
 	}
 	

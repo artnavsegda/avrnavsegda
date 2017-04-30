@@ -98,6 +98,7 @@ int main(void)
 	init_serial();
 	printf("MCU started\n\r");
 	status_vbat();
+	rtc_init();
     while(1)
     {
 		printf("RTC time is %lu\n\r",rtc_get_time());

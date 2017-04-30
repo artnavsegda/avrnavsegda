@@ -1,0 +1,22 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdio.h>
+
+static int uart_putchar(char c, FILE *stream);
+
+static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
+
+static int uart_putchar(char c, FILE *stream)
+{
+	loop_until_bit_is_set(USARTC0.STATUS,USART_DREIF_bp);
+	USARTC0.DATA = c;
+	return 0;
+}
+
+int main(void)
+{
+	UBRRL = (F_CPU / (16UL * 9600)) - 1;
+	UCSRB = _BV(TXEN) | _BV(RXEN);
+	return 0;
+}
+

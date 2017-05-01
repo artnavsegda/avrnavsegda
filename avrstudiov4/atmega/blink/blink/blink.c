@@ -3,10 +3,14 @@
 
 int main(void)
 {
-	PORTD_DIRSET = _BV(4);
-	while(1)
+	DDRB = 0xFF;
+	while (1)
 	{
-		PORTD_OUTTGL = _BV(4);
+		PORTB = 0xFF;
+		_delay_ms(1000);
+		PORTB = 0x00;
 		_delay_ms(1000);
 	}
+	return 0;
 }
+

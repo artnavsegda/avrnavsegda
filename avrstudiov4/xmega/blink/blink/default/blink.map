@@ -465,10 +465,10 @@ LOAD c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.6.2/avr
  *(.debug_frame)
  .debug_frame   0x00000000       0x24 blink.o
 
-.debug_str      0x00000000       0xf7
+.debug_str      0x00000000       0xef
  *(.debug_str)
- .debug_str     0x00000000       0xf7 blink.o
-                                0x12b (size before relaxing)
+ .debug_str     0x00000000       0xef blink.o
+                                0x123 (size before relaxing)
 
 .debug_loc
  *(.debug_loc)

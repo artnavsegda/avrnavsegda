@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  000001bc  00000000  00000000  00003c58  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005a6  00000000  00000000  00003e14  2**0
+ 10 .debug_str    000005ac  00000000  00000000  00003e14  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000007ec  00000000  00000000  000043ba  2**0
+ 11 .debug_loc    000007ec  00000000  00000000  000043c0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000048  00000000  00000000  00004ba6  2**0
+ 12 .debug_ranges 00000048  00000000  00000000  00004bac  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -206,7 +206,7 @@ Disassembly of section .text:
  23e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000242 <uart_putchar>:
-#define F_CPU 2000000UL  // 2 MHz
+#include <stdbool.h>
 #include <util/delay.h>
 
 static int uart_putchar(char c, FILE *stream)

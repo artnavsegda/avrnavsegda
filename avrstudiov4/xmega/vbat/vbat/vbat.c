@@ -1,5 +1,3 @@
-#define F_CPU 2000000UL  // 2 MHz
-
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdbool.h>

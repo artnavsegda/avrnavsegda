@@ -1,7 +1,6 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdbool.h>
-#define F_CPU 2000000UL  // 2 MHz
 #include <util/delay.h>
 
 static int uart_putchar(char c, FILE *stream)

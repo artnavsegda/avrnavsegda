@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "serial_asf", "serial_asf\serial_asf.cproj", "{458C74C5-59AA-4C44-AB0E-9C2C1DF60EED}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "STDIO_SERIAL_STDIO_SERIAL_EXAMPLE1", "STDIO_SERIAL_STDIO_SERIAL_EXAMPLE1\STDIO_SERIAL_STDIO_SERIAL_EXAMPLE1.cproj", "{B6A162F7-38A0-4CA7-A012-D8AF5A9174FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{458C74C5-59AA-4C44-AB0E-9C2C1DF60EED}.Debug|AVR.ActiveCfg = Debug|AVR
+		{458C74C5-59AA-4C44-AB0E-9C2C1DF60EED}.Debug|AVR.Build.0 = Debug|AVR
+		{458C74C5-59AA-4C44-AB0E-9C2C1DF60EED}.Release|AVR.ActiveCfg = Release|AVR
+		{458C74C5-59AA-4C44-AB0E-9C2C1DF60EED}.Release|AVR.Build.0 = Release|AVR
+		{B6A162F7-38A0-4CA7-A012-D8AF5A9174FF}.Debug|AVR.ActiveCfg = Debug|AVR
+		{B6A162F7-38A0-4CA7-A012-D8AF5A9174FF}.Debug|AVR.Build.0 = Debug|AVR
+		{B6A162F7-38A0-4CA7-A012-D8AF5A9174FF}.Release|AVR.ActiveCfg = Release|AVR
+		{B6A162F7-38A0-4CA7-A012-D8AF5A9174FF}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -242,9 +242,9 @@ void W5100_Init(void)
 {
   // Ethernet Setup
   unsigned char mac_addr[] = {0x00,0x16,0x36,0xDE,0x58,0xF6};
-  unsigned char ip_addr[] = {192,168,1,150};
+  unsigned char ip_addr[] = {192,168,2,10};
   unsigned char sub_mask[] = {255,255,255,0};
-  unsigned char gtw_addr[] = {192,168,1,1};
+  unsigned char gtw_addr[] = {192,168,2,1};
 
   // Setting the Wiznet W5100 Mode Register: 0x0000
   SPI_Write(MR,0x80);            // MR = 0b10000000;

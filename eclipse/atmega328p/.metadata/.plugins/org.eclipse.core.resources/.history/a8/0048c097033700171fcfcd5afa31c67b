@@ -61,7 +61,7 @@ int main(void)
     {
     	_delay_ms(100);
     	spi_transfer(0x38);
-    	printf("%X%X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
+    	printf("%02X%02X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
     }
 	return 0;
 }

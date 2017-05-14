@@ -18,4 +18,20 @@
 	</section>
 	<section name="NewWizardAction">
 	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.ui.wizards.export.ZipFile" key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+	</section>
+	<section name="ZipFileExportWizard">
+		<item value="true" key="WizardZipFileResourceExportPage1.STORE_COMPRESS_CONTENTS_ID"/>
+		<item value="true" key="WizardZipFileResourceExportPage1.STORE_CREATE_STRUCTURE_ID"/>
+		<list key="WizardZipFileResourceExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="/Users/artnavsegda/GitHub/avrnavsegda/eclipse/atxmega256a3bu/xmega_spi.zip"/>
+			<item value="/Users/artnavsegda/GitHub/avrnavsegda/eclipse/atxmega256a3bu/xmega_serial.zip"/>
+			<item value="/Users/artnavsegda/GitHub/avrnavsegda/eclipse/atxmega256a3bu/xmega_rtc.zip"/>
+			<item value="/Users/artnavsegda/GitHub/avrnavsegda/eclipse/atxmega256a3bu/xmega_blink.zip"/>
+		</list>
+	</section>
 </section>

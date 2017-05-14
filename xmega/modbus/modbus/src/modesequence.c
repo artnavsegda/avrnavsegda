@@ -1,67 +1,41 @@
-/*
- * modesequence.c
- *
- * Created: 14-Jul-16 11:27:43
- *  Author: Art Navsegda
- */ 
-
- #include <asf.h>
- #include "modesequence.h"
- #include "main.h"
- #include "i2c_api.h"
- #include "pca9557_api.h"
-
- //void setupseconds(void)
- //{
-	 //modeseconds[STARTLEVEL] = STARTLEVELSECONDS;
-	 //modeseconds[CELLDELAY] = CELLDELAYSECONDS;
-	 //modeseconds[CELLLEVEL] = CELLLEVELSECONDS;
-	 //modeseconds[ZERODELAY] = ZERODELAYSECONDS;
-	 //modeseconds[ZEROTEST] = ZEROTESTSECONDS;
-	 //modeseconds[PURGE] = PURGESECONDS;
-	 //modeseconds[TOTALMERCURYDELAY] = TOTALMERCURYDELAYSECONDS;
-	 //modeseconds[TOTALMERCURY] = TOTALMERCURYSECONDS;
-	 //modeseconds[ELEMENTALMERCURYDELAY] = ELEMENTALMERCURYDELAYSECONDS;
-	 //modeseconds[ELEMENTALMERCURY] = ELEMENTALMERCURYSECONDS;
-	 //modeseconds[PRECALIBRATIONDELAY] = PRECALIBRATIONDELAYSECONDS;
-	 //modeseconds[CALIBRATION] = CALIBRATIONSECONDS;
-	 //modeseconds[POSTCALIBRATIONDELAY] = POSTCALIBRATIONDELAYSECONDS;
- //}
-
- int modeseconds(int modeneed)
- {
-	switch (modeneed)
-	{
-		case STARTLEVEL: return STARTLEVELSECONDS;
-		case CELLDELAY: return CELLDELAYSECONDS;
-		case CELLLEVEL:	return CELLLEVELSECONDS;
-		case ZERODELAY: return ZERODELAYSECONDS;
-		case ZEROTEST: return ZEROTESTSECONDS;
-		case PURGE: return PURGESECONDS;
-		case TOTALMERCURYDELAY: return TOTALMERCURYDELAYSECONDS;
-		case TOTALMERCURY: return TOTALMERCURYSECONDS;
-		case ELEMENTALMERCURYDELAY: return ELEMENTALMERCURYDELAYSECONDS;
-		case ELEMENTALMERCURY: return ELEMENTALMERCURYSECONDS;
-		case PRECALIBRATIONDELAY: return PRECALIBRATIONDELAYSECONDS;
-		case CALIBRATION: return CALIBRATIONSECONDS;
-		case POSTCALIBRATIONDELAY: return POSTCALIBRATIONDELAYSECONDS;
-	}
-	return 0;
- }
+#include <asf.h>
+#include "modesequence.h"
+#include "main.h"
+#include "i2c_api.h"
+#include "pca9557_api.h"
 
 extern int timetoexitmode;
 extern int modenumber;
-
 extern unsigned int runner[MEMORYUSE];
 extern unsigned int temprunner[CALIBRATIONSECONDS];
-
 extern int runflag;
 extern int temprunflag;
-
 extern int zerolevelavg;
 extern int coefficent;
 extern int celllevelavg;
 extern int celltempavg;
+extern struct settings mysettings;
+
+int modeseconds(int modeneed)
+{
+	switch (modeneed)
+	{
+		case STARTLEVEL: return mysettings.length_table[0];
+		case CELLDELAY: return mysettings.length_table[1];
+		case CELLLEVEL:	return mysettings.length_table[2];
+		case ZERODELAY: return mysettings.length_table[3];
+		case ZEROTEST: return mysettings.length_table[4];
+		case TOTALMERCURYDELAY: return mysettings.length_table[5];
+		case TOTALMERCURY: return mysettings.length_table[6];
+		case ELEMENTALMERCURYDELAY: return mysettings.length_table[7];
+		case ELEMENTALMERCURY: return mysettings.length_table[8];
+		case PRECALIBRATIONDELAY: return mysettings.length_table[9];
+		case CALIBRATION: return mysettings.length_table[10];
+		case POSTCALIBRATIONDELAY: return mysettings.length_table[11];
+		case PURGE: return mysettings.length_table[12];
+	}
+	return 0;
+}
 
  void entermode(int modetoenter)
 {
@@ -71,6 +45,7 @@ extern int celltempavg;
 	switch(modetoenter)
 	{
 		case STARTLEVEL:
+			pca9557_set_pin_level(U3, U3_IGNIT, true);
 		break;
 		case CELLDELAY:
 			pca9557_set_pin_level(U1, SERVO_1_LEFT_OUT, false);
@@ -81,27 +56,27 @@ extern int celltempavg;
 			pca9557_set_pin_level(U1, SERVO_1_RIGHT_OUT, true);
 		break;
 		case ZERODELAY:
-			writecoil(100, 0);
-			writecoil(4, 1);
+			writecoil(REQUESTTOSTARTZEROTEST, 0);
+			writecoil(STATUSOFCALIBRATION, 1);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		return;
 		break;
 		case ZEROTEST:
-			writecoil(100, 0);
-			writecoil(4, 1);
+			writecoil(REQUESTTOSTARTZEROTEST, 0);
+			writecoil(STATUSOFCALIBRATION, 1);
 			pca9557_set_pin_level(0x1a, VALVE_ZM, true);
 			ioport_set_pin_level(LED0,false);
 		break;
 		case PURGE:
-			writecoil(102, false);
+			writecoil(REQUESTTOSTARTPURGE, false);
 		break;
 		case TOTALMERCURYDELAY:
 		break;
 		case TOTALMERCURY:
 		break;
 		case ELEMENTALMERCURYDELAY:
-			writecoil(101, false);
+			writecoil(REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY, false);
 			pca9557_set_pin_level(U3, VALVE_TE, true);
 			ioport_set_pin_level(LED3,false);
 		break;
@@ -110,20 +85,20 @@ extern int celltempavg;
 			ioport_set_pin_level(LED3,false);
 		break;
 		case PRECALIBRATIONDELAY:
-			writecoil(99, false);
-			writecoil(4, 1);
+			writecoil(REQUESTTOSTARTCALIBRATION, false);
+			writecoil(STATUSOFCALIBRATION, 1);
 			//pca9557_set_pin_level(U1, SERVO_1_LEFT_OUT, false);
 			//pca9557_set_pin_level(U1, SERVO_1_RIGHT_OUT, true);
 		break;
 		case CALIBRATION:
-			writecoil(99, false);
-			writecoil(4, 1);
+			writecoil(REQUESTTOSTARTCALIBRATION, false);
+			writecoil(STATUSOFCALIBRATION, 1);
 			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
 		case POSTCALIBRATIONDELAY:
-			writecoil(99, false);
-			writecoil(4, 1);
+			writecoil(REQUESTTOSTARTCALIBRATION, false);
+			writecoil(STATUSOFCALIBRATION, 1);
 			pca9557_set_pin_level(U3, VALVE_CM, true);
 			ioport_set_pin_level(LED1,false);
 		break;
@@ -137,6 +112,7 @@ void exitmode(int modetoexit)
 	switch(modetoexit)
 	{
 		case STARTLEVEL:
+			pca9557_set_pin_level(U3, U3_IGNIT, false);
 		break;
 		case CELLDELAY:
 		break;

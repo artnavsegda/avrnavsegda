@@ -120,13 +120,13 @@ void send_data(struct mysettingsstruct *mysettings, struct mydatastate *mystate)
 	mysettings->kfactor = i2c_read_double(&TWIE, 0x08, I2C_KFACTOR);
 
 	int statusword = getstatus();
-	i2c_send(&TWIE, 0x08, I2C_STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); 
+	i2c_send(&TWIE, 0x08, I2C_STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW)));
 	i2c_send(&TWIE, 0x08, I2C_STATUSOFTHERMOCONTROLLERS, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4)));
 	i2c_send(&TWIE, 0x08, I2C_AVAILABILITYOFEXTERNALREQUEST, (mystate->currentmode == TOTALMERCURY));
 	i2c_send(&TWIE, 0x08, I2C_STATUSOFZEROTEST, (mystate->currentmode == ZEROTEST || mystate->currentmode == ZERODELAY));
 	i2c_send(&TWIE, 0x08, I2C_STATUSOFCALIBRATION, (mystate->currentmode == CALIBRATION || mystate->currentmode == PRECALIBRATIONDELAY || mystate->currentmode == POSTCALIBRATIONDELAY));
 	if (mystate->currentmode == ELEMENTALMERCURY)	i2c_send_double(&TWIE, 0x08, I2C_ELEMENTALMERCURYROW, calculatecalibration(oversample(ad7705_averaging_massive, 32), mystate->zerolevelavg, mystate->coefficent, mysettings->standard_concentration));
-	if (mystate->currentmode == TOTALMERCURY)	i2c_send_double(&TWIE, 0x08, I2C_TOTALMERCURYROW, calculatecell(oversample(ad7705_averaging_massive, 32), mystate->zerolevelavg, mystate->celllevelavg, mystate->celllevelavg, mysettings->c_twentie_five, mysettings->kfactor));
+	if (mystate->currentmode == TOTALMERCURY)	i2c_send_double(&TWIE, 0x08, I2C_TOTALMERCURYROW, calculatecell(oversample(ad7705_averaging_massive, 32), mystate->zerolevelavg, mystate->celllevelavg, mystate->celltempavg, mysettings->c_twentie_five, mysettings->kfactor));
 	i2c_send_double(&TWIE, 0x08, I2C_MONITORFLOW, calculateflow(adc_voltage(adc_scan_results[2])));
 	i2c_send_double(&TWIE, 0x08, I2C_VACUUM, calculatepressure(adc_voltage(adc_scan_results[4])));
 	i2c_send_double(&TWIE, 0x08, I2C_DILUTIONPRESSURE, calculatepressure(adc_voltage(adc_scan_results[5])));
@@ -136,5 +136,3 @@ void send_data(struct mysettingsstruct *mysettings, struct mydatastate *mystate)
 	i2c_send_double(&TWIE, 0x08, I2C_ERRORSANDWARNINGS, statusword); // Errors and warnings
 	i2c_send_double(&TWIE, 0x08, I2C_TOTALMERCURYCOEFFICENT, mysettings->standard_concentration/(float)((long)mystate->coefficent-(long)mystate->zerolevelavg)); // Total mercury coefficent
 }
-
-

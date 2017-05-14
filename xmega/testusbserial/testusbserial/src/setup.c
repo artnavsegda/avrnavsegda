@@ -2,7 +2,7 @@
 #include "setup.h"
 
 const usart_serial_options_t usart_serial_options = {
-	.baudrate     = 9600,
+	.baudrate     = 115200,
 	.charlength   = USART_CHSIZE_8BIT_gc,
 	.paritytype   = USART_PMODE_DISABLED_gc,
 	.stopbits     = false

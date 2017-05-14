@@ -140,16 +140,20 @@ uint8_t spi_gut(SPI_t *spi, uint8_t data) // ??????? spi ??????
 
 void writefloat(uint8_t address, float content)
 {
-	i2c_send_word(&TWIE, 0x08, address, LSW(content));
-	i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
+	//i2c_send_word(&TWIE, 0x08, address, LSW(content));
+	//i2c_send_word(&TWIE, 0x08, address+1, MSW(content));
+
+	i2c_send_double(&TWIE, 0x08, address, content);
 }
 
 float readfloat(uint8_t address)
 {
-	float result = 0.0;
-	LSW(result) = i2c_read_word(&TWIE,0x08,address);
-	MSW(result) = i2c_read_word(&TWIE,0x08,address+1);
-	return result;
+	//float result = 0.0;
+	//LSW(result) = i2c_read_word(&TWIE,0x08,address);
+	//MSW(result) = i2c_read_word(&TWIE,0x08,address+1);
+	//return result;
+
+	return i2c_read_double(&TWIE,0x08,address);
 }
 
 int writecoil(uint8_t memory, uint8_t content)
@@ -361,7 +365,130 @@ void display(int mode)
 	}
 }
 
-int main (void)
+float calculatecell(float c_twentie_five, float kfactor)
+{
+	return (
+			(long) averaged - (long) zerolevelavg
+	) / (float) (
+		(long) celllevelavg - (long) zerolevelavg
+	) * (
+		c_twentie_five * exp (
+			kfactor * (
+				(
+					(
+						(
+							(
+								celltempavg - 180 // ADC zero level
+							) * (
+								(
+									3.3 / 1.6 // Voltage reference
+								) / 4095 // ADC resolution
+							)
+						) - 0.5
+					) * 100.0 // temperature in Celsius
+				) - 25.0
+			)
+		)
+	);
+}
+
+float calculatecalibration(float standard_concentration)
+{
+	return (
+		(long) averaged - (long) zerolevelavg
+	) / (float) (
+		(long) coefficent - (long) zerolevelavg
+	) * standard_concentration;
+}
+
+float calculateflow(float voltage)
+{
+	return (
+	(
+		(
+			voltage / (
+				R2_RESISTOROHM/(
+					R5_RESISTOROHM+R2_RESISTOROHM
+				)
+			)
+		) / EXPECTED_FLOW_SENSOR_VOLTAGE
+	) - 0.1
+	)*(
+		FLOW_SENSOR_SPAN / 0.4
+	);
+}
+
+float calculatepressure(float voltage)
+{
+	return (voltage-0.4)*12;
+}
+
+void readsettings(struct settings mysettings)
+{
+	i2c_read_array(&TWIE,0x08,I2C_IPADDRESS,4,mysettings.ip);
+	i2c_read_array(&TWIE,0x08,I2C_MACADDRESS,6,mysettings.mac);
+	/*mysettings.ad7705_setup_register = i2c_read(&TWIE,0x08,I2C_AD7705_SETUP_REGISTER);
+	mysettings.ad7705_clock_register = i2c_read(&TWIE,0x08,I2C_AD7705_CLOCK_REGISTER);
+	i2c_read_array(&TWIE,0x08,I2C_AD7705_ZERO_SCALE,3,mysettings.ad7705_zero_scale);
+	i2c_read_array(&TWIE,0x08,I2C_AD7705_FULL_SCALE,3,mysettings.ad7705_full_scale);
+	mysettings.standard_concentration = i2c_read_double(&TWIE,0x08,6);
+	mysettings.c_twentie_five = i2c_read_double(&TWIE,0x08,7);
+	mysettings.kfactor = i2c_read_double(&TWIE,0x08,8);
+	i2c_read_array(&TWIE,0x08,I2C_LENGTH_TABLE,26,mysettings.length_table);
+	i2c_read_array(&TWIE,0x08,I2C_JUMP_TABLE,13,mysettings.jump_table);*/
+}
+
+void filltable(struct settings mysettings)
+{
+	statusword = getstatus();
+	writecoil(STATUSOFSPECTROMETER, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
+	writecoil(STATUSOFTHERMOCONTROLLERS, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
+	writecoil(AVAILABILITYOFEXTERNALREQUEST, (modenumber == TOTALMERCURY)); // Availability of external request
+	writecoil(STATUSOFZEROTEST, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
+	writecoil(STATUSOFCALIBRATION, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
+	if (modenumber == ELEMENTALMERCURY)	writefloat (ELEMENTALMERCURYROW, calculatecalibration(mysettings.standard_concentration)); // elemental mercury
+	if (modenumber == TOTALMERCURY)	writefloat (TOTALMERCURYROW, calculatecell(mysettings.c_twentie_five, mysettings.kfactor)); // total mercury
+	writefloat(MONITORFLOW, calculateflow(analogVoltage(&ADCB, ADC_CH2))); // monitor flow
+	writefloat(VACUUM, calculatepressure(analogVoltage(&ADCA, ADC_CH0))); // vacuum
+	writefloat(DILUTIONPRESSURE, calculatepressure(analogVoltage(&ADCA, ADC_CH1))); // dilution pressure
+	writefloat(BYPASSPRESSURE, calculatepressure(analogVoltage(&ADCA, ADC_CH2))); // bypass pressure
+	writefloat(TEMPERATUREOFSPECTROMETER, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
+	//writefloat(26, analogRead(&ADCB, ADC_CH3)); // temperature ARB
+	writefloat(CODEOFACURRENTMODE, modenumber); // Code of a current mode
+	writefloat(ERRORSANDWARNINGS, statusword); // Errors and warnings
+	writefloat(TOTALMERCURYCOEFFICENT, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent
+	//writefloat(32, analogRead(&ADCB, ADC_CH1));//PMT current arb
+	//writefloat(34, (analogVoltage(&ADCB, ADC_CH1)/22)*1000);//PMT current microamper
+	//writefloat(38, analogRead(&ADCB, ADC_CH2));//flow arb
+	//writefloat(40, analogRead(&ADCB, ADC_CH0));//PMT voltage arb
+	//writefloat(42, analogVoltage(&ADCB, ADC_CH0));//PMT voltage volt
+	//writefloat(44, (float)averaged);//raw averaged
+	//writefloat(46, (float)zerolevelavg);//zero arb
+	//writefloat(48, (float)celllevelavg);//cell arb
+	//writefloat(50, (float)celltempavg);
+	// raw adc readout
+	/*i2c_send_word(&TWIE, 0x08, 0, analogVoltage(&ADCB, ADC_CH0));
+	i2c_send_word(&TWIE, 0x08, 1, analogVoltage(&ADCB, ADC_CH1));
+	i2c_send_word(&TWIE, 0x08, 2, analogVoltage(&ADCB, ADC_CH2));
+	i2c_send_word(&TWIE, 0x08, 3, analogVoltage(&ADCB, ADC_CH3));
+	i2c_send_word(&TWIE, 0x08, 4, analogVoltage(&ADCA, ADC_CH0));
+	i2c_send_word(&TWIE, 0x08, 5, analogVoltage(&ADCA, ADC_CH1));
+	i2c_send_word(&TWIE, 0x08, 6, analogVoltage(&ADCA, ADC_CH2));
+	i2c_send_word(&TWIE, 0x08, 7, analogVoltage(&ADCA, ADC_CH3));
+	i2c_send_word(&TWIE, 0x08, 16, result);
+	i2c_send_word(&TWIE, 0x08, 17, averaged);*/
+	// voltage adc readout
+	/*writefloat(70, analogVoltage(&ADCB, ADC_CH0));
+	writefloat(72, analogVoltage(&ADCB, ADC_CH1));
+	writefloat(74, analogVoltage(&ADCB, ADC_CH2));
+	writefloat(76, analogVoltage(&ADCB, ADC_CH3));
+	writefloat(78, analogVoltage(&ADCA, ADC_CH0));
+	writefloat(80, analogVoltage(&ADCA, ADC_CH1));
+	writefloat(82, analogVoltage(&ADCA, ADC_CH2));
+	writefloat(84, analogVoltage(&ADCA, ADC_CH3));*/
+}
+
+void setupeverything(void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 	pmic_init();
@@ -378,7 +505,7 @@ int main (void)
 	spi_enable(&SPIC);
 	sensor_bus_init(&TWIE, 50000);
 	logic_init();
-	pca9557_set_pin_level(0x1a, U3_IGNIT, true);
+	//pca9557_set_pin_level(U3, U3_IGNIT, true);
 	adc_init();
 	ad7705_init();
 	cpu_irq_enable();
@@ -388,97 +515,33 @@ int main (void)
 	entermode(STARTLEVEL);
 	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
 	ioport_set_pin_level(LCD_BACKLIGHT_ENABLE_PIN, LCD_BACKLIGHT_ENABLE_LEVEL);
+}
+
+struct settings mysettings;
+
+int main (void)
+{
+	setupeverything();
 
 	/* Insert application code here, after the board has been initialized. */
 	while (true) {
 		delay_ms(1000);
-		statusword = getstatus();
-		writecoil(0, !(statusword & (LOW_LIGHT|LOW_FLOW))); // Status of spectrometer
-		writecoil(1, !(statusword & (CONVERTER|WATLOW1|WATLOW2|WATLOW3|WATLOW4))); // Status of thermo controllers
-		writecoil(2, (modenumber == TOTALMERCURY)); // Availability of external request
-		writecoil(3, (modenumber == ZEROTEST || modenumber == ZERODELAY)); // Status of zero test
-		writecoil(4, (modenumber == CALIBRATION || modenumber == PRECALIBRATIONDELAY || modenumber == POSTCALIBRATIONDELAY)); // Status of calibration
-		if (modenumber == ELEMENTALMERCURY)	writefloat (
-			24, (float) (
-				(long) averaged - (long) zerolevelavg
-			) / (float) (
-				(long) coefficent - (long) zerolevelavg
-			) * STANDARDCONCENTRATION
-		); // elemental mercury
-		/* if (modenumber == TOTALMERCURY)	writefloat(
-			10, (float) (
-				(long) averaged - (long) zerolevelavg
-			) / (float) (
-				(long) coefficent - (long) zerolevelavg
-			) * STANDARDCONCENTRATION
-		); // total mercury */
-		if (modenumber == TOTALMERCURY)	writefloat (
-			10, (float) (
-				(long) averaged - (long) zerolevelavg
-			) / (float) (
-				(long) celllevelavg - (long) zerolevelavg
-			) * (
-				CTWENTIEFIVE * exp (
-					KFACTOR * (
-						(
-							(
-								(
-									(
-										celltempavg - 180 // ADC zero level
-									) * (
-										(
-											3.3 / 1.6 // Voltage reference
-										) / 4095 // ADC resolution
-									)
-								) - 0.5
-							) * 100.0 // temperature in Celsius
-						) - 25.0
-					)
-				)
-			)
-		); // total mercury
-		writefloat(14,
-			(
-				(
-					(
-						analogVoltage(&ADCB, ADC_CH2) / RESISTOR_DIVIDER
-					) / EXPECTED_FLOW_SENSOR_VOLTAGE
-				) - 0.1
-			)*(
-				FLOW_SENSOR_SPAN / 0.4	
-			)
-		); // monitor flow
-		writefloat(16, (analogVoltage(&ADCA, ADC_CH0)-0.4)*12); // vacuum
-		writefloat(18, (analogVoltage(&ADCA, ADC_CH1)-0.4)*12); // dilution pressure
-		writefloat(20, (analogVoltage(&ADCA, ADC_CH2)-0.4)*12); // bypass pressure
-		writefloat(22, (analogVoltage(&ADCB, ADC_CH3)-0.5)*100); // temperature of spectrometer
-		writefloat(26, analogRead(&ADCB, ADC_CH3)); // temperature ARB
-		writefloat(8, modenumber); // Code of a current mode
-		writefloat(28, statusword); // Errors and warnings
-		writefloat(30, STANDARDCONCENTRATION/(float)((long)coefficent-(long)zerolevelavg)); // Total mercury coefficent
-		writefloat(32, analogRead(&ADCB, ADC_CH1));//PMT current arb
-		writefloat(34, (analogVoltage(&ADCB, ADC_CH1)/22)*1000);//PMT current microamper
-		writefloat(38, analogRead(&ADCB, ADC_CH2));//flow arb
-		writefloat(40, analogRead(&ADCB, ADC_CH0));//PMT voltage arb
-		writefloat(42, analogVoltage(&ADCB, ADC_CH0));//PMT voltage volt
-		writefloat(44, (float)averaged);//raw averaged
-		writefloat(46, (float)zerolevelavg);//zero arb
-		writefloat(48, (float)celllevelavg);//cell arb
-		writefloat(50, (float)celltempavg);
+		/*readsettings(mysettings);
+		filltable(mysettings);
 
 		if (modenumber == TOTALMERCURY||modenumber == PURGE)
 		{
-			if (readcoil(99)==1) // Request to start calibration
+			if (readcoil(REQUESTTOSTARTCALIBRATION)==1) // Request to start calibration
 				entermode(PRECALIBRATIONDELAY);
-			if (readcoil(100)==1) // Request to start zero test
+			if (readcoil(REQUESTTOSTARTZEROTEST)==1) // Request to start zero test
 				entermode(ZERODELAY);
-			if (readcoil(101)==1) // Request to start measurement of elemental mercury
+			if (readcoil(REQUESTTOSTARTMEASURMENTOFELEMENTALMERCURY)==1) // Request to start measurement of elemental mercury
 				entermode(ELEMENTALMERCURYDELAY);
-			if (readcoil(102)==1) // Request to start purge
+			if (readcoil(REQUESTTOSTARTPURGE)==1) // Request to start purge
 				entermode(PURGE);
-			if (readcoil(103)==1) // Request to end purge
+			if (readcoil(REQUESTTOENDPURGE)==1) // Request to end purge
 				exitmode(PURGE);
-		}
+		}*/
 
 		display(displaymode);
 	}

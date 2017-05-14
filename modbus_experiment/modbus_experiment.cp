@@ -120,6 +120,7 @@ struct mbframestruct askframe;
 
 
 unsigned int table[100] = {0xABCD, 0xDEAD, 0x0000};
+unsigned char crmassive[100];
 unsigned int amount = 100;
 
 unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remotePort, unsigned int localPort, unsigned int reqLength, TEthPktFlags *flags)
@@ -164,14 +165,18 @@ unsigned int SPI_Ethernet_UserTCP(unsigned char *remoteHost, unsigned int remote
  {
  case 1:
  case 2:
- PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n",  ((((askframe.pdu.values.askreadregs.regnumber) >> 8) & 0xff) | (((askframe.pdu.values.askreadregs.regnumber) & 0xff) << 8)) );
- askframe.pdu.values.reqreadcoils.bytestofollow =  ((((askframe.pdu.values.askreadregs.regnumber) >> 8) & 0xff) | (((askframe.pdu.values.askreadregs.regnumber) & 0xff) << 8))  / 8;
- if (( ((((askframe.pdu.values.askreadregs.regnumber) >> 8) & 0xff) | (((askframe.pdu.values.askreadregs.regnumber) & 0xff) << 8))  % 8)>0)
+ firstrequest =  ((((askframe.pdu.values.askreadregs.firstreg) >> 8) & 0xff) | (((askframe.pdu.values.askreadregs.firstreg) & 0xff) << 8)) ;
+ PrintOut(PrintHandler, "Requesing coils starting from:: %d\r\n", firstrequest);
+ requestnumber =  ((((askframe.pdu.values.askreadregs.regnumber) >> 8) & 0xff) | (((askframe.pdu.values.askreadregs.regnumber) & 0xff) << 8)) ;
+ PrintOut(PrintHandler, "Number of C/D registers requested: %d\r\n", requestnumber);
+ askframe.pdu.values.reqreadcoils.bytestofollow = requestnumber / 8;
+ if ((requestnumber % 8)>0)
  askframe.pdu.values.reqreadcoils.bytestofollow++;
  askframe.length =  ((((askframe.pdu.values.reqreadcoils.bytestofollow + 3) >> 8) & 0xff) | (((askframe.pdu.values.reqreadcoils.bytestofollow + 3) & 0xff) << 8)) ;
 
- for (i = 0; i < askframe.pdu.values.reqreadcoils.bytestofollow; i++)
- askframe.pdu.values.reqreadcoils.coils[i] = 0x00;
+ for (i = 0; i < requestnumber/8; i++)
+ askframe.pdu.values.reqreadcoils.coils[i] = (crmassive[i+(firstrequest/8)] << (firstrequest%8)) | (crmassive[i+(firstrequest/8)+1] >> 8-(firstrequest%8));
+ askframe.pdu.values.reqreadcoils.coils[requestnumber/8] = (((crmassive[(requestnumber/8)+(firstrequest/8)] << (firstrequest%8)) | (crmassive[(requestnumber/8)+(firstrequest/8)+1] >> 8-(firstrequest%8))) & (0xFF << 8-(requestnumber%8)));
  break;
  case 3:
  case 4:
@@ -271,7 +276,7 @@ void ad7705_init(void)
  ad7705_Chip_Select = 1;
  SPI_Ethernet_CS = 0;
 }
-#line 256 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 261 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
 void main()
 {
  int i;
@@ -280,7 +285,7 @@ void main()
  ;
  CPU_CCP = 0xD8;
  CLK_CTRL = 1;
-#line 272 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 277 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
  PORTC_DIR.B7 = 1;
  PORTC_DIR.B5 = 1;
  PORTC_DIR.B6 = 0;
@@ -317,7 +322,7 @@ void main()
 
  while(1)
  {
-#line 312 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
+#line 317 "C:/Users/artna/Documents/GitHub/avrnavsegda/modbus_experiment/modbus_experiment.c"
  SPI_Ethernet_doPacket() ;
 
 
@@ -328,13 +333,14 @@ void main()
  SPIC_Write(0x38);
  SPIC_Read_Bytes((unsigned char *)&result,2);
  ad7705_Chip_Select = 1;
+ table[3] =  ((((result) >> 8) & 0xff) | (((result) & 0xff) << 8)) ;
  }
 
  if (tick == 1)
  {
  PORTD_OUTTGL.B4 = 1;
  table[2]++;
- table[3] =  ((((result) >> 8) & 0xff) | (((result) & 0xff) << 8)) ;
+
  for (i = 0; i<8;i++)
  table[4+i] = ADCA_Read(i);
  for (i = 0; i<8;i++)

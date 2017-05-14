@@ -137,7 +137,7 @@ long average(unsigned int *selekta,int amount) // ??????????
 {
 	long x = 0;
 	for(int i=0; i<amount; i++)
-	x=x+selekta[i];
+		x=x+selekta[i];
 	return x;
 }
 

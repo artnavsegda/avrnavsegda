@@ -14,12 +14,19 @@ int main (void)
 
 	sysclk_init();
 	board_init();
+	
+    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+    ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+    ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 	spi_master_init(&SPIC);
+	spi_enable(&SPIC);
 
 	/* Insert application code here, after the board has been initialized. */
-	printf("\n\rHello ATMEL World!\n\r");
+	printf("\n\rMCU started\n\r");
 	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
+	printf("Reset complete\n\r");
 	spi_write_packet(&SPIC, "\x20\x0C\x10\x40", 4);
 	
 	while (1)

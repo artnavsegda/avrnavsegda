@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>spi</AssemblyName>
-    <Name>spi</Name>
-    <RootNamespace>spi</RootNamespace>
+    <AssemblyName>serial</AssemblyName>
+    <Name>serial</Name>
+    <RootNamespace>serial</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -32,13 +32,11 @@
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
           <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.basic.spi_master" value="Add" config="standard_spi" content-id="Atmel.ASF" />
           <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.delay" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
         </options>
         <configurations>
-          <configuration key="config.spi_master_type" value="standard_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
+          <configuration key="config.spi_master_type" value="usart_and_standard_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
           <configuration key="config.gfx_mono.display" value="c12832_a1z" default="c12832_a1z" content-id="Atmel.ASF" />
         </configurations>
         <files>
@@ -75,8 +73,6 @@
           <file path="src/ASF/xmega/drivers/nvm/nvm_asm.s" framework="" version="3.34.2" source="xmega\drivers\nvm\nvm_asm.s" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/xmega/drivers/nvm/nvm.h" framework="" version="3.34.2" source="xmega\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/xmega/drivers/pmic/pmic.h" framework="" version="3.34.2" source="xmega\drivers\pmic\pmic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/spi/spi.c" framework="" version="3.34.2" source="xmega\drivers\spi\spi.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/xmega/drivers/spi/spi.h" framework="" version="3.34.2" source="xmega\drivers\spi\spi.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/clock/xmega/sysclk.c" framework="" version="3.34.2" source="common\services\clock\xmega\sysclk.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.34.2" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/clock/genclk.h" framework="" version="3.34.2" source="common\services\clock\genclk.h" changed="False" content-id="Atmel.ASF" />
@@ -86,16 +82,10 @@
           <file path="src/ASF/common/services/clock/xmega/osc.h" framework="" version="3.34.2" source="common\services\clock\xmega\osc.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="3.34.2" source="common\services\clock\sysclk.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/Config/conf_clock.h" framework="" version="3.34.2" source="common\services\clock\xmega\module_config_usb\conf_clock.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.34.2" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/delay/xmega/cycle_counter.h" framework="" version="3.34.2" source="common\services\delay\xmega\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/serial/usart_serial.c" framework="" version="3.34.2" source="common\services\serial\usart_serial.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/serial/xmega_usart/usart_serial.h" framework="" version="3.34.2" source="common\services\serial\xmega_usart\usart_serial.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.34.2" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/Config/conf_usart_serial.h" framework="" version="3.34.2" source="common\services\serial\xmega_usart\module_config\conf_usart_serial.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/spi/xmega_spi/spi_master.c" framework="" version="3.34.2" source="common\services\spi\xmega_spi\spi_master.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/spi/spi_master.h" framework="" version="3.34.2" source="common\services\spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/spi/xmega_spi/spi_master.h" framework="" version="3.34.2" source="common\services\spi\xmega_spi\spi_master.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/Config/conf_spi_master.h" framework="" version="3.34.2" source="common\services\spi\xmega_spi\module_config\conf_spi_master.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/utils/stdio/read.c" framework="" version="3.34.2" source="common\utils\stdio\read.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/utils/stdio/write.c" framework="" version="3.34.2" source="common\utils\stdio\write.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/utils/stdio/stdio_serial/stdio_serial.h" framework="" version="3.34.2" source="common\utils\stdio\stdio_serial\stdio_serial.h" changed="False" content-id="Atmel.ASF" />
@@ -159,13 +149,9 @@
             <Value>../src/ASF/xmega/drivers/cpu</Value>
             <Value>../src/ASF/xmega/drivers/nvm</Value>
             <Value>../src/ASF/xmega/drivers/pmic</Value>
-            <Value>../src/ASF/xmega/drivers/spi</Value>
             <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/common/services/serial/xmega_usart</Value>
             <Value>../src/ASF/common/services/serial</Value>
-            <Value>../src/ASF/common/services/spi/xmega_spi</Value>
-            <Value>../src/ASF/common/services/spi</Value>
             <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
             <Value>../src/ASF/xmega/drivers/usart</Value>
           </ListValues>
@@ -199,13 +185,9 @@
             <Value>../src/ASF/xmega/drivers/cpu</Value>
             <Value>../src/ASF/xmega/drivers/nvm</Value>
             <Value>../src/ASF/xmega/drivers/pmic</Value>
-            <Value>../src/ASF/xmega/drivers/spi</Value>
             <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/common/services/serial/xmega_usart</Value>
             <Value>../src/ASF/common/services/serial</Value>
-            <Value>../src/ASF/common/services/spi/xmega_spi</Value>
-            <Value>../src/ASF/common/services/spi</Value>
             <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
             <Value>../src/ASF/xmega/drivers/usart</Value>
           </ListValues>
@@ -246,13 +228,9 @@
             <Value>../src/ASF/xmega/drivers/cpu</Value>
             <Value>../src/ASF/xmega/drivers/nvm</Value>
             <Value>../src/ASF/xmega/drivers/pmic</Value>
-            <Value>../src/ASF/xmega/drivers/spi</Value>
             <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/common/services/serial/xmega_usart</Value>
             <Value>../src/ASF/common/services/serial</Value>
-            <Value>../src/ASF/common/services/spi/xmega_spi</Value>
-            <Value>../src/ASF/common/services/spi</Value>
             <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
             <Value>../src/ASF/xmega/drivers/usart</Value>
           </ListValues>
@@ -287,13 +265,9 @@
             <Value>../src/ASF/xmega/drivers/cpu</Value>
             <Value>../src/ASF/xmega/drivers/nvm</Value>
             <Value>../src/ASF/xmega/drivers/pmic</Value>
-            <Value>../src/ASF/xmega/drivers/spi</Value>
             <Value>../src/ASF/common/services/clock</Value>
-            <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/common/services/serial/xmega_usart</Value>
             <Value>../src/ASF/common/services/serial</Value>
-            <Value>../src/ASF/common/services/spi/xmega_spi</Value>
-            <Value>../src/ASF/common/services/spi</Value>
             <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
             <Value>../src/ASF/xmega/drivers/usart</Value>
           </ListValues>
@@ -310,16 +284,12 @@
     <Folder Include="src\ASF\common\services\" />
     <Folder Include="src\ASF\common\services\clock\" />
     <Folder Include="src\ASF\common\services\clock\xmega\" />
-    <Folder Include="src\ASF\common\services\delay\" />
-    <Folder Include="src\ASF\common\services\delay\xmega\" />
     <Folder Include="src\ASF\common\services\gpio\" />
     <Folder Include="src\ASF\common\services\gpio\xmega_gpio\" />
     <Folder Include="src\ASF\common\services\ioport\" />
     <Folder Include="src\ASF\common\services\ioport\xmega\" />
     <Folder Include="src\ASF\common\services\serial\" />
     <Folder Include="src\ASF\common\services\serial\xmega_usart\" />
-    <Folder Include="src\ASF\common\services\spi\" />
-    <Folder Include="src\ASF\common\services\spi\xmega_spi\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
     <Folder Include="src\ASF\common\utils\make\" />
@@ -332,7 +302,6 @@
     <Folder Include="src\ASF\xmega\drivers\cpu\" />
     <Folder Include="src\ASF\xmega\drivers\nvm\" />
     <Folder Include="src\ASF\xmega\drivers\pmic\" />
-    <Folder Include="src\ASF\xmega\drivers\spi\" />
     <Folder Include="src\ASF\xmega\drivers\usart\" />
     <Folder Include="src\ASF\xmega\utils\" />
     <Folder Include="src\ASF\xmega\utils\assembler\" />
@@ -356,18 +325,6 @@
     <Compile Include="src\ASF\common\utils\stdio\write.c">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\config\conf_spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\spi\xmega_spi\spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\spi\spi_master.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\common\services\spi\xmega_spi\spi_master.c">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\config\conf_usart_serial.h">
       <SubType>compile</SubType>
     </None>
@@ -378,12 +335,6 @@
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\common\services\serial\xmega_usart\usart_serial.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\delay\xmega\cycle_counter.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common\services\delay\delay.h">
       <SubType>compile</SubType>
     </None>
     <None Include="src\config\conf_clock.h">
@@ -416,12 +367,6 @@
     <Compile Include="src\ASF\xmega\drivers\nvm\nvm.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\ASF\xmega\drivers\spi\spi.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\xmega\drivers\spi\spi.h">
-      <SubType>compile</SubType>
-    </None>
     <None Include="src\ASF\xmega\drivers\pmic\pmic.h">
       <SubType>compile</SubType>
     </None>

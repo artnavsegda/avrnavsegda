@@ -5,8 +5,6 @@
  *  Author: Art Navsegda
  */ 
 
-#define F_CPU 2000000UL  // 2 MHz
-
 #include <avr/io.h>
 #include <util/delay.h>
 

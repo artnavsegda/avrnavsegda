@@ -17,6 +17,7 @@ int main (void)
 	
     ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
     ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+    //ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
     ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
 	
 	stdio_serial_init(&USARTC0, &usart_serial_options);

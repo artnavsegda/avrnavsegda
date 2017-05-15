@@ -33,8 +33,9 @@ void startserial(void)
 void startspi(void)
 {
 	PORTC.DIRSET = PIN7_bm;
-	PORTC.DIRSET = PIN6_bm;
 	//PORTC.DIRCLR = PIN5_bm;
+	PORTC.DIRSET = PIN5_bm;
+	PORTC.DIRSET = PIN4_bm;
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
 	printf("spi started\n\r");
@@ -43,9 +44,7 @@ void startspi(void)
 char spi_transfer(char c)
 {
 	SPIC.DATA = c;
-	//loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
-	//while( !(SPIC.STATUS & SPI_IF_bm) );
-	_delay_ms(1);
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 	return SPIC.DATA;
 }
 
@@ -61,7 +60,7 @@ int main(void)
 	{
 		_delay_ms(100);
 		spi_transfer(0x38);
-		printf("%X%X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
+		printf("%02X%02X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
 	}
 	return 0;
 }

@@ -7,8 +7,8 @@
     <name>Debug</name>
     <outputs>
       <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
-      <file>$PROJ_DIR$\main.c</file>
       <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\main.c</file>
       <file>$PROJ_DIR$\Debug\Exe\blink.d90</file>
     </outputs>
     <file>
@@ -29,7 +29,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 2</file>
+          <file> 1</file>
         </tool>
       </outputs>
     </file>
@@ -41,26 +41,25 @@
   <configuration>
     <name>Release</name>
     <outputs>
-      <file>$TOOLKIT_DIR$\src\template\cfgm328p.xcl</file>
-      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
-      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul-sf.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\main.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\iom328p.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Release\Obj\main.r90</file>
       <file>$PROJ_DIR$\main.c</file>
       <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom328p.inc</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul-sf.r90</file>
       <file>$PROJ_DIR$\Release\Obj\main.pbi</file>
+      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm328p.xcl</file>
       <file>$PROJ_DIR$\Release\Exe\blink.a90</file>
-      <file>$PROJ_DIR$\Release\Obj\main.r90</file>
-      <file>$PROJ_DIR$\Release\Obj\blink.pbd</file>
-      <file>$PROJ_DIR$\Release\Obj\main.__cstat.et</file>
-      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
-      <file>$TOOLKIT_DIR$\inc\iom328p.h</file>
-      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 6</file>
+          <file> 11</file>
         </tool>
       </outputs>
     </file>
@@ -69,25 +68,25 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 7</file>
+          <file> 4</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 5</file>
+          <file> 8</file>
         </tool>
         <tool>
           <name>__cstat</name>
-          <file> 9</file>
+          <file> 0</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 11 10 4 12</file>
+          <file> 1 2 6 3</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 11 4</file>
+          <file> 3 2 1 6</file>
         </tool>
       </inputs>
     </file>
@@ -96,7 +95,7 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 0 1 7 2</file>
+          <file> 10 9 4 7</file>
         </tool>
       </inputs>
     </file>

@@ -1187,7 +1187,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl0t.r90</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl3s-ec_mul-sf.r90</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -1768,16 +1768,16 @@
         <debug>0</debug>
         <option>
           <name>XOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OutputFile</name>
-          <state>blink.a90</state>
+          <state>blink.hex</state>
         </option>
         <option>
           <name>OutputFormat</name>
           <version>11</version>
-          <state>25</state>
+          <state>22</state>
         </option>
         <option>
           <name>FormatVariant</name>
@@ -1838,7 +1838,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\src\template\lnk0t.xcl</state>
+          <state>$TOOLKIT_DIR$\src\template\cfgm328p.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>

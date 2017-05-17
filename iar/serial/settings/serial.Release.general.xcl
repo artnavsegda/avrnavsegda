@@ -2,7 +2,7 @@
 
 "C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\bin\avrsim.dll" 
 
-"Z:\GitHub\avrnavsegda\iar\serial\Debug\Exe\serial.d90" 
+"Z:\GitHub\avrnavsegda\iar\serial\main.c" 
 
 --plugin "C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\bin\avrlibsupportbat.dll" 
 

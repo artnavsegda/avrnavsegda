@@ -1,27 +1,28 @@
-#include <iom328p.h>
+#include <ioavr.h>
 #include <intrinsics.h>
-
-int putchar(int ch)
-{
-	while(!UCSR0A_UDRE0);
-	UDR0 = ch;
-        return ch;
-}
-
+#include <yfuns.h>
 #include <stdio.h>
+
+int MyLowLevelPutchar(int x)
+{
+  while (!UCSR0A_UDRE0);
+  UDR0 = x;
+  return x;
+}
 
 int main(void)
 {
-        UBRR0L = (((8000000/(9600*16UL)))-1);
-        UCSR0C_UCSZ00 = 1;
-        UCSR0C_UCSZ01 = 1;
-        UCSR0B_RXEN0 = 1;
-        UCSR0B_TXEN0 = 1;
-	printf("Hello avr World!\n\r");
+        UBRR0L = 51;
+        UBRR0H = 0;
+        UCSR0C = 6;
+        UCSR0B = 24;
+        UCSR0A = 0;
 
         while(1)
         {
-            //TODO:: Please write your application code
+            printf("shit");
+            //MyLowLevelPutchar('o');
+            //__write(_LLIO_STDOUT,"hello",5);
         }
 
 	return 0;

@@ -1175,19 +1175,23 @@
         <option>
           <name>GRuntimeLibSelect</name>
           <version>0</version>
-          <state>4</state>
+          <state>1</state>
         </option>
         <option>
           <name>RTDescription</name>
-          <state>Use the legacy C runtime library.</state>
+          <state>Use the normal configuration of the C/C++</state>
+          <state>runtime library. No locale interface,</state>
+          <state>C locale, no file descriptor support,</state>
+          <state>no multibytes in printf and scanf, and</state>
+          <state>no hex floats in strtod.</state>
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state></state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-3s-ec_mul-sf-n.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl3s-ec_mul-sf.r90</state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-3s-ec_mul-sf-n.r90</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -1196,7 +1200,7 @@
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state>No specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>Output variant</name>
@@ -1205,12 +1209,12 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state>No specifier a, A.</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
-          <state>4</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1713,7 +1717,7 @@
         </option>
         <option>
           <name>ANewIncludes</name>
-          <state>###Uninitialized###</state>
+          <state></state>
         </option>
         <option>
           <name>AsmMultiByteSupport</name>
@@ -1729,7 +1733,7 @@
         </option>
         <option>
           <name>AsmOutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r90</state>
         </option>
         <option>
           <name>AStdIncCheck</name>
@@ -2097,7 +2101,73 @@
     </settings>
   </configuration>
   <file>
+    <name>$PROJ_DIR$\abort.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\clock.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\close.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\cppinit.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\cstartup.s90</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\dtor_rec.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\environ.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\exit.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\getenv.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\low_level_init.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\lseek.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\open.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\raise.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\read.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\remove.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\rename.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\signal.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\system.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\time.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\write.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\xcstartup.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\xxexit.c</name>
   </file>
 </project>
 

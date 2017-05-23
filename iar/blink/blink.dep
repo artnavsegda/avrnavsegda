@@ -41,35 +41,26 @@
   <configuration>
     <name>Release</name>
     <outputs>
-      <file>$PROJ_DIR$\Release\Exe\blink.hex</file>
-      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
-      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
-      <file>$TOOLKIT_DIR$\src\template\cfgm328p.xcl</file>
-      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul-sf.r90</file>
-      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom328p.inc</file>
-      <file>$PROJ_DIR$\Release\Obj\main.pbi</file>
-      <file>$PROJ_DIR$\main.c</file>
       <file>$TOOLKIT_DIR$\inc\iom328p.h</file>
-      <file>$PROJ_DIR$\Release\Obj\blink.pbd</file>
+      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom328p.inc</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
       <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
-      <file>$PROJ_DIR$\Release\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\main.pbi</file>
       <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Release\Obj\blink.pbd</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul-sf.r90</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm328p.xcl</file>
+      <file>$PROJ_DIR$\Release\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Release\Exe\blink.hex</file>
     </outputs>
-    <file>
-      <name>$PROJ_DIR$\Release\Exe\blink.hex</name>
-      <inputs>
-        <tool>
-          <name>XLINK</name>
-          <file> 3 12 11 4</file>
-        </tool>
-      </inputs>
-    </file>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 0</file>
+          <file> 12</file>
         </tool>
       </outputs>
     </file>
@@ -82,17 +73,26 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 6</file>
+          <file> 5</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 1 8 10 5 2</file>
+          <file> 3 0 4 1 7</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 8 10 2 1 5</file>
+          <file> 0 4 7 3 1</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Exe\blink.hex</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 10 6 11 9</file>
         </tool>
       </inputs>
     </file>

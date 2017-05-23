@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#define BSWAP_16(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+
 static int uart_putchar(char c, FILE *stream);
 
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
@@ -33,9 +35,8 @@ void startserial(void)
 void startspi(void)
 {
 	PORTC.DIRSET = PIN7_bm;
-	//PORTC.DIRCLR = PIN5_bm;
 	PORTC.DIRSET = PIN5_bm;
-	PORTC.DIRSET = PIN4_bm;
+	PORTC.DIRSET = PIN4_bm;//always activate chip select output when enabling spi
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
 	printf("spi started\n\r");
@@ -48,19 +49,42 @@ char spi_transfer(char c)
 	return SPIC.DATA;
 }
 
+void spi_array(char *buffer, unsigned NoBytes)
+{
+        int i;
+        for (i = 0; i < NoBytes; i++)
+        {
+				SPIC.DATA = buffer[i];
+				loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+				buffer[i] = SPIC.DATA;
+        }
+}
+
 int main(void)
 {
+	unsigned int result;
 	startserial();
 	startspi();
-	spi_transfer(0x20);
-	spi_transfer(0x0C);
-	spi_transfer(0x10);
-	spi_transfer(0x40);
+	PORTC.OUTCLR = PIN4_bm;
+	spi_array("\xFF\xFF\xFF\xFF\xFF", 5);
+	_delay_ms(10);
+	spi_array("\x20\x0C", 2);
+	_delay_ms(10);
+	spi_array("\x10\x04", 2);
+	_delay_ms(10);
+	spi_array("\x60\x18\x3A\x00", 4);
+	_delay_ms(10);
+	spi_array("\x70\x89\x78\xD7", 4);
+	_delay_ms(10);
 	while(1)
 	{
-		_delay_ms(100);
-		spi_transfer(0x38);
-		printf("%02X%02X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
+		if (bit_is_clear(PORTC.IN,PIN1_bp))
+		{
+			spi_transfer(0x38);
+			spi_array((char *)&result,2);
+			printf("%04X\r\n",BSWAP_16(result));
+		}
 	}
 	return 0;
 }
+

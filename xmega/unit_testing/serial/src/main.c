@@ -24,7 +24,7 @@ int main (void)
 	printf("\n\rHello ATMEL World!\n\r");
 
 	do {
-		//if (usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,5) == STATUS_OK)
+		if (usart_serial_read_packet(&USARTC0,(uint8_t *)&frame,5) == STATUS_OK)
 		//	LED_Toggle(LED0);
 	} while (1);
 }

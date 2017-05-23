@@ -17,13 +17,14 @@ void my_callback_rx_notify(uint8_t port)
 	udi_cdc_read_buf(buffer,length);
 	for (int i=0;i<length;i++)
 	{
-		printf(" 0x%X", buffer[i]);
+		printf(" 0x%02X", buffer[i]);
 	}
 	printf("\n\r");
 
 	if(length == 8)
 	{
-		printf("CRC calculation: %04X\n\r", crc_io_checksum(&buffer[2],4,CRC_16BIT));
+		crc_set_initial_value(0xFFFF);
+		printf("CRC calculation: %04X\n\r", crc_io_checksum(&buffer,6,CRC_16BIT));
 	}
 
 }

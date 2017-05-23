@@ -36,9 +36,10 @@ int main (void)
 	while (true)
 	{
 		LED_Toggle(LED2);
-		i2c_send(&TWIE, 0x1a, 0x01, i);
-		delay_ms(100);
-		i++;
+		i2c_send(&TWIE, 0x1a, 0x01, 0xFF);
+		delay_ms(1000);
+		i2c_send(&TWIE, 0x1a, 0x01, 0x00);
+		delay_ms(1000);
 	}
 
 }

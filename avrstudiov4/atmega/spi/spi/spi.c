@@ -39,29 +39,58 @@ void startspi(void)
 
 char spi_transfer(char c)
 {
+	PORTB &= ~(_BV(PORTB2));//clear
 	SPDR = c;
 	loop_until_bit_is_set(SPSR, SPIF);
+	PORTB |= _BV(PORTB2);//set
 	return(SPDR);
+}
+
+void SPI_Read_Bytes(char *buffer, unsigned NoBytes)
+{
+	PORTB &= ~(_BV(PORTB2));//clear
+	for (int i = 0; i < NoBytes; i++)
+	{
+		SPDR = 0xFF;
+		loop_until_bit_is_set(SPSR, SPIF);
+		buffer[i] = SPDR;
+	}
+	PORTB |= _BV(PORTB2);//set
+}
+
+void SPI_Write_Bytes(char *buffer, unsigned NoBytes)
+{
+	PORTB &= ~(_BV(PORTB2));//clear
+	for (int i = 0; i < NoBytes; i++)
+	{
+		SPDR = buffer[i];
+		loop_until_bit_is_set(SPSR, SPIF);
+	}
+	PORTB |= _BV(PORTB2);//set
 }
 
 int main(void)
 {
+	uint16_t result;
 	startserial();
 	startspi();
-	spi_transfer(0xFF);
-	spi_transfer(0xFF);
-	spi_transfer(0xFF);
-	spi_transfer(0xFF);
-	spi_transfer(0xFF);
-	spi_transfer(0x20);
-	spi_transfer(0x0C);
-	spi_transfer(0x10);
-	spi_transfer(0x40);
+	SPI_Write_Bytes("\xFF\xFF\xFF\xFF\xFF", 5);
+	_delay_ms(10);
+	SPI_Write_Bytes("\x20\x0C\x10\x04", 4);
+	_delay_ms(10);
+	SPI_Write_Bytes("\x60\x18\x3A\x00", 4);
+	_delay_ms(10);
+	SPI_Write_Bytes("\x70\x89\x78\xD7", 4);
+	_delay_ms(10);
+
     while(1)
     {
-    	_delay_ms(100);
-    	spi_transfer(0x38);
-    	printf("%X%X\r\n",spi_transfer(0xFF),spi_transfer(0xFF));
+			if (bit_is_clear(PINB,PINB1))
+			{
+				spi_transfer(0x38);
+				SPI_Read_Bytes((char *)&result,2);
+				printf("%04X\r\n",__builtin_bswap16(result));
+			}
     }
 	return 0;
 }

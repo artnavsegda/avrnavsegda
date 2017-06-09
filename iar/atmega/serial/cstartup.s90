@@ -1,0 +1,243 @@
+;----------------------------------------------------------------------------
+;
+;   This module contains the AVR C and EC++ startup
+;   routine and must usually be tailored to suit
+;   customer's hardware.
+;
+;   File version:   $Revision: 12747 $
+;
+;----------------------------------------------------------------------------
+#include    "macros.m90"
+#include    "cfi.m90"
+
+    // Declare CFI resources required in this file
+    CFI_NAMES
+    CFI_COMMON_DEFAULT
+
+;----------------------------------------------------------------------------
+; Set up the INTVEC segment with a reset vector
+;----------------------------------------------------------------------------
+    MODULE    ?RESET
+
+    COMMON  INTVEC:CODE:ROOT(1) ; Align at an even address
+
+    EXTERN  ?C_STARTUP
+    PUBLIC  ?RESET
+
+    ORG $0
+?RESET:
+    XJMP    ?C_STARTUP
+
+    ENDMOD
+
+;----------------------------------------------------------------------------
+; Forward declarations of segments used in initialization
+;----------------------------------------------------------------------------
+    RSEG    CSTACK:DATA:NOROOT(0)
+    RSEG    RSTACK:DATA:NOROOT(0)
+
+;----------------------------------------------------------------------------
+; Perform C initialization
+;----------------------------------------------------------------------------
+    MODULE  ?C_STARTUP
+
+    EXTERN  __low_level_init
+    EXTERN  __segment_init
+#ifdef _ECLIB_ECPP
+    EXTERN  __call_ctors
+#endif /* _ECLIB_ECPP */
+    EXTERN  main
+    EXTERN  exit
+    EXTERN  _exit
+
+;----------------------------------------------------------------------------
+; If the return address stack is located in external SRAM, make sure that
+; you have uncommented the correct code in __low_level_init!!!
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+    PUBLIC  __program_start
+    PUBLIC  ?C_STARTUP
+    PUBLIC  __RESTART
+    EXTERN ?RESET
+    CFI_BEGIN ?C_STARTUP, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+__program_start:
+__RESTART:
+?C_STARTUP:
+#if A90_POINTER_REG_SIZE > 2
+    PUBLIC  ?zero_reg_initialization
+
+?zero_reg_initialization:
+    CLR R15
+    OUT RAMPD,R15
+#endif
+
+    REQUIRE ?SETUP_STACK
+    REQUIRE ?RESET
+
+    CFI_END ?C_STARTUP
+
+    RSEG    CODE:CODE:NOROOT(1)
+    PUBLIC  __RSTACK_in_external_ram
+    CFI_BEGIN __RSTACK_in_external_ram, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+__RSTACK_in_external_ram:
+    LDI     R16,0xC0
+    OUT     0x35,R16    ;Enable the external SRAM with a wait state
+    CFI_END __RSTACK_in_external_ram
+
+    RSEG    CODE:CODE:NOROOT(1)
+    PUBLIC  __RSTACK_in_external_ram_new_way
+    EXTERN  __?XMCRA
+    CFI_BEGIN __RSTACK_in_external_ram_new_way, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+__RSTACK_in_external_ram_new_way:
+    LDI     R16,0x8C        ;SRE=1,SRL2=0,SRL1=0,SRL0=0,SRW11=1,SRW10=1,SRW01=0,SRW00=0
+    STS     __?XMCRA,R16    ;Enable the external SRAM with maximum wait state.
+    CFI_END __RSTACK_in_external_ram_new_way
+
+;----------------------------------------------------------------------------
+; Set up the CSTACK and RSTACK pointers.
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+    CFI_BEGIN ?SETUP_STACK, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+?SETUP_STACK:
+    ;; Return address stack (RSTACK)
+    LDI R16,LOW(SFE(RSTACK)-1)
+    OUT 0x3D,R16
+#if A90_POINTER_REG_SIZE > 1
+    LDI R16,HIGH(SFE(RSTACK)-1)
+    OUT 0x3E,R16
+#endif
+
+    ;; Data stack (CSTACK)
+    LDI Y0,LOW(SFE(CSTACK))
+#if A90_POINTER_REG_SIZE > 1
+#if MEMORY_MODEL == TINY_MEMORY_MODEL
+    LDI Y1,0
+#else
+    LDI Y1,HIGH(SFE(CSTACK))
+#endif
+#if A90_POINTER_REG_SIZE > 2
+    LDI Z0,HWRD(SFB(CSTACK))
+    OUT     RAMPY,Z0
+#endif
+#endif
+    CFI_END ?SETUP_STACK
+#if A90_POINTER_REG_SIZE > 2
+; Nothing here, the things previously here has been done earlier.
+#else
+    REQUIRE ?call_low_level_init
+
+;----------------------------------------------------------------------------
+; Clear R15 so that it can be used as zero register by the code generator.
+; The compiler will emit a "REQUIRE ?zero_reg_initialization" statement if
+; this optimization has been enabled.
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+    PUBLIC  ?zero_reg_initialization
+    CFI_BEGIN ?zero_reg_initialization, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+?zero_reg_initialization:
+    CLR R15
+    CFI_END ?zero_reg_initialization
+;----------------------------------------------------------------------------
+; Call __low_level_init to do low level initializatons. Modify the supplied
+; __low_level_init module to add your own initialization code or to
+; remove segment initialization (by returning 0).
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+#endif
+    PUBLIC  ?call_low_level_init
+    CFI_BEGIN ?call_low_level_init, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+?call_low_level_init:
+    XCALL   __low_level_init
+    CFI_CALL __low_level_init
+
+    CFI_END ?call_low_level_init
+
+    REQUIRE ?cstartup_call_main
+
+;----------------------------------------------------------------------------
+; Call __segment_init to initialize segments.
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+    PUBLIC  ?need_segment_init
+    CFI_BEGIN ?need_segment_init, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+?need_segment_init:
+    TST P0
+    BREQ    ?skip_segment_init
+    XCALL   __segment_init
+    CFI_CALL __segment_init
+?skip_segment_init:
+
+    CFI_END ?need_segment_init
+;----------------------------------------------------------------------------
+;   Call the constructors of all global objects. This code will only
+;   be used if any EC++ modules defines global objects that need to
+;   have its constructor called before main.
+;----------------------------------------------------------------------------
+#ifdef _ECLIB_ECPP
+    RSEG    DIFUNCT:CODE:NOROOT(0)
+    RSEG    CODE:CODE:NOROOT(1)
+
+    PUBLIC  ?call_ctors
+    CFI_BEGIN ?call_ctors, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+?call_ctors:
+#ifdef __HAS_ELPM__
+    LDI P0,LOW(SFB(DIFUNCT))
+    LDI P1,LOW(SFB(DIFUNCT) >> 8)
+    LDI P2,SFB(DIFUNCT) >> 16
+
+    LDI Q0,LOW(SFE(DIFUNCT))
+    LDI Q1,LOW(SFE(DIFUNCT) >> 8)
+    LDI Q2,SFE(DIFUNCT) >> 16
+#else
+    LDI P0,LOW(SFB(DIFUNCT))
+    LDI P1,SFB(DIFUNCT) >> 8
+
+    LDI P2,LOW(SFE(DIFUNCT))
+    LDI P3,SFE(DIFUNCT) >> 8
+#endif
+
+    XCALL   __call_ctors
+    CFI_CALL __call_ctors
+
+    CFI_END ?call_ctors
+#endif /* _ECLIB_ECPP */
+
+;----------------------------------------------------------------------------
+;   Call main
+;----------------------------------------------------------------------------
+    RSEG    CODE:CODE:NOROOT(1)
+
+    PUBLIC  ?cstartup_call_main
+    CFI_BEGIN ?cstartup_call_main, DEFAULT, __program_start
+    CFI CFA_SP SP+0
+
+?cstartup_call_main:
+    XCALL   main
+    CFI_CALL main
+    XCALL   exit
+    CFI_CALL exit
+    XJMP    _exit
+    CFI CFA_SP SP+0
+    CFI_CALL _exit
+
+    CFI_END ?cstartup_call_main
+
+    END
+
+;----------------------------------------------------------------------------
+;  

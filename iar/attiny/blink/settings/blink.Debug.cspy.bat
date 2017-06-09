@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\atmega\blink\settings\blink.Release.general.xcl" --backend -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\atmega\blink\settings\blink.Release.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\attiny\blink\settings\blink.Debug.general.xcl" --backend -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\attiny\blink\settings\blink.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\atmega\blink\settings\blink.Release.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\atmega\blink\settings\blink.Release.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\attiny\blink\settings\blink.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\artna\Documents\GitHub\avrnavsegda\iar\attiny\blink\settings\blink.Debug.driver.xcl" 
 
 @echo off 
 :end

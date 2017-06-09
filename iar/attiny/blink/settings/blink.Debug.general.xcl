@@ -2,7 +2,7 @@
 
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\bin\avrsim.dll" 
 
-"C:\Users\artna\Documents\GitHub\avrnavsegda\iar\atmega\blink\main.c" 
+"C:\Users\artna\Documents\GitHub\avrnavsegda\iar\attiny\blink\main.c" 
 
 --plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\bin\avrlibsupportbat.dll" 
 

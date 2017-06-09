@@ -1,0 +1,19 @@
+"--cpu=tiny2313a" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\Config\iotiny2313a.ddf" 
+
+"--eeprom_size" 
+
+"128" 
+
+"-d" 
+
+"sim" 
+
+
+
+

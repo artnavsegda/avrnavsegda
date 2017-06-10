@@ -6,6 +6,11 @@
   <configuration>
     <name>Debug</name>
     <outputs>
+      <file>$TOOLKIT_DIR$\inc\iotiny2313a.h</file>
+      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iotiny2313a.inc</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
       <file>$PROJ_DIR$\Debug\Exe\blink.hex</file>
       <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
       <file>$PROJ_DIR$\Debug\Obj\blink.pbd</file>
@@ -18,20 +23,26 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 3</file>
+          <file> 8</file>
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 1</file>
+          <file> 6</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 0 4 3 2 1</file>
+        </tool>
+      </inputs>
     </file>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 4 0</file>
+          <file> 9 5</file>
         </tool>
       </outputs>
     </file>

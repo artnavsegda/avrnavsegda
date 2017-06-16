@@ -521,10 +521,10 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x9fe
+.debug_info     0x00000000      0xa06
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x456 c:/program files/atmel/avr tools/avr toolchain/bin/../lib/gcc/avr/4.9.2/../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
- .debug_info    0x00000456      0x5a8 spi.o
+ .debug_info    0x00000456      0x5b0 spi.o
 
 .debug_abbrev   0x00000000      0x699
  *(.debug_abbrev)

@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project blink
+# Makefile for the project timer
 ###############################################################################
 
 ## General Flags
-PROJECT = blink
+PROJECT = timer
 MCU = atxmega256a3bu
-TARGET = blink.elf
+TARGET = timer.elf
 CC = avr-gcc
 
 CPP = avr-g++
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99   -DF_CPU=2000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -Os -std=gnu99 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=blink.map
+LDFLAGS +=  -Wl,-Map=timer.map
 
 
 ## Intel Hex file production flags
@@ -37,16 +37,16 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = blink.o 
+OBJECTS = timer.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) blink.hex blink.eep blink.lss size
+all: $(TARGET) timer.hex timer.eep timer.lss size
 
 ## Compile
-blink.o: ../blink.c
+timer.o: ../timer.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -69,7 +69,7 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) blink.elf dep/* blink.hex blink.eep blink.lss blink.map
+	-rm -rf $(OBJECTS) timer.elf dep/* timer.hex timer.eep timer.lss timer.map
 
 
 ## Other dependencies

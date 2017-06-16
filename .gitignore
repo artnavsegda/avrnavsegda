@@ -209,3 +209,7 @@ FakesAssemblies/
 
 Release/
 Release/*
+
+.DS_Store/
+.DS_Store
+

@@ -17,5 +17,9 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */
 	printf("\n\rHello ATMEL World!\n\r");
-	while (1);
+	while (1)
+	{
+		delay_ms(1000);
+		printf("hello\n\r");
+	}
 }

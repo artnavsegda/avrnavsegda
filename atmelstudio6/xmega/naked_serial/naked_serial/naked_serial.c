@@ -1,11 +1,5 @@
-/*
- * naked_serial.c
- *
- * Created: 4/9/2017 5:13:43 PM
- *  Author: Art Navsegda
- */ 
-
 #include <avr/io.h>
+#include <util/delay.h>
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -37,6 +31,7 @@ int main(void)
 	
     while(1)
     {
-        //TODO:: Please write your application code 
+    		_delay_ms(1000);
+    		printf("hello\n\r");
     }
 }

@@ -14,7 +14,7 @@ static int uart_putchar(char c, FILE *stream)
 	return 0;
 }
 
-int main(void)
+void startserial(void)
 {
 	PORTC.DIRSET = PIN3_bm;
 	PORTC.DIRCLR = PIN2_bm;
@@ -27,11 +27,6 @@ int main(void)
 
 	stdout = &mystdout;
 
-	printf("Hello eclipse World!\n\r");
-
-    while(1)
-    {
-    		_delay_ms(1000);
-        printf("hello\n\r");
-    }
+	printf("serial started\n\r");
 }
+

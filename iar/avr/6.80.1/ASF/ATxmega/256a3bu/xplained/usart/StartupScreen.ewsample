@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<exampleInfo>
+  <copyDir>../../common/common/services/clock/xmega\</copyDir>
+  <copyDir>../../common/common/services/ioport/xmega\</copyDir>
+  <copyDir>../../common/xmega/boards/xmega_a3bu_xplained\</copyDir>
+  <copyDir>../../common/xmega/drivers/cpu\</copyDir>
+  <copyDir>../../common/xmega/drivers/nvm\</copyDir>
+  <copyDir>../../common/xmega/drivers/usart\</copyDir>
+  <copyDir>../../common/common/boards\</copyDir>
+  <copyDir>../../common/common/utils/interrupt\</copyDir>
+  <copyDir>../../common/common/utils\</copyDir>
+  <copyDir>../../common/common/services/clock\</copyDir>
+  <copyDir>../../common/xmega/utils/bit_handling\</copyDir>
+  <copyDir>../../common/xmega/utils/preprocessor\</copyDir>
+  <copyDir>../../common/xmega/utils\</copyDir>
+  <copyDir>../../common/common/services/ioport\</copyDir>
+  <copyDir>../../common/xmega/utils/assembler\</copyDir>
+  <copyDir>../../common/xmega/drivers/pmic\</copyDir>
+  <copyDir>../../common/common/services/gpio/xmega_gpio\</copyDir>
+  <copyDir>../../common/common/services/gpio\</copyDir>
+</exampleInfo>

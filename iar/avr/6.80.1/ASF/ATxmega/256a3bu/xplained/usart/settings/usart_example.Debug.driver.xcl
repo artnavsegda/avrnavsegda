@@ -1,0 +1,25 @@
+"--cpu=xm256a3bu" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\Config\ioxm256a3bu.ddf" 
+
+"--eeprom_size" 
+
+"4096" 
+
+"-d" 
+
+"jtagIce3" 
+
+"--avrone_jtag_clock=100000" 
+
+"--drv_communication=USB" 
+
+"--drv_debug_port=autodetect" 
+
+
+
+

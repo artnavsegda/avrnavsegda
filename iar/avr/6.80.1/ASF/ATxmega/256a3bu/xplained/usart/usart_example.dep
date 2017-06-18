@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>4170274490</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\usart.r90</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\ioport_compat.r90</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\ccp.r90</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\usart_example.r90</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\xmega\sysclk.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\gpio\xmega_gpio\xmega_gpio.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\osc.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\pll.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\sysclk.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\ioport\xmega\ioport.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\gpio\gpio.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\ioport\xmega\ioport_compat.c</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\ioport\xmega\ioport_compat.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\utils\interrupt.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\ioport\ioport.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\utils\interrupt\interrupt_avr8.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\utils\parts.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\boards\xmega_a3bu_xplained\init.c</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\boards\xmega_a3bu_xplained\led.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\boards\xmega_a3bu_xplained\xmega_a3bu_xplained.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\cpu\ccp.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\cpu\ccp.s</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\nvm\nvm.c</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\cpu\xmega_reset_cause.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\nvm\nvm.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\pmic\pmic.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\nvm\nvm_asm.s</file>
+      <file>$PROJ_DIR$\xmega\drivers\usart\example\atxmega256a3bu_xmega_a3bu_xplained\iar\asf.h</file>
+      <file>$PROJ_DIR$\xmega\drivers\usart\example\atxmega256a3bu_xmega_a3bu_xplained\conf_board.h</file>
+      <file>$PROJ_DIR$\xmega\drivers\usart\example\atxmega256a3bu_xmega_a3bu_xplained\conf_clock.h</file>
+      <file>$PROJ_DIR$\xmega\drivers\usart\example\atxmega256a3bu_xmega_a3bu_xplained\conf_usart_example.h</file>
+      <file>$PROJ_DIR$\xmega\drivers\usart\example\usart_example.c</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\usart\usart.c</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\drivers\usart\usart.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\bit_handling\clz_ctz.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\preprocessor\mrepeat.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\preprocessor\preprocessor.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\preprocessor\stringz.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\preprocessor\tpaste.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\compiler.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\progmem.h</file>
+      <file>$PROJ_DIR$\..\..\common\xmega\utils\status_codes.h</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\nvm.r90</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\init.r90</file>
+      <file>$PROJ_DIR$\Debug\Exe\usart_example.d90</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\xmega\pll.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\xmega\sysclk.c</file>
+      <file>$PROJ_DIR$\..\..\common\common\boards\board.h</file>
+      <file>$PROJ_DIR$\..\..\common\common\services\clock\xmega\osc.h</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\usart.pbi</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\usart_example.pbd</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\sysclk.r90</file>
+      <file>C:\Documents and Settings\All Users\Application Data\IARSystems\EmbeddedWorkbench\DownloadedExamples\avr\6.80.1\ASF\ATxmega\256a3bu\xplained\usart\ewinfo.ENU.html</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\nvm_asm.r90</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\sysclk.pbi</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\ioport_compat.pbi</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\init.pbi</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\nvm.pbi</file>
+      <file>$PROJ_DIR$\Debug\usart_example\Obj\usart_example.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\pgmspace.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdlib.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
+      <file>$TOOLKIT_DIR$\inc\Atmel\ATxmega256A3BU.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdint.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ysizet.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stddef.h</file>
+      <file>$TOOLKIT_DIR$\inc\Atmel\iomacro_xmega.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$TOOLKIT_DIR$\inc\ioxm256a3bu.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdarg.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ystdio.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-5s-xmega-n.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdbool.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 44</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\common\services\ioport\xmega\ioport_compat.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 1</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 38 80 71 59 65 16 70 63 67 68 14 39 79 69 34 40 72 61 9 12 66 64 60 36 13 62 75 77 35 76 78 81 37 73 74 15</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\xmega\boards\xmega_a3bu_xplained\init.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 80 71 68 61 39 16 70 73 14 79 69 34 40 72 78 81 75 47 19 66 64 60 36 13 62 37 74 67 15 28 77 63 38 35 59 65 76 9 12</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\xmega\drivers\cpu\ccp.s</name>
+      <outputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\xmega\drivers\nvm\nvm.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 42</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 69 34 40 37 61 74 79 72 68 24 80 16 71 70 78 81 20 73 66 64 60 36 13 62 75 77 63 76 39 67 38 35 59 65 15</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\xmega\drivers\nvm\nvm_asm.s</name>
+      <outputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 53</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\xmega\drivers\usart\example\usart_example.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 45 47 20 68 16 29 80 71 61 35 14 6 39 70 75 36 8 79 69 34 40 72 77 67 76 41 10 27 28 4 7 19 66 64 60 13 62 63 38 59 65 24 33 25 30 78 81 37 73 74 15 48 23 18 5 9 12</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\xmega\drivers\usart\usart.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 0</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 49</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 78 81 16 39 68 67 29 6 9 14 64 36 62 37 74 15 48 33 61 66 60 13 20 47 8 41 75 77 63 79 80 69 34 40 72 71 70 73 12 38 35 59 65 76 25 4 7 19 45</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\common\common\services\clock\xmega\sysclk.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 51</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 65 29 66 38 59 39 60 13 61 68 6 64 36 62 63 67 16 48 20 8 7 24 79 80 69 34 40 72 71 70 75 77 35 76 47 78 81 37 73 74 15 4 19 45</file>
+        </tool>
+      </inputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

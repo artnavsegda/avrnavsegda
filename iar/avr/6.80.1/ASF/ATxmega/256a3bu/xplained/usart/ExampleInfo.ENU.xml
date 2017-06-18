@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<infocenter_data version='1.0'>
+  <iar_template_variant>G</iar_template_variant>
+  <iar_name>usart_example</iar_name>
+  <iar_description>USART Example for XMEGA-A3BU Xplained</iar_description>
+  <iar_curdir>$CUR_DIR$</iar_curdir>
+  <iar_info_url>http://links.iar.com/Doc/ASF/ATxmega/256a3bu/xplained/usart/index.html</iar_info_url>
+</infocenter_data>

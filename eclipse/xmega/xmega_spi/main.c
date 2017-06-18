@@ -6,9 +6,7 @@
 
 void startspi(void)
 {
-	PORTC.DIRSET = PIN7_bm;
-	PORTC.DIRSET = PIN5_bm;
-	PORTC.DIRSET = PIN4_bm;//always activate chip select output when enabling spi
+	PORTC.DIRSET = PIN7_bm | PIN5_bm | PIN4_bm; //always activate chip select output when enabling spi
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
 	printf("spi started\n\r");

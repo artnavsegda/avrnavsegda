@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sequencer", "sequencer\sequencer.cproj", "{B7E78090-483F-4EAE-AC46-C291E55CC2B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7E78090-483F-4EAE-AC46-C291E55CC2B9}.Debug|AVR.ActiveCfg = Debug|AVR
+		{B7E78090-483F-4EAE-AC46-C291E55CC2B9}.Debug|AVR.Build.0 = Debug|AVR
+		{B7E78090-483F-4EAE-AC46-C291E55CC2B9}.Release|AVR.ActiveCfg = Release|AVR
+		{B7E78090-483F-4EAE-AC46-C291E55CC2B9}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

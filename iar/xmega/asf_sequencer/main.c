@@ -9,10 +9,10 @@ const usart_serial_options_t usart_serial_options = {
 
 void AD7705_Init(void)
 {
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
-    ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
+	ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
 	spi_master_init(&SPIC);
 	spi_enable(&SPIC);
 	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);

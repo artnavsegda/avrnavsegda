@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>1847322001</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Debug\Exe\sequencer.d90</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 0</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 3</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1</file>
+        </tool>
+      </outputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs>
+      <file>$PROJ_DIR$\Release\Obj\twim.r90</file>
+      <file>$PROJ_DIR$\Release\Exe\sequencer.a90</file>
+      <file>$PROJ_DIR$\Release\Obj\write.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\adc.pbi</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-5s-xmega-n.h</file>
+      <file>$TOOLKIT_DIR$\inc\Atmel\ATxmega256A3BU.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ysizet.h</file>
+      <file>$PROJ_DIR$\Release\Obj\twim.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\adc_aau.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\spi.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\pgmspace.h</file>
+      <file>$PROJ_DIR$\Release\Obj\sleepmgr.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\write.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\usart_serial.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\sleepmgr.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdint.h</file>
+      <file>$PROJ_DIR$\Release\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\ioport_compat.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\usart.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\adc.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\init.__cstat.et</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\twi\twim.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\twi\twim.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\usart\usart.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\usart\usart.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\assembler\gas.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\bit_handling\clz_ctz.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\preprocessor\mrepeat.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\preprocessor\preprocessor.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\preprocessor\stringz.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\preprocessor\tpaste.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\compiler.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\assembler.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\progmem.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\status_codes.h</file>
+      <file>$PROJ_DIR$\config\conf_board.h</file>
+      <file>$PROJ_DIR$\config\conf_adc.h</file>
+      <file>$PROJ_DIR$\config\conf_clock.h</file>
+      <file>$PROJ_DIR$\config\conf_sleepmgr.h</file>
+      <file>$PROJ_DIR$\config\conf_spi_master.h</file>
+      <file>$PROJ_DIR$\config\conf_twim.h</file>
+      <file>$PROJ_DIR$\config\conf_usart_serial.h</file>
+      <file>$PROJ_DIR$\asf.h</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\Release\Obj\ioport_compat.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdarg.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\Release\Obj\sysclk.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\sysclk.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\usart.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\sequencer.pbd</file>
+      <file>$PROJ_DIR$\Release\Obj\tc.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\sleepmgr.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\tc.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\yfuns.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdbool.h</file>
+      <file>$PROJ_DIR$\Release\Obj\twim.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\tc.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\read.r90</file>
+      <file>$TOOLKIT_DIR$\inc\Atmel\iomacro_xmega.h</file>
+      <file>$PROJ_DIR$\Release\Obj\write.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\init.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\main.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\init.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\adc_aau.__cstat.et</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\nvm\nvm.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\nvm\nvm.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\nvm\nvm_asm.s</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\pmic\pmic.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\sleep\sleep.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\spi\spi.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\spi\spi.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\tc\tc.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\tc\tc.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\twi\twi_common.h</file>
+      <file>$PROJ_DIR$\Release\Obj\read.pbi</file>
+      <file>$PROJ_DIR$\ASF\common\boards\board.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\xmega\osc.h</file>
+      <file>$PROJ_DIR$\Release\Obj\nvm.r90</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
+      <file>$PROJ_DIR$\Release\Obj\ioport_compat.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\ioxm256a3bu.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stddef.h</file>
+      <file>$PROJ_DIR$\Release\Obj\nvm.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\Release\Obj\spi_master.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\spi.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\usart.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\adc.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\nvm_asm.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\nvm.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Release\Obj\spi_master.__cstat.et</file>
+      <file>$PROJ_DIR$\Release\Obj\spi_master.r90</file>
+      <file>$PROJ_DIR$\ASF\xmega\utils\assembler\iar.h</file>
+      <file>$PROJ_DIR$\Release\Obj\spi.__cstat.et</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\adc\xmega_aau\adc_aau.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\adc\adc.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\adc\adc.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\cpu\ccp.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\cpu\ccp.s</file>
+      <file>$PROJ_DIR$\ASF\xmega\drivers\cpu\xmega_reset_cause.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\xmega\sysclk.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\genclk.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\osc.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\pll.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\xmega\pll.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdlib.h</file>
+      <file>$PROJ_DIR$\Release\Obj\usart_serial.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\ccp.r90</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ystdio.h</file>
+      <file>$PROJ_DIR$\Release\Obj\adc_aau.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\sysclk.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\stdio.h</file>
+      <file>$PROJ_DIR$\Release\Obj\usart_serial.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\read.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-5s-xmega-n.r90</file>
+      <file>$PROJ_DIR$\ASF\common\services\twi\xmega_twi\twi_slave.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\twi\twi_master.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\twi\twi_slave.h</file>
+      <file>$PROJ_DIR$\ASF\common\utils\interrupt\interrupt_avr8.h</file>
+      <file>$PROJ_DIR$\ASF\common\utils\make\Makefile.avr.in</file>
+      <file>$PROJ_DIR$\ASF\common\services\sleepmgr\xmega\sleepmgr.c</file>
+      <file>$PROJ_DIR$\ASF\common\services\sleepmgr\xmega\sleepmgr.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\sleepmgr\sleepmgr.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\spi\xmega_spi\spi_master.c</file>
+      <file>$PROJ_DIR$\ASF\common\services\spi\xmega_spi\spi_master.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\spi\spi_master.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\twi\xmega_twi\twi_master.h</file>
+      <file>$PROJ_DIR$\ASF\common\utils\stdio\stdio_serial\stdio_serial.h</file>
+      <file>$PROJ_DIR$\ASF\common\utils\stdio\read.c</file>
+      <file>$PROJ_DIR$\ASF\common\utils\stdio\write.c</file>
+      <file>$PROJ_DIR$\ASF\common\utils\parts.h</file>
+      <file>$PROJ_DIR$\ASF\common\utils\interrupt.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\boards\xmega_a3bu_xplained\led.h</file>
+      <file>$PROJ_DIR$\ASF\xmega\boards\xmega_a3bu_xplained\init.c</file>
+      <file>$PROJ_DIR$\ASF\xmega\boards\xmega_a3bu_xplained\xmega_a3bu_xplained.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\ioport\xmega\ioport_compat.c</file>
+      <file>$PROJ_DIR$\ASF\common\services\ioport\xmega\ioport_compat.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\ioport\ioport.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\serial\xmega_usart\usart_serial.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\serial\serial.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\serial\usart_serial.c</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\xmega\sysclk.c</file>
+      <file>$PROJ_DIR$\ASF\common\services\clock\sysclk.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\delay\xmega\cycle_counter.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\delay\delay.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\gpio\xmega_gpio\xmega_gpio.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\gpio\gpio.h</file>
+      <file>$PROJ_DIR$\ASF\common\services\ioport\xmega\ioport.h</file>
+      <file>$PROJ_DIR$\Release\Exe\sequencer.hex</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgxmega5soimntf.xcl</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgxm256a3bu.xcl</file>
+    </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 157</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Exe\sequencer.a90</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 159 158 93 117 114 65 19 18 82 94 62 55 91 98 50 54 0 92 113 13 123</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\twi\twim.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 0</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 60</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 24 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 36 42 78</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36 139 84 63 122 59 83 4 7 16 78 47 87 28 35 86 6 33 42 96 17 112 30 140 5 49 89 31 48 24 115 32 29 11 119 116 127</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\usart\usart.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 92</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 52</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 20</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 17 84 122 6 4 89 49 115 33 47 86 83 5 63 96 59 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 26 72 104 151 39 107 80 143 109 81 110 111 146 156 145 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 6 115 104 156 146 17 30 5 122 33 109 139 26 84 96 112 140 49 32 11 119 127 39 80 151 36 4 89 47 59 87 28 35 86 83 63 29 116 81 145 7 31 16 48 72 107 110 143 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 66</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 44 103 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 38 70 104 131 130 40 73 151 39 107 80 143 109 81 110 111 106 153 152 155 154 146 156 145 72 75 36 134 133 41 136 148 147 26 43 77 125 135 24 42 78 141</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\nvm\nvm.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 82</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 88</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 95</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 104 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 127 87 28 35 7 31 89 122 48 47 86 70 59 139 83 63 84 49 33 104 16 96 17 112 30 140 5 6 4 116 115 32 29 11 119</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\nvm\nvm_asm.s</name>
+      <outputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 94</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 34 99 47 86 83 5 63</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\spi\spi.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 100</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 75 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 36 146 156 145</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 84 33 30 17 5 29 146 96 112 140 122 116 36 47 59 87 139 28 35 86 83 63 6 115 49 32 11 119 127 75 4 89 7 31 16 48 156 145</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\tc\tc.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 54</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 17 84 122 6 4 89 49 115 140 139 127 33 47 86 83 5 63 96 59 87 7 112 28 30 32 31 29 35 11 16 119 116 48 77 36 72 104 131 130 40 73 151 39 107 80 143 109 81 110 111</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 89 59 83 84 77 139 63 40 39 80 33 131 122 49 4 127 47 87 28 35 86 16 36 130 109 140 151 6 115 96 17 112 30 5 31 48 7 81 32 29 11 119 116 72 104 73 107 110 143 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\adc\xmega_aau\adc_aau.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 117</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 68</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 103 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 38 70 104 131 130 40 73 151 39 107 80 143 109 81 110 111</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30 33 17 5 122 139 73 38 151 96 112 140 6 115 84 49 32 11 119 127 39 81 70 131 47 59 87 28 35 86 83 63 29 116 80 109 143 103 4 89 7 31 16 48 104 130 40 107 110 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\adc\adc.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 93</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 21</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 103 38 70 104 131 130 40 73 151 39 107 80 143 109 81 110 111</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 140 33 112 70 122 116 139 96 84 73 17 30 5 29 39 81 103 47 59 87 28 35 86 83 63 6 115 49 32 11 119 127 131 80 109 143 4 89 7 31 16 48 38 151 104 130 40 107 110 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\drivers\cpu\ccp.s</name>
+      <outputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 114</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 34 99 47 86 83 5 63</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\services\sleepmgr\xmega\sleepmgr.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 55</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 12</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 131 130 40 73</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 30 32 5 122 59 139 84 47 87 140 6 115 49 29 11 119 127 73 131 96 17 112 28 35 86 83 63 4 89 7 31 33 16 48 116 130 40</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\services\spi\xmega_spi\spi_master.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 98</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 90</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 97</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 133 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 36 146 156 145 75 41 151 39 107 80 143 104 109 81 110 111</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 84 146 6 115 119 112 140 122 49 32 11 127 109 33 96 41 17 30 5 36 39 80 143 81 151 75 47 59 87 139 28 35 86 83 63 29 116 133 4 89 7 31 16 48 156 145 107 104 110 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\utils\stdio\read.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 62</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 79</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 121</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 58</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 59 7 30 5 4 84 31 16 116 139 122 49 58 47 87 140 89 96 17 112 28 35 86 83 63 6 115 32 29 48 33 11 119 127</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\utils\stdio\write.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 13</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 58</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 87 7 140 89 122 16 116 47 84 58 59 139 30 5 49 4 31 96 17 112 28 35 86 83 63 6 115 32 29 48 33 11 119 127</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\xmega\boards\xmega_a3bu_xplained\init.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 65</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 67</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 37 80 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 143 146 156 145</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 63 139 122 59 83 6 115 84 49 32 11 119 127 33 146 47 87 28 35 86 80 143 96 17 112 30 140 5 29 116 37 4 89 7 31 16 48 156 145</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\services\ioport\xmega\ioport_compat.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 46</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 85</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 145 146 139 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 28 30 32 31 29 35 11 16 119 116 48 140 127 156</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 140 112 16 96 6 115 122 84 49 146 33 17 30 5 139 156 145 47 59 87 28 35 86 83 63 31 48 7 4 89 32 29 11 119 116 127</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\services\serial\usart_serial.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 113</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 120</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 14</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 148 139 36 147 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 28 30 32 31 29 35 11 16 119 116 48 140 127 151 39 107 80 143 104 109 81 110 111 26 72 43</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 140 84 96 7 4 127 36 112 32 11 119 39 80 143 81 139 33 43 17 30 5 49 122 109 104 147 151 26 47 59 87 28 35 86 83 63 89 29 72 148 6 115 31 16 48 116 107 110 111</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ASF\common\services\clock\xmega\sysclk.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 50</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 118</file>
+        </tool>
+        <tool>
+          <name>__cstat</name>
+          <file> 51</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 33 47 86 83 5 63 96 59 17 84 122 6 4 89 49 115 87 7 112 139 28 30 32 31 29 35 11 16 119 116 48 140 127 151 39 107 80 143 104 109 81 110 111 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 84 96 30 80 112 140 29 33 110 109 17 5 122 116 107 151 70 47 59 87 139 28 35 86 83 63 6 115 49 32 11 119 127 104 143 39 111 4 89 7 31 16 48 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Exe\sequencer.hex</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 159 158 93 117 114 65 19 18 82 94 62 55 91 98 50 54 0 92 113 13 123</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+</project>
+
+

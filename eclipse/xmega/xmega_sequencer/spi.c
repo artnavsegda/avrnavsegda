@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <stdio.h>
 
 void startspi(void)
 {

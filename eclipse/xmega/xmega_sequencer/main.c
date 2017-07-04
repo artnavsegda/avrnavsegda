@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "serial.h"
 #include "spi.h"
+#include "i2c.h"
 
 void AD7705_Init(void)
 {
@@ -27,6 +28,7 @@ int main(void)
 	startserial();
 	startspi();
 	AD7705_Init();
+	starti2c();
 	while(1)
 	{
 		if (bit_is_clear(PORTC.IN,PIN1_bp))

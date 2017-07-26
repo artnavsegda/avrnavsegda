@@ -5,8 +5,8 @@
 OUTPUT = default
 
 # General Flags
-TARGET = $(PROJECT).exe
-CC = gcc.exe
+TARGET = $(PROJECT)
+CC = gcc
 MAKECFG   = config.mk
 
 # Options common to compile, link and assembly rules
@@ -23,7 +23,7 @@ ASMFLAGS +=
 
 # Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += 
+LDFLAGS += -lusb
 
 # Include Directories
 INCLUDES = -I"./" 

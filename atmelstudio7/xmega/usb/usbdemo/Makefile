@@ -6,7 +6,7 @@ OUTPUT = default
 
 # General Flags
 TARGET = $(PROJECT)
-CC = gcc
+CC = clang
 MAKECFG   = config.mk
 
 # Options common to compile, link and assembly rules

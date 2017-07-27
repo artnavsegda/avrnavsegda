@@ -5,28 +5,29 @@
 OUTPUT = default
 
 # General Flags
-TARGET = $(PROJECT)
-CC = clang
+TARGET = $(PROJECT).exe
+CC = gcc.exe
 MAKECFG   = config.mk
+RC = windres.exe
 
 # Options common to compile, link and assembly rules
-COMMON = 
+COMMON =
 
 # Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += 
+CFLAGS +=
 
 
 # Assembly specific flags
 ASMFLAGS = $(COMMON)
-ASMFLAGS += 
+ASMFLAGS +=
 
 # Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -lusb
+LDFLAGS += -lgdi32
 
 # Include Directories
-INCLUDES = -I"./" 
+INCLUDES = -I"./"
 
 # Include Source files list and part informations
 include $(MAKECFG)
@@ -50,7 +51,7 @@ rebuild: clean all
 ## Compile
 
 # Create objects files list with sources files
-OBJECTS  = $(CSRCS:.c=.o) $(ASSRCS:.s=.o)
+OBJECTS  = $(CSRCS:.c=.o) $(ASSRCS:.s=.o) $(RCSRCS:.rc=.o)
 
 .PHONY: objfiles
 objfiles: $(OBJECTS)
@@ -61,7 +62,7 @@ objfiles: $(OBJECTS)
 	@$(shell mkdir $(OUTPUT) 2>/dev/null)
 	@$(shell mkdir $(OUTPUT)/dep 2>/dev/null)
 	@$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(OUTPUT)/$(@F)
-	
+
 # Preprocess & assemble: create object files from assembler source files.
 %.o: %.s
 	@echo 'Building file: $<'
@@ -69,14 +70,18 @@ objfiles: $(OBJECTS)
 	@$(shell mkdir $(OUTPUT)/dep 2>/dev/null)
 	@$(CC) $(INCLUDES) $(ASMFLAGS) -c $< -o $(OUTPUT)/$(@F)
 
+# create object files from resource files.
+%.o: %.rc
+	@echo 'Building file: $<'
+	@$(shell mkdir $(OUTPUT) 2>/dev/null)
+	@$(shell mkdir $(OUTPUT)/dep 2>/dev/null)
+	@$(RC) -i $< -o $(OUTPUT)/$(@F)
 
 ## Link
 $(TARGET): $(OBJECTS)
 	@echo "Linking"
-	@$(CC) $(LDFLAGS) $(addprefix $(OUTPUT)/,$(notdir $(OBJECTS))) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET)
+	@$(CC) $(LDFLAGS) $(addprefix $(OUTPUT)/,$(notdir $(OBJECTS))) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET) -mwindows -Wl,--subsystem,windows
 
 %.lss: $(TARGET)
 	@echo "Create lss file"
 	@avr-objdump -h -S $< > $@
-
-

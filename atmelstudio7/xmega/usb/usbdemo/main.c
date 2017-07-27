@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
-#include <usb.h>
-#include <string.h>
+#include "usb.h"
 
 /**
  * Device vendor definition

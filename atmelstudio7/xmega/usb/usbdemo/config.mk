@@ -4,8 +4,12 @@ PROJECT = avr_vendor_class_example
 
 # Source files
 CSRCS = \
-  ./main.c\
+	./winmain.c\
+  ./libusb_dyn.c\
 
 # Assembler source files
 ASSRCS = \
 
+# Resource files
+RCSRCS = \
+	./menu.rc\

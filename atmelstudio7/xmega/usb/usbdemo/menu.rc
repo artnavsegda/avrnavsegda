@@ -7,6 +7,7 @@ Menu MENU
 		MENUITEM "&Open", ID_OPEN
 		MENUITEM "&Endpoint", ID_EPOINT
 		MENUITEM "&Interface", ID_IFACE
+		MENUITEM "&Transfer", ID_TRANSFER
 		MENUITEM "&Exit", ID_EXIT
 	}
 }

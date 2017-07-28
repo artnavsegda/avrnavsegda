@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "usb.h"
 #include "menu.h"
 
@@ -19,28 +20,65 @@ struct usb_bus *bus;
 struct usb_device *device;
 usb_dev_handle *device_handle = NULL; // the device handle
 
+#define  UDI_VENDOR_LOOPBACK_SIZE    12
+
+uint8_t udi_vendor_buf_out[UDI_VENDOR_LOOPBACK_SIZE] = "hello world";
+uint8_t udi_vendor_buf_in[UDI_VENDOR_LOOPBACK_SIZE];
+
+static int loop_back_interrupt(usb_dev_handle *device_handle)
+{
+	if (0> usb_interrupt_write( device_handle,
+			udi_vendor_ep_interrupt_out,
+			udi_vendor_buf_out,
+			sizeof(udi_vendor_buf_out),
+			1000)) {
+		return -1;
+	}
+	if (0> usb_interrupt_read( device_handle,
+			udi_vendor_ep_interrupt_in,
+			udi_vendor_buf_in,
+			sizeof(udi_vendor_buf_in),
+			1000)) {
+		return -1;
+	}
+	return 0;
+}
+
+void transfer(void)
+{
+	if (udi_vendor_ep_interrupt_in && udi_vendor_ep_interrupt_out) {
+		sprintf(statustext,"Interrupt enpoint loop back...\n");
+		if (loop_back_interrupt(device_handle)) {
+			sprintf(statustext,"Error during interrupt endpoint transfer\n");
+			usb_close(device_handle);
+			return;
+		}
+		sprintf(statustext,"data: %s\n",udi_vendor_buf_in);
+	}
+}
+
 void openinterface(void)
 {
 	// Open interface vendor
 	if(usb_set_configuration(device_handle, 1) < 0) {
-		sprintf(statustext,"%s","error: setting config 1 failed\n");
+		sprintf(statustext,"error: setting config 1 failed\n");
 		usb_close(device_handle);
 		return;
 	}
 	if(usb_claim_interface(device_handle, 0) < 0) {
-		sprintf(statustext,"%s","error: claiming interface 0 failed\n");
+		sprintf(statustext,"error: claiming interface 0 failed\n");
 		usb_close(device_handle);
 		return;
 	}
 	if (1!=device->config->interface->num_altsetting) {
 
 		if(usb_set_altinterface(device_handle, 1) < 0) {
-			sprintf(statustext,"%s","error: set alternate 1 interface 0 failed\n");
+			sprintf(statustext,"error: set alternate 1 interface 0 failed\n");
 			usb_close(device_handle);
 			return;
 		}
 	}
-	sprintf(statustext,"%s","Device ready");
+	sprintf(statustext,"Device ready");
 }
 
 void opendevice(void)
@@ -56,10 +94,10 @@ void opendevice(void)
 		}
 	}
 	if(device_handle == NULL)
-    sprintf(statustext,"%s","Device not found");
+    sprintf(statustext,"Device not found");
   else
 	{
-    sprintf(statustext,"%s","Device open");
+    sprintf(statustext,"Device open");
 		if (0!=device->descriptor.iManufacturer)
 			usb_get_string_simple(device_handle, device->descriptor.iManufacturer, string_manufacturer, sizeof(string_manufacturer));
 		if (0!=device->descriptor.iProduct)
@@ -134,21 +172,26 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hwnd);
                 return 0;
             case ID_OPEN:
-                sprintf(statustext,"%s","Opening");
+                sprintf(statustext,"Opening");
                 opendevice();
                 InvalidateRect(hwnd, NULL, TRUE);
                 return 0;
 						case ID_EPOINT:
 								if (device_handle != NULL)
 								{
-									sprintf(statustext,"%s","Searching endpoints");
+									sprintf(statustext,"Searching endpoints");
 									findendpoint();
 									InvalidateRect(hwnd, NULL, TRUE);
 								}
 								return 0;
 						case ID_IFACE:
-								sprintf(statustext,"%s","Initialization device");
+								sprintf(statustext,"Initialization device");
 								openinterface();
+								InvalidateRect(hwnd, NULL, TRUE);
+								return 0;
+						case ID_TRANSFER:
+								sprintf(statustext,"Interrupt endpoint transfer");
+								transfer();
 								InvalidateRect(hwnd, NULL, TRUE);
 								return 0;
         }

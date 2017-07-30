@@ -10,6 +10,13 @@ COMPILER_WORD_ALIGNED static uint8_t main_buf_answer[MAIN_LOOPBACK_SIZE] = "hEll
 void main_vendor_int_in_received(udd_ep_status_t status, iram_size_t nb_transfered, udd_ep_id_t ep);
 void main_vendor_int_out_received(udd_ep_status_t status, iram_size_t nb_transfered, udd_ep_id_t ep);
 
+const usart_serial_options_t usart_serial_options = {
+	.baudrate     = 9600,
+	.charlength   = USART_CHSIZE_8BIT_gc,
+	.paritytype   = USART_PMODE_DISABLED_gc,
+	.stopbits     = false
+};
+
 int main(void)
 {
 	irq_initialize_vectors();
@@ -17,8 +24,10 @@ int main(void)
 
 	sysclk_init();
 	board_init();
+	stdio_serial_init(&USARTC0, &usart_serial_options);
 	udc_start();
 
+	printf("\n\rMCU started\n\r");
 	while (true);
 }
 

@@ -19,16 +19,29 @@ const usart_serial_options_t usart_serial_options = {
 
 int main(void)
 {
+	uint16_t adcdata;
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
 	stdio_serial_init(&USARTC0, &usart_serial_options);
+	spi_master_init(&SPIC);
+	spi_enable(&SPIC);
 	udc_start();
 
 	printf("\n\rMCU started\n\r");
-	while (true);
+	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
+	printf("Reset complete\n\r");
+	spi_write_packet(&SPIC, "\x20\x0C\x10\x40", 4);
+	
+	while (true)
+	{
+		delay_ms(100);
+		spi_write_packet(&SPIC, "\x38", 1);
+		spi_read_packet(&SPIC, (uint8_t *)&adcdata, 2);
+		printf("%04X\r\n",adcdata);
+	}
 }
 
 void main_suspend_action(void)

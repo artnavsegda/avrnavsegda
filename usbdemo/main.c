@@ -139,12 +139,16 @@ int main (int argc, char *argv[])
 	if (udi_vendor_ep_interrupt_in && udi_vendor_ep_interrupt_out) {
 		printf("Interrupt enpoint loop back...\n");
 		init_buffers();
-		if (loop_back_interrupt(device_handle)) {
-			printf("Error during interrupt endpoint transfer\n");
-			usb_close(device_handle);
-			return 0;
+		while (1)
+		{
+			if (loop_back_interrupt(device_handle)) {
+				printf("Error during interrupt endpoint transfer\n");
+				usb_close(device_handle);
+				return 0;
+			}
+			printf("data: %02X %02X\n",udi_vendor_buf_in[0], udi_vendor_buf_in[1]);
+			sleep(1);
 		}
-		printf("data: %02X %02X\n",udi_vendor_buf_in[0], udi_vendor_buf_in[1]);
 	}
 
 	usb_close(device_handle);

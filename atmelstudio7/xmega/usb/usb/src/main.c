@@ -19,14 +19,13 @@ const usart_serial_options_t usart_serial_options = {
 
 int main(void)
 {
-	uint16_t adcdata;
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
 	// replace everything with simple port assignment pls
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
     ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
     //ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
     ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
@@ -38,15 +37,23 @@ int main(void)
 
 	printf("\n\rMCU started\n\r");
 	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
+	delay_ms(10);
 	printf("Reset complete\n\r");
-	spi_write_packet(&SPIC, "\x20\x0C\x10\x40", 4);
+	spi_write_packet(&SPIC, "\x20\x0C", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x10\x04", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x70\x89\x78\xD7", 4);
+	delay_ms(10);
 	
 	while (true)
 	{
 		delay_ms(100);
 		spi_write_packet(&SPIC, "\x38", 1);
-		spi_read_packet(&SPIC, (uint8_t *)&adcdata, 2);
-		printf("%04X\r\n",adcdata);
+		spi_read_packet(&SPIC, main_buf_answer, 2);
+		printf("%02X %02X\r\n", main_buf_answer[0], main_buf_answer[1]);
 	}
 }
 

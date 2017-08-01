@@ -53,7 +53,7 @@ void transfer(void)
 			usb_close(device_handle);
 			return;
 		}
-		sprintf(statustext,"data: %s\n",udi_vendor_buf_in);
+		sprintf(statustext,"data: %02X %02X\n",udi_vendor_buf_in[0], udi_vendor_buf_in[1]);
 	}
 }
 

@@ -15,7 +15,7 @@ int main (void)
 	sysclk_init();
 	board_init();
 	
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
     ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
     //ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
     ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
@@ -27,8 +27,16 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 	printf("\n\rMCU started\n\r");
 	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
+	delay_ms(10);
 	printf("Reset complete\n\r");
-	spi_write_packet(&SPIC, "\x20\x0C\x10\x40", 4);
+	spi_write_packet(&SPIC, "\x20\x0C", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x10\x04", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x70\x89\x78\xD7", 4);
+	delay_ms(10);
 	
 	while (1)
 	{

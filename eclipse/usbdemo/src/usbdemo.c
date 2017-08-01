@@ -144,7 +144,7 @@ int main (int argc, char *argv[])
 			usb_close(device_handle);
 			return 0;
 		}
-		printf("data: %s\n",udi_vendor_buf_in);
+		printf("data: %02X %02X\n",udi_vendor_buf_in[0], udi_vendor_buf_in[1]);
 	}
 
 	usb_close(device_handle);

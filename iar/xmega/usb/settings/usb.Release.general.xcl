@@ -1,10 +1,10 @@
-"C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\bin\avrproc.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\bin\avrproc.dll" 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\bin\avrsim.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\bin\avrsim.dll" 
 
-"Z:\GitHub\avrnavsegda\iar\xmega\usb\Release\Exe\usb.a90" 
+"C:\Users\artna\Documents\GitHub\avrnavsegda\iar\xmega\usb\Release\Exe\usb.a90" 
 
---plugin "C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\bin\avrlibsupportbat.dll" 
+--plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\bin\avrlibsupportbat.dll" 
 
 
 

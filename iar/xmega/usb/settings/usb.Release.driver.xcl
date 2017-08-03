@@ -4,7 +4,7 @@
 
 "-p" 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\Config\ioxm256a3bu.ddf" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\Config\ioxm256a3bu.ddf" 
 
 "--eeprom_size" 
 

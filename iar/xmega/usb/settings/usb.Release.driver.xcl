@@ -1,0 +1,19 @@
+"--cpu=xm256a3bu" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files\IAR Systems\Embedded Workbench 7.4\avr\Config\ioxm256a3bu.ddf" 
+
+"--eeprom_size" 
+
+"4096" 
+
+"-d" 
+
+"sim" 
+
+
+
+

@@ -34,7 +34,7 @@
           </Tab>
         <Tab><Identity>TabID-32426-8692</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>1</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-10258-28571</Identity>
@@ -59,7 +59,7 @@
       
       
       
-    <Top><Row0><Sizes><Toolbar-0135BCB8><key>iaridepm.enu1</key></Toolbar-0135BCB8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>642</Bottom><Right>358</Right><x>-2</x><y>-2</y><xscreen>214</xscreen><yscreen>218</yscreen><sizeHorzCX>143721</sizeHorzCX><sizeHorzCY>213935</sizeHorzCY><sizeVertCX>241773</sizeVertCX><sizeVertCY>631992</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>333</Bottom><Right>1491</Right><x>-2</x><y>-2</y><xscreen>1493</xscreen><yscreen>335</yscreen><sizeHorzCX>1002686</sizeHorzCX><sizeHorzCY>328754</sizeHorzCY><sizeVertCX>143721</sizeVertCX><sizeVertCY>213935</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0135BCB8><key>iaridepm.enu1</key></Toolbar-0135BCB8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>663</Bottom><Right>358</Right><x>-2</x><y>-2</y><xscreen>214</xscreen><yscreen>218</yscreen><sizeHorzCX>112218</sizeHorzCX><sizeHorzCY>209615</sizeHorzCY><sizeVertCX>188778</sizeVertCX><sizeVertCY>639423</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>333</Bottom><Right>1909</Right><x>-2</x><y>-2</y><xscreen>1911</xscreen><yscreen>335</yscreen><sizeHorzCX>1002098</sizeHorzCX><sizeHorzCY>322115</sizeHorzCY><sizeVertCX>112218</sizeVertCX><sizeVertCY>209615</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

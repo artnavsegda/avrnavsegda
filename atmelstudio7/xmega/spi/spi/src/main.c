@@ -15,10 +15,10 @@ int main (void)
 	sysclk_init();
 	board_init();
 	
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_LOW | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    //ioport_configure_port_pin(&PORTC, PIN6_bm, IOPORT_DIR_INPUT);
-    ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_SS,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MOSI,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MISO,IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(SPIC_SCK,IOPORT_DIR_OUTPUT);
 	
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 	spi_master_init(&SPIC);
@@ -40,6 +40,7 @@ int main (void)
 	
 	while (1)
 	{
+		//if (ioport_get_pin_level())
 		delay_ms(100);
 		spi_write_packet(&SPIC, "\x38", 1);
 		spi_read_packet(&SPIC, (uint8_t *)&adcdata, 2);

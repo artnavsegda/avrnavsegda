@@ -1,5 +1,7 @@
 #include <asf.h>
 
+
+
 const usart_serial_options_t usart_serial_options = {
 	.baudrate     = 9600,
 	.charlength   = USART_CHSIZE_8BIT_gc,
@@ -40,10 +42,11 @@ int main (void)
 	
 	while (1)
 	{
-		//if (ioport_get_pin_level())
-		delay_ms(100);
-		spi_write_packet(&SPIC, "\x38", 1);
-		spi_read_packet(&SPIC, (uint8_t *)&adcdata, 2);
-		printf("%04X\r\n",adcdata);
+		if (ioport_get_pin_level(J1_PIN1) == false)
+		{
+			spi_write_packet(&SPIC, "\x38", 1);
+			spi_read_packet(&SPIC, (uint8_t *)&adcdata, 2);
+			printf("%04X\r\n",adcdata);
+		}
 	}
 }

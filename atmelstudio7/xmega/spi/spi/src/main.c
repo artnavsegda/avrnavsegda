@@ -1,7 +1,5 @@
 #include <asf.h>
 
-
-
 const usart_serial_options_t usart_serial_options = {
 	.baudrate     = 9600,
 	.charlength   = USART_CHSIZE_8BIT_gc,

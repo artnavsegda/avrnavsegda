@@ -50,10 +50,12 @@ int main(void)
 	
 	while (true)
 	{
-		delay_ms(100);
-		spi_write_packet(&SPIC, "\x38", 1);
-		spi_read_packet(&SPIC, main_buf_answer, 2);
-		printf("%02X %02X\r\n", main_buf_answer[0], main_buf_answer[1]);
+		if (ioport_get_pin_level(J1_PIN1) == false)
+		{
+			spi_write_packet(&SPIC, "\x38", 1);
+			spi_read_packet(&SPIC, main_buf_answer, 2);
+			printf("%02X %02X\r\n", main_buf_answer[0], main_buf_answer[1]);
+		}
 	}
 }
 

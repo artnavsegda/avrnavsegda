@@ -31,11 +31,14 @@ int main(void)
 
 	stdout = &mystdout;
 
-	printf("Hello eclipse World!\n\r");
+	//printf("Hello eclipse World!\n\r");
+	uart_putchar('a',NULL);
 
     while(1)
     {
-        //TODO:: Please write your application code
+		_delay_ms(1000);
+		//printf("hello\n\r");
+		uart_putchar('b',NULL);
     }
 
 	return 0;

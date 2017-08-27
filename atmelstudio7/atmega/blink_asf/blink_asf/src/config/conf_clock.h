@@ -62,6 +62,6 @@
 #define SYSCLK_SOURCE SYSCLK_SRC_EXTERNAL
 
 /* ===== System Clock Bus Division Options */
-#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_8
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
 #endif /* CONF_CLOCK_H_INCLUDED */

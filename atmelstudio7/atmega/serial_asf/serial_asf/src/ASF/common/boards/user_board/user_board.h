@@ -23,7 +23,7 @@
 // Uncomment and set correct values if external oscillator is used.
 
 // External oscillator frequency
-//#define BOARD_XOSC_HZ          8000000
+#define BOARD_XOSC_HZ          8000000
 
 // External oscillator type.
 //!< External clock signal
@@ -31,10 +31,24 @@
 //!< 32.768 kHz resonator on TOSC
 //#define BOARD_XOSC_TYPE        XOSC_TYPE_32KHZ
 //!< 0.4 to 16 MHz resonator on XTALS
-//#define BOARD_XOSC_TYPE        XOSC_TYPE_XTAL
+#define BOARD_XOSC_TYPE        XOSC_TYPE_XTAL
 
 // External oscillator startup time
 //#define BOARD_XOSC_STARTUP_US  500000
 
+#define ARDUINO0                       IOPORT_CREATE_PIN(PORTD, 0)
+#define ARDUINO1                       IOPORT_CREATE_PIN(PORTD, 1)
+#define ARDUINO2                       IOPORT_CREATE_PIN(PORTD, 2)
+#define ARDUINO3                       IOPORT_CREATE_PIN(PORTD, 3)
+#define ARDUINO4                       IOPORT_CREATE_PIN(PORTD, 4)
+#define ARDUINO5                       IOPORT_CREATE_PIN(PORTD, 5)
+#define ARDUINO6                       IOPORT_CREATE_PIN(PORTD, 6)
+#define ARDUINO7                       IOPORT_CREATE_PIN(PORTD, 7)
+#define ARDUINO8                       IOPORT_CREATE_PIN(PORTB, 0)
+#define ARDUINO9                       IOPORT_CREATE_PIN(PORTB, 1)
+#define ARDUINO10                      IOPORT_CREATE_PIN(PORTB, 2)
+#define ARDUINO11                      IOPORT_CREATE_PIN(PORTB, 3)
+#define ARDUINO12                      IOPORT_CREATE_PIN(PORTB, 4)
+#define ARDUINO13                      IOPORT_CREATE_PIN(PORTB, 5)
 
 #endif // USER_BOARD_H

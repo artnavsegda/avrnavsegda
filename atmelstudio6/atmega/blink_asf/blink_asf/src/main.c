@@ -10,7 +10,7 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 	while(1)
 	{
-		gpio_toggle_pin(ARDUINO13);
+		ioport_toggle_pin(ARDUINO13);
 		delay_s(1);
 	}
 }

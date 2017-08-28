@@ -24,7 +24,7 @@ int main (void)
 
 	sysclk_init();
 	board_init();
-	adc_init(ADC_PRESCALER_DIV128);
+	adc_init(ADC_PRESCALER_DIV64);
 	usart_init_rs232(&USART0, &usart_serial_options);
 	usart_set_baudrate(&USART0, 9600, 16000000);
 	stdout = &mystdout;
@@ -35,6 +35,6 @@ int main (void)
 	while(1)
 	{
 		delay_s(1);
-		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC0, ADC_VREF_AVCC));
+		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC1, ADC_VREF_1V1));
 	}
 }

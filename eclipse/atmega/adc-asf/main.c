@@ -22,19 +22,20 @@ int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
 
-	sysclk_init();
-	board_init();
-	adc_init(ADC_PRESCALER_DIV64);
+	//sysclk_init();
+	//board_init();
 	usart_init_rs232(&USART0, &usart_serial_options);
 	usart_set_baudrate(&USART0, 9600, 16000000);
 	stdout = &mystdout;
 
+	adc_init(ADC_PRESCALER_DIV128);
+
 	/* Insert application code here, after the board has been initialized. */
-	printf("Hello World!\n\r");
+	printf("MCU started\n\r");
 	
 	while(1)
 	{
 		delay_s(1);
-		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC0, ADC_VREF_1V1));
+		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC0, ADC_VREF_AVCC));
 	}
 }

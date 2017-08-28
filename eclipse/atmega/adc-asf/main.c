@@ -35,6 +35,6 @@ int main (void)
 	while(1)
 	{
 		delay_s(1);
-		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC1, ADC_VREF_1V1));
+		printf("adc value %d\n\r", adc_read_10bit(ADC_MUX_ADC0, ADC_VREF_1V1));
 	}
 }

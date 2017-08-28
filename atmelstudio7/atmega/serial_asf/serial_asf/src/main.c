@@ -1,7 +1,9 @@
 #include <asf.h>
 #include <stdio.h>
 
-static FILE mystdout = FDEV_SETUP_STREAM(usart_putchar, NULL, _FDEV_SETUP_WRITE);
+static int uart_putchar(char c, FILE *stream);
+
+static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
 const usart_rs232_options_t usart_serial_options = {
 	.baudrate     = 9600,
@@ -10,6 +12,12 @@ const usart_rs232_options_t usart_serial_options = {
 	.stopbits     = false
 };
 
+static int uart_putchar(char c, FILE *stream)
+{
+	usart_putchar(&USART0, c);
+	return 0;
+}
+
 int main (void)
 {
 	/* Insert system clock initialization code here (sysclk_init()). */
@@ -17,6 +25,7 @@ int main (void)
 	sysclk_init();
 	board_init();
 	usart_init_rs232(&USART0, &usart_serial_options);
+	usart_set_baudrate(&USART0, 9600, 16000000);
 	stdout = &mystdout;
 
 	/* Insert application code here, after the board has been initialized. */

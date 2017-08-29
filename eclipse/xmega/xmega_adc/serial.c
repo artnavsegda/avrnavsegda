@@ -26,7 +26,5 @@ void startserial(void)
 	USARTC0.CTRLB |= USART_TXEN_bm;
 
 	stdout = &mystdout;
-
-	printf("serial started\n\r");
 }
 

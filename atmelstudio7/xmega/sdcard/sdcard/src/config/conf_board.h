@@ -32,4 +32,6 @@
 // Enable Sensors Xplained board interface
 //#define SENSORS_XPLAINED_BOARD
 
+#define CONF_BOARD_SD_MMC_SPI
+
 #endif // CONF_BOARD_H

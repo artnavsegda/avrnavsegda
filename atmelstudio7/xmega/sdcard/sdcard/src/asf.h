@@ -95,6 +95,9 @@
 // From module: RTC32 - Real Time Counter 32
 #include <rtc32.h>
 
+// From module: SD/MMC Memory Control Access - Enable
+#include <sd_mmc_mem.h>
+
 // From module: SD/MMC stack on SPI interface
 #include <sd_mmc.h>
 
@@ -102,8 +105,8 @@
 #include <spi.h>
 
 // From module: SPI - XMEGA implementation
-#include <spi_master.h>
-#include <spi_master.h>
+#include <usart_spi.h>
+#include <xmega_usart_spi/usart_spi.h>
 
 // From module: Sleep Controller driver
 #include <sleep.h>

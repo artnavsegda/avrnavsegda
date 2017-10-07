@@ -30,18 +30,18 @@
       <framework-data>
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.components.memory.sd_mmc" value="Add" config="spi" content-id="Atmel.ASF" />
+    <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="xmega.drivers.ioport" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
     <configuration key="config.spi_master_type" value="usart_and_standard_spi" default="usart_and_standard_spi" content-id="Atmel.ASF" />
     <configuration key="config.gfx_mono.display" value="c12832_a1z" default="c12832_a1z" content-id="Atmel.ASF" />
     <configuration key="config.common.services.fs.fatfs.codepage" value="sbcs" default="sbcs" content-id="Atmel.ASF" />
-    <configuration key="config.common.components.memory.sd_mmc.ctrl_access" value="disable" default="disable" content-id="Atmel.ASF" />
+    <configuration key="config.common.components.memory.sd_mmc.ctrl_access" value="enable" default="disable" content-id="Atmel.ASF" />
   </configurations>
   <files>
     <file path="src/config/conf_board.h" framework="" version="" source="common/applications/user_application/atxmega256a3bu_xmega_a3bu_xplained/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
@@ -197,6 +197,8 @@
     <file path="src/Config/conf_fatfs.h" framework="" version="3.35.1" source="thirdparty\fatfs\fatfs-r0.09\src\module_config_sbcs\conf_fatfs.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/usart/usart.c" framework="" version="3.35.1" source="xmega\drivers\usart\usart.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/xmega/drivers/usart/usart.h" framework="" version="3.35.1" source="xmega\drivers\usart\usart.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/components/memory/sd_mmc/sd_mmc_mem.c" framework="" version="3.35.1" source="common\components\memory\sd_mmc\sd_mmc_mem.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/components/memory/sd_mmc/sd_mmc_mem.h" framework="" version="3.35.1" source="common\components\memory\sd_mmc\sd_mmc_mem.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.35.1/common.applications.user_application.xmega_a3bu_xplained/html/index.html" />
   <offline-documentation help="" />
@@ -223,6 +225,7 @@
       <Value>CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA</Value>
       <Value>BOARD=XMEGA_A3BU_XPLAINED</Value>
       <Value>IOPORT_XMEGA_COMPAT</Value>
+      <Value>SD_MMC_ENABLE</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -326,6 +329,7 @@
       <Value>CONFIG_NVM_IGNORE_XMEGA_A3_D3_REVB_ERRATA</Value>
       <Value>BOARD=XMEGA_A3BU_XPLAINED</Value>
       <Value>IOPORT_XMEGA_COMPAT</Value>
+      <Value>SD_MMC_ENABLE</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -479,6 +483,12 @@
     <Compile Include="src\ASF\common\components\memory\sd_mmc\sd_mmc.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\common\components\memory\sd_mmc\sd_mmc_mem.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\components\memory\sd_mmc\sd_mmc_mem.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\common\utils\stdio\read.c">
       <SubType>compile</SubType>
     </Compile>

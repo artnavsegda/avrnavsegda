@@ -22,6 +22,8 @@ int main (void)
 	cpu_irq_enable();
 	sysclk_init();
 	board_init();
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC,0), IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH); // deactivate ethernet
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC,4), IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH); // deactivate adc
 	rtc_init();
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 	printf("serial start\n\r");

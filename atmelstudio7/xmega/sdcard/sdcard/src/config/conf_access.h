@@ -57,6 +57,7 @@
 #include "compiler.h"
 #include "board.h"
 
+#define ACCESS_MEM_TO_RAM_ENABLED
 
 /*! \name Activation of Logical Unit Numbers
  */

@@ -340,7 +340,7 @@ DRESULT disk_ioctl(BYTE drv, BYTE ctrl, void *buff)
 			return RES_ERROR;
 		}
 
-		*(U8 *)buff = uc_sector_size * SECTOR_SIZE_DEFAULT;
+		*(WORD *)buff = uc_sector_size * SECTOR_SIZE_DEFAULT;
 
 		res = RES_OK;
 	}

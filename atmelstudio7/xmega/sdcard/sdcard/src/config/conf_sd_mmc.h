@@ -54,7 +54,7 @@
 #define SDIO_SUPPORT_ENABLE
 
 // Define to enable the debug trace to the current standard output (stdio)
-//#define SD_MMC_DEBUG
+#define SD_MMC_DEBUG
 
 /*! \name board SPI SD/MMC slot template definition
  *
@@ -104,10 +104,10 @@
 #  endif
 #  if XMEGA
 #    define SD_MMC_SPI_MEM_CNT          1
-/* Optional card detect pin and write protection pin
+/* Optional card detect pin and write protection pin */
 #    define SD_MMC_0_CD_GPIO            IOPORT_CREATE_PIN(PORTE, 4)
 #    define SD_MMC_0_CD_DETECT_VALUE    0
-#    define SD_MMC_0_WP_GPIO            IOPORT_CREATE_PIN(PORTE, 6)
+/* #    define SD_MMC_0_WP_GPIO            IOPORT_CREATE_PIN(PORTE, 6)
 #    define SD_MMC_0_WP_DETECT_VALUE    0
 */
 #    define SD_MMC_SPI                  &SPIC

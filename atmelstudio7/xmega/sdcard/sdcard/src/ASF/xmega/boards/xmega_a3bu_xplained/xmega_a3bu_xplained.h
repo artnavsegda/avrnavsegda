@@ -52,6 +52,7 @@
 #define _XMEGA_A3BU_XPLAINED_H_
 
 #include <compiler.h>
+#include "conf_sd_mmc.h"
 
 #define MCU_SOC_NAME        "ATxmega256A3BU"
 #define BOARD_NAME          "XMEGA-A3BU-XPLAINED"

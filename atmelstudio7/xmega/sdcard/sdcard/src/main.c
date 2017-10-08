@@ -19,6 +19,7 @@ int main (void)
 
 	sysclk_init();
 	board_init();
+	rtc_init();
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 	printf("serial start\n\r");
 	sd_mmc_init();

@@ -105,7 +105,7 @@
 #  if XMEGA
 #    define SD_MMC_SPI_MEM_CNT          1
 /* Optional card detect pin and write protection pin */
-#    define SD_MMC_0_CD_GPIO            IOPORT_CREATE_PIN(PORTE, 4)
+#    define SD_MMC_0_CD_GPIO            IOPORT_CREATE_PIN(PORTC, 0)
 #    define SD_MMC_0_CD_DETECT_VALUE    0
 /* #    define SD_MMC_0_WP_GPIO            IOPORT_CREATE_PIN(PORTE, 6)
 #    define SD_MMC_0_WP_DETECT_VALUE    0

@@ -512,6 +512,11 @@ int main(void){
   // Enable SPI, Master Mode 0, set the clock rate fck/2
   SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
+  // Reset W5100
+  SPI_PORT &= ~(1<<PIN0_bp); //write zero
+  _delay_ms(1);
+  SPI_PORT |= (1<<PIN0_bp); //write one
+
   // Initial the W5100 Ethernet
   W5100_Init();
 

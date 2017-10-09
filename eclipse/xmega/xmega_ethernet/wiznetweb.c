@@ -179,25 +179,25 @@ void SPI_Write(uint16_t addr,uint8_t data)
 	SPIC.DATA = WIZNET_WRITE_OPCODE;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Start Wiznet W5100 Address High Bytes transmission
 	SPIC.DATA = (addr & 0xFF00) >> 8;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
 	SPIC.DATA = addr & 0x00FF;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Start Data transmission
 	SPIC.DATA = data;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// CS pin is not active
 	SPI_PORT |= (1<<SPI_CS);
@@ -212,25 +212,25 @@ unsigned char SPI_Read(uint16_t addr)
 	SPIC.DATA = WIZNET_READ_OPCODE;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Start Wiznet W5100 Address High Bytes transmission
 	SPIC.DATA = (addr & 0xFF00) >> 8;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
 	SPIC.DATA = addr & 0x00FF;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// Send Dummy transmission for reading the data
 	SPIC.DATA = 0x00;
 
 	// Wait for transmission complete
-	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
 
 	// CS pin is not active
 	SPI_PORT |= (1<<SPI_CS);

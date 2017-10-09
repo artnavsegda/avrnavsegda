@@ -170,34 +170,40 @@ void ansi_me(void)
 }
 #endif
 
+char spi_transfer(char c)
+{
+	SPIC.DATA = c;
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	return SPIC.DATA;
+}
+
+void spi_array(char *buffer, unsigned NoBytes)
+{
+        int i;
+        for (i = 0; i < NoBytes; i++)
+        {
+				SPIC.DATA = buffer[i];
+				loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+				buffer[i] = SPIC.DATA;
+        }
+}
+
 void SPI_Write(uint16_t addr,uint8_t data)
 {
 	// Activate the CS pin
 	SPI_PORT &= ~(1<<SPI_CS);
 
 	// Start Wiznet W5100 Write OpCode transmission
-	SPIC.DATA = WIZNET_WRITE_OPCODE;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer(WIZNET_WRITE_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	SPIC.DATA = (addr & 0xFF00) >> 8;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	SPIC.DATA = addr & 0x00FF;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer(addr & 0x00FF);
 
 	// Start Data transmission
-	SPIC.DATA = data;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer(data);
 
 	// CS pin is not active
 	SPI_PORT |= (1<<SPI_CS);
@@ -205,37 +211,27 @@ void SPI_Write(uint16_t addr,uint8_t data)
 
 unsigned char SPI_Read(uint16_t addr)
 {
+	unsigned char recieveddata;
+
 	// Activate the CS pin
 	SPI_PORT &= ~(1<<SPI_CS);
 
 	// Start Wiznet W5100 Read OpCode transmission
-	SPIC.DATA = WIZNET_READ_OPCODE;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer(WIZNET_READ_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	SPIC.DATA = (addr & 0xFF00) >> 8;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	SPIC.DATA = addr & 0x00FF;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	spi_transfer(addr & 0x00FF);
 
 	// Send Dummy transmission for reading the data
-	SPIC.DATA = 0x00;
-
-	// Wait for transmission complete
-	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	recieveddata = spi_transfer(0x00);
 
 	// CS pin is not active
 	SPI_PORT |= (1<<SPI_CS);
 
-	return(SPIC.DATA);
+	return(recieveddata);
 }
 
 void W5100_Init(void)
@@ -481,7 +477,25 @@ int strindex(char *s,char *t)
 FILE uart_str = FDEV_SETUP_STREAM(uart_putch, uart_getch, _FDEV_SETUP_RW);
 #endif
 
+void ad7705_init(void)
+{
+	// Activate the CS pin
+	PORTC.OUT &= ~(1<<PIN4_bp);
+	spi_array("\xFF\xFF\xFF\xFF\xFF", 5);
+	_delay_ms(10);
+	spi_array("\x20\x0C", 2);
+	_delay_ms(10);
+	spi_array("\x10\x04", 2);
+	_delay_ms(10);
+	spi_array("\x60\x18\x3A\x00", 4);
+	_delay_ms(10);
+	spi_array("\x70\x89\x78\xD7", 4);
+	_delay_ms(10);
+}
+
 int main(void){
+	unsigned int adcresult;
+
 	uint8_t sockstat;
 	uint16_t rsize;
 	char radiostat0[10],radiostat1[10],temp[4];
@@ -502,7 +516,7 @@ int main(void){
 	uart_flush();
 	#endif
 
-	// Initial the AVR ATMega328 SPI Peripheral
+	// Initial the Peripheral
 	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
 	PORTC.DIR = (1<<PIN5_bp)|(1<<PIN7_bp)|(1<<PIN4_bp)|(1<<PIN0_bp);
 	// Set PORTE2 (sdcard SS) as output
@@ -517,6 +531,9 @@ int main(void){
 
 	// Enable SPI, Master Mode 0, set the clock rate fck/2
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+
+	// init ad7705
+	ad7705_init();
 
 	// Reset W5100
 	PORTA.OUT &= ~(1<<PIN0_bp); //write zero
@@ -539,6 +556,13 @@ int main(void){
 
 	// Loop forever
 	for(;;){
+		//read adc
+		if (bit_is_clear(PORTC.IN,PIN1_bp))
+		{
+			spi_transfer(0x38);
+			spi_array((char *)&adcresult,2);
+		}
+
 		sockstat=SPI_Read(S0_SR);
 		switch(sockstat) {
 			case SOCK_CLOSED:
@@ -594,9 +618,9 @@ int main(void){
 					if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
 
 					// Create the HTTP Temperature Response
-					sprintf((char *)temp,"%d",tempvalue);        // Convert temperature value to string
+					sprintf((char *)temp,"%X",adcresult);        // Convert temperature value to string
 
-					strcpy_P((char *)buf,PSTR("<strong>Temp: <input type=\"text\" size=2 value=\""));
+					strcpy_P((char *)buf,PSTR("<strong>AD7705: <input type=\"text\" size=2 value=\""));
 					strcat((char *)buf,temp);
 					strcat_P((char *)buf,PSTR("\"> <sup>O</sup>C\r\n"));
 

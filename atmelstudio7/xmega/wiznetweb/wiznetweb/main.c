@@ -20,7 +20,7 @@
 // AVRJazz Mega328 SPI I/O
 #define SPI_PORT PORTC.OUT
 #define SPI_DDR  PORTC.DIR
-#define SPI_CS   PIN4_bp
+#define SPI_CS   PIN0_bp
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -503,14 +503,25 @@ int main(void){
 	#endif
 
 	// Initial the AVR ATMega328 SPI Peripheral
-	// Set MOSI (PORTC5),SCK (PORTC7) and PORTC4 (SS) as output, others as input
-	SPI_DDR = (1<<PIN5_bp)|(1<<PIN7_bp)|(1<<PIN4_bp);
+	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
+	PORTC.DIR = (1<<PIN5_bp)|(1<<PIN7_bp)|(1<<PIN4_bp)|(1<<PIN0_bp);
+	// Set PORTE2 (sdcard SS) as output
+	PORTE.DIR = (1<<PIN2_bp);
+	// Set PORTA0 (eth reset) as output
+	PORTA.DIR = (1<<PIN0_bp);
 
-	// CS pin is not active
-	SPI_PORT |= (1<<SPI_CS);
+	// adc SS and eth SS deactivate
+	PORTC.OUT |= (1<<PIN4_bp)|(1<<PIN0_bp);
+	// sdcard ss deactivate
+	PORTE.OUT |= (1<<PIN2_bp);
 
 	// Enable SPI, Master Mode 0, set the clock rate fck/2
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+
+	// Reset W5100
+	PORTA.OUT &= ~(1<<PIN0_bp); //write zero
+	_delay_ms(1);
+	PORTA.OUT |= (1<<PIN0_bp); //write one
 
 	// Initial the W5100 Ethernet
 	W5100_Init();

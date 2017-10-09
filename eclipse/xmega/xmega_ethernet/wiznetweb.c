@@ -20,7 +20,7 @@
 // AVRJazz Mega328 SPI I/O
 #define SPI_PORT PORTC.OUT
 #define SPI_DDR  PORTC.DIR
-#define SPI_CS   PIN4_bp
+#define SPI_CS   PIN0_bp
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -97,7 +97,7 @@
 #define _DEBUG_MODE      0
 
 #if _DEBUG_MODE
-  #define BAUD_RATE 19200
+#define BAUD_RATE 19200
 #endif
 
 // Define W5100 Socket Register and Variables Used
@@ -112,368 +112,368 @@ uint8_t ledmode,ledeye,ledsign;
 #if _DEBUG_MODE
 void uart_init(void)
 {
-  UBRR0H = (((F_CPU/BAUD_RATE)/16)-1)>>8;		// set baud rate
-  UBRR0L = (((F_CPU/BAUD_RATE)/16)-1);
-  UCSR0B = (1<<RXEN0)|(1<<TXEN0); 				// enable Rx & Tx
-  UCSR0C=  (1<<UCSZ01)|(1<<UCSZ00);  	        // config USART; 8N1
+	UBRR0H = (((F_CPU/BAUD_RATE)/16)-1)>>8;		// set baud rate
+	UBRR0L = (((F_CPU/BAUD_RATE)/16)-1);
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0); 				// enable Rx & Tx
+	UCSR0C=  (1<<UCSZ01)|(1<<UCSZ00);  	        // config USART; 8N1
 }
 
 void uart_flush(void)
 {
-  unsigned char dummy;
+	unsigned char dummy;
 
-  while (UCSR0A & (1<<RXC0)) dummy = UDR0;
+	while (UCSR0A & (1<<RXC0)) dummy = UDR0;
 }
 
 int uart_putch(char ch,FILE *stream)
 {
-   if (ch == '\n')
-    uart_putch('\r', stream);
+	if (ch == '\n')
+	uart_putch('\r', stream);
 
-   while (!(UCSR0A & (1<<UDRE0)));
-   UDR0=ch;
+	while (!(UCSR0A & (1<<UDRE0)));
+	UDR0=ch;
 
-   return 0;
+	return 0;
 }
 
 int uart_getch(FILE *stream)
 {
-   unsigned char ch;
+	unsigned char ch;
 
-   while (!(UCSR0A & (1<<RXC0)));
-   ch=UDR0;
+	while (!(UCSR0A & (1<<RXC0)));
+	ch=UDR0;
 
-   /* Echo the Output Back to terminal */
-   uart_putch(ch,stream);
+	/* Echo the Output Back to terminal */
+	uart_putch(ch,stream);
 
-   return ch;
+	return ch;
 }
 
 void ansi_cl(void)
 {
-  // ANSI clear screen: cl=\E[H\E[J
-  putchar(27);
-  putchar('[');
-  putchar('H');
-  putchar(27);
-  putchar('[');
-  putchar('J');
+	// ANSI clear screen: cl=\E[H\E[J
+	putchar(27);
+	putchar('[');
+	putchar('H');
+	putchar(27);
+	putchar('[');
+	putchar('J');
 }
 
 void ansi_me(void)
 {
-  // ANSI turn off all attribute: me=\E[0m
-  putchar(27);
-  putchar('[');
-  putchar('0');
-  putchar('m');
+	// ANSI turn off all attribute: me=\E[0m
+	putchar(27);
+	putchar('[');
+	putchar('0');
+	putchar('m');
 }
 #endif
 
 void SPI_Write(uint16_t addr,uint8_t data)
 {
-  // Activate the CS pin
-  SPI_PORT &= ~(1<<SPI_CS);
+	// Activate the CS pin
+	SPI_PORT &= ~(1<<SPI_CS);
 
-  // Start Wiznet W5100 Write OpCode transmission
-  SPIC.DATA = WIZNET_WRITE_OPCODE;
+	// Start Wiznet W5100 Write OpCode transmission
+	SPIC.DATA = WIZNET_WRITE_OPCODE;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Start Wiznet W5100 Address High Bytes transmission
-  SPIC.DATA = (addr & 0xFF00) >> 8;
+	// Start Wiznet W5100 Address High Bytes transmission
+	SPIC.DATA = (addr & 0xFF00) >> 8;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Start Wiznet W5100 Address Low Bytes transmission
-  SPIC.DATA = addr & 0x00FF;
+	// Start Wiznet W5100 Address Low Bytes transmission
+	SPIC.DATA = addr & 0x00FF;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Start Data transmission
-  SPIC.DATA = data;
+	// Start Data transmission
+	SPIC.DATA = data;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // CS pin is not active
-  SPI_PORT |= (1<<SPI_CS);
+	// CS pin is not active
+	SPI_PORT |= (1<<SPI_CS);
 }
 
 unsigned char SPI_Read(uint16_t addr)
 {
-  // Activate the CS pin
-  SPI_PORT &= ~(1<<SPI_CS);
+	// Activate the CS pin
+	SPI_PORT &= ~(1<<SPI_CS);
 
-  // Start Wiznet W5100 Read OpCode transmission
-  SPIC.DATA = WIZNET_READ_OPCODE;
+	// Start Wiznet W5100 Read OpCode transmission
+	SPIC.DATA = WIZNET_READ_OPCODE;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Start Wiznet W5100 Address High Bytes transmission
-  SPIC.DATA = (addr & 0xFF00) >> 8;
+	// Start Wiznet W5100 Address High Bytes transmission
+	SPIC.DATA = (addr & 0xFF00) >> 8;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Start Wiznet W5100 Address Low Bytes transmission
-  SPIC.DATA = addr & 0x00FF;
+	// Start Wiznet W5100 Address Low Bytes transmission
+	SPIC.DATA = addr & 0x00FF;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // Send Dummy transmission for reading the data
-  SPIC.DATA = 0x00;
+	// Send Dummy transmission for reading the data
+	SPIC.DATA = 0x00;
 
-  // Wait for transmission complete
-  while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
+	// Wait for transmission complete
+	while(!(SPIC.STATUS & (1<<SPI_IF_bp)));
 
-  // CS pin is not active
-  SPI_PORT |= (1<<SPI_CS);
+	// CS pin is not active
+	SPI_PORT |= (1<<SPI_CS);
 
-  return(SPIC.DATA);
+	return(SPIC.DATA);
 }
 
 void W5100_Init(void)
 {
-  // Ethernet Setup
-  unsigned char mac_addr[] = {0x00,0x16,0x36,0xDE,0x58,0xF6};
-  unsigned char ip_addr[] = {192,168,1,150};
-  unsigned char sub_mask[] = {255,255,255,0};
-  unsigned char gtw_addr[] = {192,168,1,1};
+	// Ethernet Setup
+	unsigned char mac_addr[] = {0x00,0x16,0x36,0xDE,0x58,0xF6};
+	unsigned char ip_addr[] = {192,168,1,150};
+	unsigned char sub_mask[] = {255,255,255,0};
+	unsigned char gtw_addr[] = {192,168,1,1};
 
-  // Setting the Wiznet W5100 Mode Register: 0x0000
-  SPI_Write(MR,0x80);            // MR = 0b10000000;
+	// Setting the Wiznet W5100 Mode Register: 0x0000
+	SPI_Write(MR,0x80);            // MR = 0b10000000;
 
-  // Setting the Wiznet W5100 Gateway Address (GAR): 0x0001 to 0x0004
-  SPI_Write(GAR + 0,gtw_addr[0]);
-  SPI_Write(GAR + 1,gtw_addr[1]);
-  SPI_Write(GAR + 2,gtw_addr[2]);
-  SPI_Write(GAR + 3,gtw_addr[3]);
+	// Setting the Wiznet W5100 Gateway Address (GAR): 0x0001 to 0x0004
+	SPI_Write(GAR + 0,gtw_addr[0]);
+	SPI_Write(GAR + 1,gtw_addr[1]);
+	SPI_Write(GAR + 2,gtw_addr[2]);
+	SPI_Write(GAR + 3,gtw_addr[3]);
 
-  // Setting the Wiznet W5100 Source Address Register (SAR): 0x0009 to 0x000E
-  SPI_Write(SAR + 0,mac_addr[0]);
-  SPI_Write(SAR + 1,mac_addr[1]);
-  SPI_Write(SAR + 2,mac_addr[2]);
-  SPI_Write(SAR + 3,mac_addr[3]);
-  SPI_Write(SAR + 4,mac_addr[4]);
-  SPI_Write(SAR + 5,mac_addr[5]);
+	// Setting the Wiznet W5100 Source Address Register (SAR): 0x0009 to 0x000E
+	SPI_Write(SAR + 0,mac_addr[0]);
+	SPI_Write(SAR + 1,mac_addr[1]);
+	SPI_Write(SAR + 2,mac_addr[2]);
+	SPI_Write(SAR + 3,mac_addr[3]);
+	SPI_Write(SAR + 4,mac_addr[4]);
+	SPI_Write(SAR + 5,mac_addr[5]);
 
-  // Setting the Wiznet W5100 Sub Mask Address (SUBR): 0x0005 to 0x0008
-  SPI_Write(SUBR + 0,sub_mask[0]);
-  SPI_Write(SUBR + 1,sub_mask[1]);
-  SPI_Write(SUBR + 2,sub_mask[2]);
-  SPI_Write(SUBR + 3,sub_mask[3]);
+	// Setting the Wiznet W5100 Sub Mask Address (SUBR): 0x0005 to 0x0008
+	SPI_Write(SUBR + 0,sub_mask[0]);
+	SPI_Write(SUBR + 1,sub_mask[1]);
+	SPI_Write(SUBR + 2,sub_mask[2]);
+	SPI_Write(SUBR + 3,sub_mask[3]);
 
-  // Setting the Wiznet W5100 IP Address (SIPR): 0x000F to 0x0012
-  SPI_Write(SIPR + 0,ip_addr[0]);
-  SPI_Write(SIPR + 1,ip_addr[1]);
-  SPI_Write(SIPR + 2,ip_addr[2]);
-  SPI_Write(SIPR + 3,ip_addr[3]);
+	// Setting the Wiznet W5100 IP Address (SIPR): 0x000F to 0x0012
+	SPI_Write(SIPR + 0,ip_addr[0]);
+	SPI_Write(SIPR + 1,ip_addr[1]);
+	SPI_Write(SIPR + 2,ip_addr[2]);
+	SPI_Write(SIPR + 3,ip_addr[3]);
 
-  // Setting the Wiznet W5100 RX and TX Memory Size (2KB),
-  SPI_Write(RMSR,NET_MEMALLOC);
-  SPI_Write(TMSR,NET_MEMALLOC);
+	// Setting the Wiznet W5100 RX and TX Memory Size (2KB),
+	SPI_Write(RMSR,NET_MEMALLOC);
+	SPI_Write(TMSR,NET_MEMALLOC);
 }
 
 void close(uint8_t sock)
 {
-   if (sock != 0) return;
+	if (sock != 0) return;
 
-   // Send Close Command
-   SPI_Write(S0_CR,CR_CLOSE);
+	// Send Close Command
+	SPI_Write(S0_CR,CR_CLOSE);
 
-   // Waiting until the S0_CR is clear
-   while(SPI_Read(S0_CR));
+	// Waiting until the S0_CR is clear
+	while(SPI_Read(S0_CR));
 }
 
 void disconnect(uint8_t sock)
 {
-   if (sock != 0) return;
+	if (sock != 0) return;
 
-   // Send Disconnect Command
-   SPI_Write(S0_CR,CR_DISCON);
+	// Send Disconnect Command
+	SPI_Write(S0_CR,CR_DISCON);
 
-   // Wait for Disconecting Process
-   while(SPI_Read(S0_CR));
+	// Wait for Disconecting Process
+	while(SPI_Read(S0_CR));
 }
 
 uint8_t socket(uint8_t sock,uint8_t eth_protocol,uint16_t tcp_port)
 {
-    uint8_t retval=0;
+	uint8_t retval=0;
 
-    if (sock != 0) return retval;
+	if (sock != 0) return retval;
 
-    // Make sure we close the socket first
-    if (SPI_Read(S0_SR) == SOCK_CLOSED) {
-      close(sock);
-    }
+	// Make sure we close the socket first
+	if (SPI_Read(S0_SR) == SOCK_CLOSED) {
+		close(sock);
+	}
 
-    // Assigned Socket 0 Mode Register
-    SPI_Write(S0_MR,eth_protocol);
+	// Assigned Socket 0 Mode Register
+	SPI_Write(S0_MR,eth_protocol);
 
-    // Now open the Socket 0
-    SPI_Write(S0_PORT,((tcp_port & 0xFF00) >> 8 ));
-    SPI_Write(S0_PORT + 1,(tcp_port & 0x00FF));
-    SPI_Write(S0_CR,CR_OPEN);                   // Open Socket
+	// Now open the Socket 0
+	SPI_Write(S0_PORT,((tcp_port & 0xFF00) >> 8 ));
+	SPI_Write(S0_PORT + 1,(tcp_port & 0x00FF));
+	SPI_Write(S0_CR,CR_OPEN);                   // Open Socket
 
-    // Wait for Opening Process
-    while(SPI_Read(S0_CR));
+	// Wait for Opening Process
+	while(SPI_Read(S0_CR));
 
-    // Check for Init Status
-    if (SPI_Read(S0_SR) == SOCK_INIT)
-      retval=1;
-    else
-      close(sock);
+	// Check for Init Status
+	if (SPI_Read(S0_SR) == SOCK_INIT)
+	retval=1;
+	else
+	close(sock);
 
-    return retval;
+	return retval;
 }
 
 uint8_t listen(uint8_t sock)
 {
-   uint8_t retval = 0;
+	uint8_t retval = 0;
 
-   if (sock != 0) return retval;
+	if (sock != 0) return retval;
 
-   if (SPI_Read(S0_SR) == SOCK_INIT) {
-     // Send the LISTEN Command
-     SPI_Write(S0_CR,CR_LISTEN);
+	if (SPI_Read(S0_SR) == SOCK_INIT) {
+		// Send the LISTEN Command
+		SPI_Write(S0_CR,CR_LISTEN);
 
-     // Wait for Listening Process
-     while(SPI_Read(S0_CR));
+		// Wait for Listening Process
+		while(SPI_Read(S0_CR));
 
-     // Check for Listen Status
-     if (SPI_Read(S0_SR) == SOCK_LISTEN)
-       retval=1;
-     else
-       close(sock);
-    }
-    return retval;
+		// Check for Listen Status
+		if (SPI_Read(S0_SR) == SOCK_LISTEN)
+		retval=1;
+		else
+		close(sock);
+	}
+	return retval;
 }
 
 uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 {
-    uint16_t ptr,offaddr,realaddr,txsize,timeout;
+	uint16_t ptr,offaddr,realaddr,txsize,timeout;
 
-    if (buflen <= 0 || sock != 0) return 0;
+	if (buflen <= 0 || sock != 0) return 0;
 
-#if _DEBUG_MODE
-    printf("Send Size: %d\n",buflen);
-#endif
+	#if _DEBUG_MODE
+	printf("Send Size: %d\n",buflen);
+	#endif
 
-    // Make sure the TX Free Size Register is available
-    txsize=SPI_Read(SO_TX_FSR);
-    txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
+	// Make sure the TX Free Size Register is available
+	txsize=SPI_Read(SO_TX_FSR);
+	txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
 
-#if _DEBUG_MODE
-    printf("TX Free Size: %d\n",txsize);
-#endif
+	#if _DEBUG_MODE
+	printf("TX Free Size: %d\n",txsize);
+	#endif
 
-    timeout=0;
-    while (txsize < buflen) {
-      _delay_ms(1);
+	timeout=0;
+	while (txsize < buflen) {
+		_delay_ms(1);
 
-     txsize=SPI_Read(SO_TX_FSR);
-     txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
+		txsize=SPI_Read(SO_TX_FSR);
+		txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
 
-     // Timeout for approx 1000 ms
-     if (timeout++ > 1000) {
-#if _DEBUG_MODE
-       printf("TX Free Size Error!\n");
-#endif
-       // Disconnect the connection
-       disconnect(sock);
-       return 0;
-     }
-   }
+		// Timeout for approx 1000 ms
+		if (timeout++ > 1000) {
+			#if _DEBUG_MODE
+			printf("TX Free Size Error!\n");
+			#endif
+			// Disconnect the connection
+			disconnect(sock);
+			return 0;
+		}
+	}
 
-   // Read the Tx Write Pointer
-   ptr = SPI_Read(S0_TX_WR);
-   offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_TX_WR + 1));
-#if _DEBUG_MODE
-    printf("TX Buffer: %x\n",offaddr);
-#endif
+	// Read the Tx Write Pointer
+	ptr = SPI_Read(S0_TX_WR);
+	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_TX_WR + 1));
+	#if _DEBUG_MODE
+	printf("TX Buffer: %x\n",offaddr);
+	#endif
 
-    while(buflen) {
-      buflen--;
-      // Calculate the real W5100 physical Tx Buffer Address
-      realaddr = TXBUFADDR + (offaddr & TX_BUF_MASK);
+	while(buflen) {
+		buflen--;
+		// Calculate the real W5100 physical Tx Buffer Address
+		realaddr = TXBUFADDR + (offaddr & TX_BUF_MASK);
 
-      // Copy the application data to the W5100 Tx Buffer
-      SPI_Write(realaddr,*buf);
-      offaddr++;
-      buf++;
-    }
+		// Copy the application data to the W5100 Tx Buffer
+		SPI_Write(realaddr,*buf);
+		offaddr++;
+		buf++;
+	}
 
-    // Increase the S0_TX_WR value, so it point to the next transmit
-    SPI_Write(S0_TX_WR,(offaddr & 0xFF00) >> 8 );
-    SPI_Write(S0_TX_WR + 1,(offaddr & 0x00FF));
+	// Increase the S0_TX_WR value, so it point to the next transmit
+	SPI_Write(S0_TX_WR,(offaddr & 0xFF00) >> 8 );
+	SPI_Write(S0_TX_WR + 1,(offaddr & 0x00FF));
 
-    // Now Send the SEND command
-    SPI_Write(S0_CR,CR_SEND);
+	// Now Send the SEND command
+	SPI_Write(S0_CR,CR_SEND);
 
-    // Wait for Sending Process
-    while(SPI_Read(S0_CR));
+	// Wait for Sending Process
+	while(SPI_Read(S0_CR));
 
-    return 1;
+	return 1;
 }
 
 uint16_t recv(uint8_t sock,uint8_t *buf,uint16_t buflen)
 {
-    uint16_t ptr,offaddr,realaddr;
+	uint16_t ptr,offaddr,realaddr;
 
-    if (buflen <= 0 || sock != 0) return 1;
+	if (buflen <= 0 || sock != 0) return 1;
 
-    // If the request size > MAX_BUF,just truncate it
-    if (buflen > MAX_BUF)
-      buflen=MAX_BUF - 2;
+	// If the request size > MAX_BUF,just truncate it
+	if (buflen > MAX_BUF)
+	buflen=MAX_BUF - 2;
 
-    // Read the Rx Read Pointer
-    ptr = SPI_Read(S0_RX_RD);
-    offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_RX_RD + 1));
-#if _DEBUG_MODE
-    printf("RX Buffer: %x\n",offaddr);
-#endif
+	// Read the Rx Read Pointer
+	ptr = SPI_Read(S0_RX_RD);
+	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_RX_RD + 1));
+	#if _DEBUG_MODE
+	printf("RX Buffer: %x\n",offaddr);
+	#endif
 
-    while(buflen) {
-      buflen--;
-      realaddr=RXBUFADDR + (offaddr & RX_BUF_MASK);
-      *buf = SPI_Read(realaddr);
-      offaddr++;
-      buf++;
-    }
-    *buf='\0';        // String terminated character
+	while(buflen) {
+		buflen--;
+		realaddr=RXBUFADDR + (offaddr & RX_BUF_MASK);
+		*buf = SPI_Read(realaddr);
+		offaddr++;
+		buf++;
+	}
+	*buf='\0';        // String terminated character
 
-    // Increase the S0_RX_RD value, so it point to the next receive
-    SPI_Write(S0_RX_RD,(offaddr & 0xFF00) >> 8 );
-    SPI_Write(S0_RX_RD + 1,(offaddr & 0x00FF));
+	// Increase the S0_RX_RD value, so it point to the next receive
+	SPI_Write(S0_RX_RD,(offaddr & 0xFF00) >> 8 );
+	SPI_Write(S0_RX_RD + 1,(offaddr & 0x00FF));
 
-    // Now Send the RECV command
-    SPI_Write(S0_CR,CR_RECV);
-    _delay_us(5);    // Wait for Receive Process
+	// Now Send the RECV command
+	SPI_Write(S0_CR,CR_RECV);
+	_delay_us(5);    // Wait for Receive Process
 
-    return 1;
+	return 1;
 }
 
 uint16_t recv_size(void)
 {
-  return ((SPI_Read(S0_RX_RSR) & 0x00FF) << 8 ) + SPI_Read(S0_RX_RSR + 1);
+	return ((SPI_Read(S0_RX_RSR) & 0x00FF) << 8 ) + SPI_Read(S0_RX_RSR + 1);
 }
 
 int strindex(char *s,char *t)
 {
-  uint16_t i,n;
+	uint16_t i,n;
 
-  n=strlen(t);
-  for(i=0;*(s+i); i++) {
-    if (strncmp(s+i,t,n) == 0)
-      return i;
-  }
-  return -1;
+	n=strlen(t);
+	for(i=0;*(s+i); i++) {
+		if (strncmp(s+i,t,n) == 0)
+		return i;
+	}
+	return -1;
 }
 
 #if _DEBUG_MODE
@@ -482,162 +482,168 @@ FILE uart_str = FDEV_SETUP_STREAM(uart_putch, uart_getch, _FDEV_SETUP_RW);
 #endif
 
 int main(void){
-  uint8_t sockstat;
-  uint16_t rsize;
-  char radiostat0[10],radiostat1[10],temp[4];
-  int getidx,postidx;
+	uint8_t sockstat;
+	uint16_t rsize;
+	char radiostat0[10],radiostat1[10],temp[4];
+	int getidx,postidx;
 
-#if _DEBUG_MODE
-  // Define Output/Input Stream
-  stdout = stdin = &uart_str;
+	#if _DEBUG_MODE
+	// Define Output/Input Stream
+	stdout = stdin = &uart_str;
 
-  // Initial UART Peripheral
-  uart_init();
+	// Initial UART Peripheral
+	uart_init();
 
-  // Clear Screen
-  ansi_me();
-  ansi_cl();
-  ansi_me();
-  ansi_cl();
-  uart_flush();
-#endif
+	// Clear Screen
+	ansi_me();
+	ansi_cl();
+	ansi_me();
+	ansi_cl();
+	uart_flush();
+	#endif
 
-  // Initial the AVR ATMega328 SPI Peripheral
-  // Set MOSI (PORTC5),SCK (PORTC7) and PORTC4 (SS) as output, others as input
-  SPI_DDR = (1<<PIN5_bp)|(1<<PIN7_bp)|(1<<PIN4_bp)|(1<<PIN0_bp);//always activate chip select output when enabling spi
+	// Initial the AVR ATMega328 SPI Peripheral
+	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
+	PORTC.DIR = (1<<PIN5_bp)|(1<<PIN7_bp)|(1<<PIN4_bp)|(1<<PIN0_bp);
+	// Set PORTE2 (sdcard SS) as output
+	PORTE.DIR = (1<<PIN2_bp);
+	// Set PORTA0 (eth reset) as output
+	PORTA.DIR = (1<<PIN0_bp);
 
-  // CS pin is not active
-  SPI_PORT |= (1<<SPI_CS);
+	// adc SS and eth SS deactivate
+	PORTC.OUT |= (1<<PIN4_bp)|(1<<PIN0_bp);
+	// sdcard ss deactivate
+	PORTE.OUT |= (1<<PIN2_bp);
 
-  // Enable SPI, Master Mode 0, set the clock rate fck/2
-  SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+	// Enable SPI, Master Mode 0, set the clock rate fck/2
+	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
-  // Reset W5100
-  SPI_PORT &= ~(1<<PIN0_bp); //write zero
-  _delay_ms(1);
-  SPI_PORT |= (1<<PIN0_bp); //write one
+	// Reset W5100
+	PORTA.OUT &= ~(1<<PIN0_bp); //write zero
+	_delay_ms(1);
+	PORTA.OUT |= (1<<PIN0_bp); //write one
 
-  // Initial the W5100 Ethernet
-  W5100_Init();
+	// Initial the W5100 Ethernet
+	W5100_Init();
 
-  // Initial variable used
-  sockreg=0;
-  tempvalue=0;
-  ledmode=1;
-  ledeye=0x01;                  // Initial LED Eye Variables
-  ledsign=0;
+	// Initial variable used
+	sockreg=0;
+	tempvalue=0;
+	ledmode=1;
+	ledeye=0x01;                  // Initial LED Eye Variables
+	ledsign=0;
 
-#if _DEBUG_MODE
-  printf("WEB Server Debug Mode\n\n");
-#endif
+	#if _DEBUG_MODE
+	printf("WEB Server Debug Mode\n\n");
+	#endif
 
-  // Loop forever
-  for(;;){
-    sockstat=SPI_Read(S0_SR);
-    switch(sockstat) {
-     case SOCK_CLOSED:
-        if (socket(sockreg,MR_TCP,TCP_PORT) > 0) {
-	  // Listen to Socket 0
-	  if (listen(sockreg) <= 0)
-	    _delay_ms(1);
-#if _DEBUG_MODE
-          printf("Socket Listen!\n");
-#endif
+	// Loop forever
+	for(;;){
+		sockstat=SPI_Read(S0_SR);
+		switch(sockstat) {
+			case SOCK_CLOSED:
+			if (socket(sockreg,MR_TCP,TCP_PORT) > 0) {
+				// Listen to Socket 0
+				if (listen(sockreg) <= 0)
+				_delay_ms(1);
+				#if _DEBUG_MODE
+				printf("Socket Listen!\n");
+				#endif
+			}
+			break;
+
+			case SOCK_ESTABLISHED:
+			// Get the client request size
+			rsize=recv_size();
+			#if _DEBUG_MODE
+			printf("Size: %d\n",rsize);
+			#endif
+			if (rsize > 0) {
+				// Now read the client Request
+				if (recv(sockreg,buf,rsize) <= 0) break;
+				#if _DEBUG_MODE
+				printf("Content:\n%s\n",buf);
+				#endif
+				// Check the Request Header
+				getidx=strindex((char *)buf,"GET /");
+				postidx=strindex((char *)buf,"POST /");
+
+				if (getidx >= 0 || postidx >= 0) {
+					#if _DEBUG_MODE
+					printf("Req. Check!\n");
+					#endif
+					// Now check the Radio Button for POST request
+					if (postidx >= 0) {
+						if (strindex((char *)buf,"radio=0") > 0)
+						ledmode=0;
+
+						if (strindex((char *)buf,"radio=1") > 0)
+						ledmode=1;
+					}
+					#if _DEBUG_MODE
+					printf("Req. Send!\n");
+					#endif
+					// Create the HTTP Response	Header
+					strcpy_P((char *)buf,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
+					strcat_P((char *)buf,PSTR("<html><body><span style=\"color:#0000A0\">\r\n"));
+					strcat_P((char *)buf,PSTR("<h1>Embedded Web Server</h1>\r\n"));
+					strcat_P((char *)buf,PSTR("<h3>AVRJazz Mega328 and WIZ811MJ</h3>\r\n"));
+					strcat_P((char *)buf,PSTR("<p><form method=\"POST\">\r\n"));
+
+					// Now Send the HTTP Response
+					if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
+
+					// Create the HTTP Temperature Response
+					sprintf((char *)temp,"%d",tempvalue);        // Convert temperature value to string
+
+					strcpy_P((char *)buf,PSTR("<strong>Temp: <input type=\"text\" size=2 value=\""));
+					strcat((char *)buf,temp);
+					strcat_P((char *)buf,PSTR("\"> <sup>O</sup>C\r\n"));
+
+					if (ledmode == 1) {
+						strcpy(radiostat0,"");
+						strcpy_P(radiostat1,PSTR("checked"));
+						} else {
+						strcpy_P(radiostat0,PSTR("checked"));
+						strcpy(radiostat1,"");
+					}
+
+					// Create the HTTP Radio Button 0 Response
+					strcat_P((char *)buf,PSTR("<p><input type=\"radio\" name=\"radio\" value=\"0\" "));
+					strcat((char *)buf,radiostat0);
+					strcat_P((char *)buf,PSTR(">Blinking LED\r\n"));
+					strcat_P((char *)buf,PSTR("<br><input type=\"radio\" name=\"radio\" value=\"1\" "));
+					strcat((char *)buf,radiostat1);
+					strcat_P((char *)buf,PSTR(">Scanning LED\r\n"));
+					strcat_P((char *)buf,PSTR("</strong><p>\r\n"));
+					strcat_P((char *)buf,PSTR("<input type=\"submit\">\r\n"));
+					strcat_P((char *)buf,PSTR("</form></span></body></html>\r\n"));
+
+					// Now Send the HTTP Remaining Response
+					if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
+				}
+
+				// Disconnect the socket
+				disconnect(sockreg);
+			} else
+			_delay_us(10);    // Wait for request
+
+			break;
+
+			case SOCK_FIN_WAIT:
+			case SOCK_CLOSING:
+			case SOCK_TIME_WAIT:
+			case SOCK_CLOSE_WAIT:
+			case SOCK_LAST_ACK:
+			// Force to close the socket
+			close(sockreg);
+			#if _DEBUG_MODE
+			printf("Socket Close!\n");
+			#endif
+			break;
+		}
 	}
-	break;
-
-     case SOCK_ESTABLISHED:
-	// Get the client request size
-        rsize=recv_size();
-#if _DEBUG_MODE
-	printf("Size: %d\n",rsize);
-#endif
-	if (rsize > 0) {
-	  // Now read the client Request
-	  if (recv(sockreg,buf,rsize) <= 0) break;
-#if _DEBUG_MODE
-  	  printf("Content:\n%s\n",buf);
-#endif
-          // Check the Request Header
-	  getidx=strindex((char *)buf,"GET /");
-	  postidx=strindex((char *)buf,"POST /");
-
-	  if (getidx >= 0 || postidx >= 0) {
-#if _DEBUG_MODE
-	    printf("Req. Check!\n");
-#endif
-            // Now check the Radio Button for POST request
-	    if (postidx >= 0) {
-	      if (strindex((char *)buf,"radio=0") > 0)
-	        ledmode=0;
-
-	      if (strindex((char *)buf,"radio=1") > 0)
-	        ledmode=1;
-            }
-#if _DEBUG_MODE
-	    printf("Req. Send!\n");
-#endif
-	    // Create the HTTP Response	Header
-	    strcpy_P((char *)buf,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
-	    strcat_P((char *)buf,PSTR("<html><body><span style=\"color:#0000A0\">\r\n"));
-	    strcat_P((char *)buf,PSTR("<h1>Embedded Web Server</h1>\r\n"));
-	    strcat_P((char *)buf,PSTR("<h3>AVRJazz Mega328 and WIZ811MJ</h3>\r\n"));
-	    strcat_P((char *)buf,PSTR("<p><form method=\"POST\">\r\n"));
-
-	    // Now Send the HTTP Response
-	    if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
-
-	    // Create the HTTP Temperature Response
-	    sprintf((char *)temp,"%d",tempvalue);        // Convert temperature value to string
-
-	    strcpy_P((char *)buf,PSTR("<strong>Temp: <input type=\"text\" size=2 value=\""));
-	    strcat((char *)buf,temp);
-	    strcat_P((char *)buf,PSTR("\"> <sup>O</sup>C\r\n"));
-
-	    if (ledmode == 1) {
-	      strcpy(radiostat0,"");
-	      strcpy_P(radiostat1,PSTR("checked"));
-	    } else {
-	      strcpy_P(radiostat0,PSTR("checked"));
-	      strcpy(radiostat1,"");
-	    }
-
-            // Create the HTTP Radio Button 0 Response
-	    strcat_P((char *)buf,PSTR("<p><input type=\"radio\" name=\"radio\" value=\"0\" "));
-	    strcat((char *)buf,radiostat0);
-	    strcat_P((char *)buf,PSTR(">Blinking LED\r\n"));
-	    strcat_P((char *)buf,PSTR("<br><input type=\"radio\" name=\"radio\" value=\"1\" "));
-	    strcat((char *)buf,radiostat1);
-	    strcat_P((char *)buf,PSTR(">Scanning LED\r\n"));
- 	    strcat_P((char *)buf,PSTR("</strong><p>\r\n"));
-	    strcat_P((char *)buf,PSTR("<input type=\"submit\">\r\n"));
-	    strcat_P((char *)buf,PSTR("</form></span></body></html>\r\n"));
-
-            // Now Send the HTTP Remaining Response
-	    if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
-          }
-
-	  // Disconnect the socket
-	  disconnect(sockreg);
-        } else
-	  _delay_us(10);    // Wait for request
-
-	break;
-
-      case SOCK_FIN_WAIT:
-      case SOCK_CLOSING:
-      case SOCK_TIME_WAIT:
-      case SOCK_CLOSE_WAIT:
-      case SOCK_LAST_ACK:
-        // Force to close the socket
-	close(sockreg);
-#if _DEBUG_MODE
-	printf("Socket Close!\n");
-#endif
-	break;
-    }
-  }
-  return 0;
+	return 0;
 }
 
 /* EOF: wiznetweb.c */

@@ -148,10 +148,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
-		case WM_TIMER:
-				transfer();
-				InvalidateRect(hwnd, NULL, TRUE);
-				return 0;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
@@ -196,16 +192,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						case ID_TRANSFER:
 								sprintf(statustext,"Interrupt endpoint transfer");
 								transfer();
-								InvalidateRect(hwnd, NULL, TRUE);
-								return 0;
-						case ID_START:
-								sprintf(statustext,"Start timer");
-								SetTimer(hwnd, 0, 1000, (TIMERPROC) NULL);
-								InvalidateRect(hwnd, NULL, TRUE);
-								return 0;
-						case ID_STOP:
-								sprintf(statustext,"Stop timer");
-								KillTimer(hwnd, 0);
 								InvalidateRect(hwnd, NULL, TRUE);
 								return 0;
         }

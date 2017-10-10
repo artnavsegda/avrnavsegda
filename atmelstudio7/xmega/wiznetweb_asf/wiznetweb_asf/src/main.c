@@ -10,12 +10,18 @@
 //               : AVR Visual Studio 4.17, STK500 programmer
 //  Last Updated : 20 July 2010
 *****************************************************************************/
-#include <avr/io.h>
+#include <asf.h>
 #include <string.h>
-#include <stdio.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
+
+#define ETH_SS                         IOPORT_CREATE_PIN(PORTC, 0)
+#define ADC_DRDY                         IOPORT_CREATE_PIN(PORTC, 1)
+#define SD_SS                         IOPORT_CREATE_PIN(PORTE, 2)
+#define ETH_RES                         IOPORT_CREATE_PIN(PORTA, 0)
+#define ETH_SEN                         IOPORT_CREATE_PIN(PORTB, 7)
+
+struct spi_device adc_spi = { .id = SPIC_SS };
+struct spi_device eth_spi = { .id = ETH_SS };
+struct spi_device sd_spi = { .id = SD_SS };
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -117,7 +123,7 @@ void spi_array(char *buffer, unsigned NoBytes)
 
 void SPI_Write(uint16_t addr,uint8_t data)
 {
-	PORTB.OUTSET = PIN7_bm;
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
 	PORTC.OUTCLR = PIN0_bm;
 
@@ -135,14 +141,14 @@ void SPI_Write(uint16_t addr,uint8_t data)
 
 	// CS pin is not active
 	PORTC.OUTSET = PIN0_bm;
-	PORTB.OUTCLR = PIN7_bm;
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 }
 
 unsigned char SPI_Read(uint16_t addr)
 {
 	unsigned char recieveddata;
 
-	PORTB.OUTSET = PIN7_bm;
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
 	PORTC.OUTCLR = PIN0_bm;
 
@@ -160,7 +166,7 @@ unsigned char SPI_Read(uint16_t addr)
 
 	// CS pin is not active
 	PORTC.OUTSET = PIN0_bm;
-	PORTB.OUTCLR = PIN7_bm;
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 
 	return(recieveddata);
 }
@@ -294,7 +300,7 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 	timeout=0;
 	while (txsize < buflen) {
-		_delay_ms(1);
+		delay_ms(1);
 
 		txsize=SPI_Read(SO_TX_FSR);
 		txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
@@ -364,7 +370,7 @@ uint16_t recv(uint8_t sock,uint8_t *buf,uint16_t buflen)
 
 	// Now Send the RECV command
 	SPI_Write(S0_CR,CR_RECV);
-	_delay_us(5);    // Wait for Receive Process
+	delay_us(5);    // Wait for Receive Process
 
 	return 1;
 }
@@ -389,19 +395,19 @@ int strindex(char *s,char *t)
 void ad7705_init(void)
 {
 	// Activate the CS pin
-	PORTC.OUTCLR = PIN4_bm;
+	spi_select_device(&SPIC, &adc_spi);
 	spi_array("\xFF\xFF\xFF\xFF\xFF", 5);
-	_delay_ms(10);
+	delay_ms(10);
 	spi_array("\x20\x0C", 2);
-	_delay_ms(10);
+	delay_ms(10);
 	spi_array("\x10\x04", 2);
-	_delay_ms(10);
+	delay_ms(10);
 	spi_array("\x60\x18\x3A\x00", 4);
-	_delay_ms(10);
+	delay_ms(10);
 	spi_array("\x70\x89\x78\xD7", 4);
-	_delay_ms(10);
+	delay_ms(10);
 	// CS pin is not active
-	PORTC.OUTSET = PIN4_bm;
+	spi_deselect_device(&SPIC, &adc_spi);
 }
 
 int main(void){
@@ -412,33 +418,33 @@ int main(void){
 	char radiostat0[10],radiostat1[10],temp[4];
 	int getidx,postidx;
 
-	// Initial the Peripheral
-	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
-	PORTC.DIRSET = PIN5_bm|PIN7_bm|PIN4_bm|PIN0_bm;
-	// Set PORTE2 (sdcard SS) as output
-	PORTE.DIRSET = PIN2_bm;
-	// Set PORTA0 (eth reset) as output
-	PORTA.DIRSET = PIN0_bm;
-	// SEN wiznet
-	PORTB.DIRSET = PIN7_bm;
+	ioport_init();
+	ioport_set_pin_dir(SPIC_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MOSI, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MISO, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(SPIC_SCK, IOPORT_DIR_OUTPUT);
 
-	// adc SS and eth SS deactivate
-	PORTC.OUTSET = PIN4_bm|PIN0_bm;
-	// sdcard ss deactivate
-	PORTE.OUTSET = PIN2_bm;
-	// disable wiznet spi
-	PORTB.OUTCLR = PIN7_bm;
+	ioport_set_pin_dir(ETH_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(ETH_RES, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(ETH_SEN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SD_SS, IOPORT_DIR_OUTPUT);
 
-	// Enable SPI, Master Mode 0, set the clock rate fck/2
-	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+	ioport_set_pin_level(SPIC_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(ETH_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(SD_SS, IOPORT_PIN_LEVEL_HIGH);
+
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
+
+	spi_master_init(&SPIC);
+	spi_enable(&SPIC);
 
 	// init ad7705
 	ad7705_init();
 
 	// Reset W5100
-	PORTA.OUTCLR = PIN0_bm; //write zero
-	_delay_ms(1);
-	PORTA.OUTSET = PIN0_bm; //write one
+	ioport_set_pin_level(ETH_RES, IOPORT_PIN_LEVEL_LOW);
+	delay_ms(1);
+	ioport_set_pin_level(ETH_RES, IOPORT_PIN_LEVEL_HIGH);
 
 	// Initial the W5100 Ethernet
 	W5100_Init();
@@ -467,7 +473,7 @@ int main(void){
 			if (socket(sockreg,MR_TCP,TCP_PORT) > 0) {
 				// Listen to Socket 0
 				if (listen(sockreg) <= 0)
-				_delay_ms(1);
+				delay_ms(1);
 			}
 			break;
 
@@ -533,7 +539,7 @@ int main(void){
 				// Disconnect the socket
 				disconnect(sockreg);
 			} else
-			_delay_us(10);    // Wait for request
+			delay_us(10);    // Wait for request
 
 			break;
 

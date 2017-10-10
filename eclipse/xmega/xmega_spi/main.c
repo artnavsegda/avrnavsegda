@@ -6,8 +6,14 @@
 
 void startspi(void)
 {
-	PORTC.DIRSET = PIN7_bm | PIN5_bm | PIN4_bm; //always activate chip select output when enabling spi
+	PORTC.DIRSET = PIN7_bm | PIN5_bm | PIN4_bm | PIN0_bm; //always activate chip select output when enabling spi
+	PORTB.DIRSET = PIN7_bm; // SEN wiznet
+	//PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc;
+	PORTE.DIRSET = PIN2_bm;
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+	PORTC.OUTSET = PIN0_bm | PIN4_bm;
+	PORTE.OUTSET = PIN2_bm;
+	//PORTB.OUTCLR = PIN7_bm; // disable wiznet spi
 
 	printf("spi started\n\r");
 }
@@ -33,6 +39,7 @@ void spi_array(char *buffer, unsigned NoBytes)
 int main(void)
 {
 	unsigned int result;
+	_delay_ms(1000);
 	startserial();
 	startspi();
 	PORTC.OUTCLR = PIN4_bm;
@@ -46,13 +53,16 @@ int main(void)
 	_delay_ms(10);
 	spi_array("\x70\x89\x78\xD7", 4);
 	_delay_ms(10);
+	PORTC.OUTSET = PIN4_bm;
 	while(1)
 	{
 		if (bit_is_clear(PORTC.IN,PIN1_bp))
 		{
+			PORTC.OUTCLR = PIN4_bm;
 			spi_transfer(0x38);
 			spi_array((char *)&result,2);
 			printf("%04X\r\n",__builtin_bswap16(result));
+			PORTC.OUTSET = PIN4_bm;
 		}
 	}
 	return 0;

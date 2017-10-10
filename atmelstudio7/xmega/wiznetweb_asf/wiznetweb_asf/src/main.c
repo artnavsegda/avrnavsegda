@@ -1,15 +1,3 @@
-/*****************************************************************************
-//  File Name    : wiznetweb.c
-//  Version      : 1.0
-//  Description  : AVRJazz Mega328 and Wiznet W5100 Web Server
-//  Author       : RWB
-//  Target       : AVRJazz Mega328 Board
-//  Compiler     : AVR-GCC 4.3.2; avr-libc 1.6.6 (WinAVR 20090313)
-//  IDE          : Atmel AVR Studio 4.17
-//  Programmer   : AVRJazz Mega328 STK500 v2.0 Bootloader
-//               : AVR Visual Studio 4.17, STK500 programmer
-//  Last Updated : 20 July 2010
-*****************************************************************************/
 #include <asf.h>
 #include <string.h>
 
@@ -110,22 +98,11 @@ char spi_transfer(char c)
 	return SPIC.DATA;
 }
 
-void spi_array(char *buffer, unsigned NoBytes)
-{
-	int i;
-	for (i = 0; i < NoBytes; i++)
-	{
-		SPIC.DATA = buffer[i];
-		loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
-		buffer[i] = SPIC.DATA;
-	}
-}
-
 void SPI_Write(uint16_t addr,uint8_t data)
 {
 	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
-	PORTC.OUTCLR = PIN0_bm;
+	spi_select_device(&SPIC, &eth_spi);
 
 	// Start Wiznet W5100 Write OpCode transmission
 	spi_transfer(WIZNET_WRITE_OPCODE);
@@ -140,7 +117,7 @@ void SPI_Write(uint16_t addr,uint8_t data)
 	spi_transfer(data);
 
 	// CS pin is not active
-	PORTC.OUTSET = PIN0_bm;
+	spi_deselect_device(&SPIC, &eth_spi);
 	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 }
 
@@ -150,7 +127,7 @@ unsigned char SPI_Read(uint16_t addr)
 
 	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
-	PORTC.OUTCLR = PIN0_bm;
+	spi_select_device(&SPIC, &eth_spi);
 
 	// Start Wiznet W5100 Read OpCode transmission
 	spi_transfer(WIZNET_READ_OPCODE);
@@ -165,7 +142,7 @@ unsigned char SPI_Read(uint16_t addr)
 	recieveddata = spi_transfer(0x00);
 
 	// CS pin is not active
-	PORTC.OUTSET = PIN0_bm;
+	spi_deselect_device(&SPIC, &eth_spi);
 	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 
 	return(recieveddata);
@@ -396,15 +373,15 @@ void ad7705_init(void)
 {
 	// Activate the CS pin
 	spi_select_device(&SPIC, &adc_spi);
-	spi_array("\xFF\xFF\xFF\xFF\xFF", 5);
+	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
 	delay_ms(10);
-	spi_array("\x20\x0C", 2);
+	spi_write_packet(&SPIC, "\x20\x0C", 2);
 	delay_ms(10);
-	spi_array("\x10\x04", 2);
+	spi_write_packet(&SPIC, "\x10\x04", 2);
 	delay_ms(10);
-	spi_array("\x60\x18\x3A\x00", 4);
+	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
 	delay_ms(10);
-	spi_array("\x70\x89\x78\xD7", 4);
+	spi_write_packet(&SPIC, "\x70\x89\x78\xD7", 4);
 	delay_ms(10);
 	// CS pin is not active
 	spi_deselect_device(&SPIC, &adc_spi);
@@ -463,7 +440,7 @@ int main(void){
 		{
 			PORTC.OUTCLR = PIN4_bm;
 			spi_transfer(0x38);
-			spi_array((char *)&adcresult,2);
+			spi_read_packet(&SPIC, (char *)&adcresult,2);
 			PORTC.OUTSET = PIN4_bm;
 		}
 

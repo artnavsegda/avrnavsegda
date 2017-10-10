@@ -13,18 +13,9 @@
 #include <avr/io.h>
 #include <string.h>
 #include <stdio.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include <asf.h>
-
-struct spi_device spi_device_conf = {
-	.id = IOPORT_CREATE_PIN(PORTC, 4)
-};
-
-// AVRJazz Mega328 SPI I/O
-#define SPI_PORT PORTC.OUT
-#define SPI_DDR  PORTC.DIR
-#define SPI_CS   PIN4_bp
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -97,13 +88,6 @@ struct spi_device spi_device_conf = {
 
 #define TCP_PORT         80       // TCP/IP Port
 
-// Debugging Mode, 0 - Debug OFF, 1 - Debug ON
-#define _DEBUG_MODE      0
-
-#if _DEBUG_MODE
-#define BAUD_RATE 19200
-#endif
-
 // Define W5100 Socket Register and Variables Used
 uint8_t sockreg;
 
@@ -113,74 +97,70 @@ uint8_t buf[MAX_BUF];
 int tempvalue;
 uint8_t ledmode,ledeye,ledsign;
 
+char spi_transfer(char c)
+{
+	SPIC.DATA = c;
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	return SPIC.DATA;
+}
+
+void spi_array(char *buffer, unsigned NoBytes)
+{
+	int i;
+	for (i = 0; i < NoBytes; i++)
+	{
+		SPIC.DATA = buffer[i];
+		loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+		buffer[i] = SPIC.DATA;
+	}
+}
+
 void SPI_Write(uint16_t addr,uint8_t data)
 {
+	PORTB.OUTSET = PIN7_bm;
 	// Activate the CS pin
-	spi_select_device(&SPIC, &spi_device_conf);
+	PORTC.OUTCLR = PIN0_bm;
 
 	// Start Wiznet W5100 Write OpCode transmission
-	spi_write_single(&SPIC,WIZNET_WRITE_OPCODE);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(WIZNET_WRITE_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	spi_write_single(&SPIC,(addr & 0xFF00) >> 8);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	spi_write_single(&SPIC,addr & 0x00FF);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(addr & 0x00FF);
 
 	// Start Data transmission
-	spi_write_single(&SPIC,data);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(data);
 
 	// CS pin is not active
-	spi_deselect_device(&SPIC, &spi_device_conf);
+	PORTC.OUTSET = PIN0_bm;
+	PORTB.OUTCLR = PIN7_bm;
 }
 
 unsigned char SPI_Read(uint16_t addr)
 {
 	unsigned char recieveddata;
 
+	PORTB.OUTSET = PIN7_bm;
 	// Activate the CS pin
-	spi_select_device(&SPIC, &spi_device_conf);
+	PORTC.OUTCLR = PIN0_bm;
 
 	// Start Wiznet W5100 Read OpCode transmission
-	spi_write_single(&SPIC,WIZNET_READ_OPCODE);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(WIZNET_READ_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	spi_write_single(&SPIC,(addr & 0xFF00) >> 8);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	spi_write_single(&SPIC,addr & 0x00FF);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(addr & 0x00FF);
 
 	// Send Dummy transmission for reading the data
-	spi_write_single(&SPIC,CONFIG_SPI_MASTER_DUMMY);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
-
-	spi_read_single(&SPIC, &recieveddata);
+	recieveddata = spi_transfer(0x00);
 
 	// CS pin is not active
-	spi_deselect_device(&SPIC, &spi_device_conf);
+	PORTC.OUTSET = PIN0_bm;
+	PORTB.OUTCLR = PIN7_bm;
 
 	return(recieveddata);
 }
@@ -314,7 +294,7 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 	timeout=0;
 	while (txsize < buflen) {
-		delay_ms(1);
+		_delay_ms(1);
 
 		txsize=SPI_Read(SO_TX_FSR);
 		txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
@@ -384,7 +364,7 @@ uint16_t recv(uint8_t sock,uint8_t *buf,uint16_t buflen)
 
 	// Now Send the RECV command
 	SPI_Write(S0_CR,CR_RECV);
-	delay_us(5);    // Wait for Receive Process
+	_delay_us(5);    // Wait for Receive Process
 
 	return 1;
 }
@@ -406,21 +386,59 @@ int strindex(char *s,char *t)
 	return -1;
 }
 
+void ad7705_init(void)
+{
+	// Activate the CS pin
+	PORTC.OUTCLR = PIN4_bm;
+	spi_array("\xFF\xFF\xFF\xFF\xFF", 5);
+	_delay_ms(10);
+	spi_array("\x20\x0C", 2);
+	_delay_ms(10);
+	spi_array("\x10\x04", 2);
+	_delay_ms(10);
+	spi_array("\x60\x18\x3A\x00", 4);
+	_delay_ms(10);
+	spi_array("\x70\x89\x78\xD7", 4);
+	_delay_ms(10);
+	// CS pin is not active
+	PORTC.OUTSET = PIN4_bm;
+}
+
 int main(void){
+	unsigned int adcresult;
+
 	uint8_t sockstat;
 	uint16_t rsize;
 	char radiostat0[10],radiostat1[10],temp[4];
 	int getidx,postidx;
 
-	// Initial the AVR ATMega328 SPI Peripheral
-	// Set MOSI (PORTC5),SCK (PORTC7) and PORTC4 (SS) as output, others as input
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	// Initial the Peripheral
+	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
+	PORTC.DIRSET = PIN5_bm|PIN7_bm|PIN4_bm|PIN0_bm;
+	// Set PORTE2 (sdcard SS) as output
+	PORTE.DIRSET = PIN2_bm;
+	// Set PORTA0 (eth reset) as output
+	PORTA.DIRSET = PIN0_bm;
+	// SEN wiznet
+	PORTB.DIRSET = PIN7_bm;
 
-	spi_master_init(&SPIC);
-	spi_master_setup_device(&SPIC, &spi_device_conf, SPI_MODE_0, 1000000, 0);
-	spi_enable(&SPIC);
+	// adc SS and eth SS deactivate
+	PORTC.OUTSET = PIN4_bm|PIN0_bm;
+	// sdcard ss deactivate
+	PORTE.OUTSET = PIN2_bm;
+	// disable wiznet spi
+	PORTB.OUTCLR = PIN7_bm;
+
+	// Enable SPI, Master Mode 0, set the clock rate fck/2
+	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
+
+	// init ad7705
+	ad7705_init();
+
+	// Reset W5100
+	PORTA.OUTCLR = PIN0_bm; //write zero
+	_delay_ms(1);
+	PORTA.OUTSET = PIN0_bm; //write one
 
 	// Initial the W5100 Ethernet
 	W5100_Init();
@@ -434,13 +452,22 @@ int main(void){
 
 	// Loop forever
 	for(;;){
+		//read adc
+		if (bit_is_clear(PORTC.IN,PIN1_bp))
+		{
+			PORTC.OUTCLR = PIN4_bm;
+			spi_transfer(0x38);
+			spi_array((char *)&adcresult,2);
+			PORTC.OUTSET = PIN4_bm;
+		}
+
 		sockstat=SPI_Read(S0_SR);
 		switch(sockstat) {
 			case SOCK_CLOSED:
 			if (socket(sockreg,MR_TCP,TCP_PORT) > 0) {
 				// Listen to Socket 0
 				if (listen(sockreg) <= 0)
-				delay_ms(1);
+				_delay_ms(1);
 			}
 			break;
 
@@ -474,9 +501,9 @@ int main(void){
 					if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
 
 					// Create the HTTP Temperature Response
-					sprintf((char *)temp,"%d",tempvalue);        // Convert temperature value to string
+					sprintf((char *)temp,"%X",__builtin_bswap16(adcresult));        // Convert temperature value to string
 
-					strcpy_P((char *)buf,PSTR("<strong>Temp: <input type=\"text\" size=2 value=\""));
+					strcpy_P((char *)buf,PSTR("<strong>AD7705: <input type=\"text\" size=2 value=\""));
 					strcat((char *)buf,temp);
 					strcat_P((char *)buf,PSTR("\"> <sup>O</sup>C\r\n"));
 
@@ -506,7 +533,7 @@ int main(void){
 				// Disconnect the socket
 				disconnect(sockreg);
 			} else
-			delay_us(10);    // Wait for request
+			_delay_us(10);    // Wait for request
 
 			break;
 

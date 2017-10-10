@@ -113,67 +113,6 @@ uint8_t buf[MAX_BUF];
 int tempvalue;
 uint8_t ledmode,ledeye,ledsign;
 
-#if _DEBUG_MODE
-void uart_init(void)
-{
-	UBRR0H = (((F_CPU/BAUD_RATE)/16)-1)>>8;		// set baud rate
-	UBRR0L = (((F_CPU/BAUD_RATE)/16)-1);
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0); 				// enable Rx & Tx
-	UCSR0C=  (1<<UCSZ01)|(1<<UCSZ00);  	        // config USART; 8N1
-}
-
-void uart_flush(void)
-{
-	unsigned char dummy;
-
-	while (UCSR0A & (1<<RXC0)) dummy = UDR0;
-}
-
-int uart_putch(char ch,FILE *stream)
-{
-	if (ch == '\n')
-	uart_putch('\r', stream);
-
-	while (!(UCSR0A & (1<<UDRE0)));
-	UDR0=ch;
-
-	return 0;
-}
-
-int uart_getch(FILE *stream)
-{
-	unsigned char ch;
-
-	while (!(UCSR0A & (1<<RXC0)));
-	ch=UDR0;
-
-	/* Echo the Output Back to terminal */
-	uart_putch(ch,stream);
-
-	return ch;
-}
-
-void ansi_cl(void)
-{
-	// ANSI clear screen: cl=\E[H\E[J
-	putchar(27);
-	putchar('[');
-	putchar('H');
-	putchar(27);
-	putchar('[');
-	putchar('J');
-}
-
-void ansi_me(void)
-{
-	// ANSI turn off all attribute: me=\E[0m
-	putchar(27);
-	putchar('[');
-	putchar('0');
-	putchar('m');
-}
-#endif
-
 void SPI_Write(uint16_t addr,uint8_t data)
 {
 	// Activate the CS pin
@@ -369,17 +308,9 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 	if (buflen <= 0 || sock != 0) return 0;
 
-	#if _DEBUG_MODE
-	printf("Send Size: %d\n",buflen);
-	#endif
-
 	// Make sure the TX Free Size Register is available
 	txsize=SPI_Read(SO_TX_FSR);
 	txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
-
-	#if _DEBUG_MODE
-	printf("TX Free Size: %d\n",txsize);
-	#endif
 
 	timeout=0;
 	while (txsize < buflen) {
@@ -390,9 +321,6 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 		// Timeout for approx 1000 ms
 		if (timeout++ > 1000) {
-			#if _DEBUG_MODE
-			printf("TX Free Size Error!\n");
-			#endif
 			// Disconnect the connection
 			disconnect(sock);
 			return 0;
@@ -402,9 +330,6 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 	// Read the Tx Write Pointer
 	ptr = SPI_Read(S0_TX_WR);
 	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_TX_WR + 1));
-	#if _DEBUG_MODE
-	printf("TX Buffer: %x\n",offaddr);
-	#endif
 
 	while(buflen) {
 		buflen--;
@@ -443,9 +368,6 @@ uint16_t recv(uint8_t sock,uint8_t *buf,uint16_t buflen)
 	// Read the Rx Read Pointer
 	ptr = SPI_Read(S0_RX_RD);
 	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_RX_RD + 1));
-	#if _DEBUG_MODE
-	printf("RX Buffer: %x\n",offaddr);
-	#endif
 
 	while(buflen) {
 		buflen--;
@@ -484,31 +406,11 @@ int strindex(char *s,char *t)
 	return -1;
 }
 
-#if _DEBUG_MODE
-// Assign I/O stream to UART
-FILE uart_str = FDEV_SETUP_STREAM(uart_putch, uart_getch, _FDEV_SETUP_RW);
-#endif
-
 int main(void){
 	uint8_t sockstat;
 	uint16_t rsize;
 	char radiostat0[10],radiostat1[10],temp[4];
 	int getidx,postidx;
-
-	#if _DEBUG_MODE
-	// Define Output/Input Stream
-	stdout = stdin = &uart_str;
-
-	// Initial UART Peripheral
-	uart_init();
-
-	// Clear Screen
-	ansi_me();
-	ansi_cl();
-	ansi_me();
-	ansi_cl();
-	uart_flush();
-	#endif
 
 	// Initial the AVR ATMega328 SPI Peripheral
 	// Set MOSI (PORTC5),SCK (PORTC7) and PORTC4 (SS) as output, others as input
@@ -530,10 +432,6 @@ int main(void){
 	ledeye=0x01;                  // Initial LED Eye Variables
 	ledsign=0;
 
-	#if _DEBUG_MODE
-	printf("WEB Server Debug Mode\n\n");
-	#endif
-
 	// Loop forever
 	for(;;){
 		sockstat=SPI_Read(S0_SR);
@@ -543,32 +441,20 @@ int main(void){
 				// Listen to Socket 0
 				if (listen(sockreg) <= 0)
 				delay_ms(1);
-				#if _DEBUG_MODE
-				printf("Socket Listen!\n");
-				#endif
 			}
 			break;
 
 			case SOCK_ESTABLISHED:
 			// Get the client request size
 			rsize=recv_size();
-			#if _DEBUG_MODE
-			printf("Size: %d\n",rsize);
-			#endif
 			if (rsize > 0) {
 				// Now read the client Request
 				if (recv(sockreg,buf,rsize) <= 0) break;
-				#if _DEBUG_MODE
-				printf("Content:\n%s\n",buf);
-				#endif
 				// Check the Request Header
 				getidx=strindex((char *)buf,"GET /");
 				postidx=strindex((char *)buf,"POST /");
 
 				if (getidx >= 0 || postidx >= 0) {
-					#if _DEBUG_MODE
-					printf("Req. Check!\n");
-					#endif
 					// Now check the Radio Button for POST request
 					if (postidx >= 0) {
 						if (strindex((char *)buf,"radio=0") > 0)
@@ -577,9 +463,6 @@ int main(void){
 						if (strindex((char *)buf,"radio=1") > 0)
 						ledmode=1;
 					}
-					#if _DEBUG_MODE
-					printf("Req. Send!\n");
-					#endif
 					// Create the HTTP Response	Header
 					strcpy_P((char *)buf,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
 					strcat_P((char *)buf,PSTR("<html><body><span style=\"color:#0000A0\">\r\n"));
@@ -634,9 +517,6 @@ int main(void){
 			case SOCK_LAST_ACK:
 			// Force to close the socket
 			close(sockreg);
-			#if _DEBUG_MODE
-			printf("Socket Close!\n");
-			#endif
 			break;
 		}
 	}

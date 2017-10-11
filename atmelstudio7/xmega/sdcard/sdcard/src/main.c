@@ -1,141 +1,12 @@
-/**
- * \file
- *
- * \brief SD/MMC card example
- *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
-/**
- * \mainpage SD/MMC/SDIO Card Example
- *
- * \section Purpose
- *
- * This example demonstrates basic functions of SD/MMC/SDIO stack.
- * It will read and write an SD, MMC or SDIO card over MCI or SPI interface.
- * It is a development base for a SDIO application or a specific SD/MMC
- * application which does not require a file system.
- *
- * \section Description
- *
- * The example executes the following sequences:
- * - For each card slot available on board:
- *   - Wait for a card insertion
- *   - Initialize an SD, MMC or SDIO card.
- *   - If the inserted card is an SD or MMC card, test read/write access.
- *       - Write data into the card
- *       - Read data from the card
- *       - Verify the written data.
- *   - If the inserted card is a SDIO card:
- *     - Iniltialize a SDIO card.
- *     - Read and write test on CIA.
- *
- * The example outputs the information through the standard output (stdio).
- * To know the output used on the board, look in the conf_example.h file
- * and connect a terminal to the correct stdio port.
- * 
- * While using SAM4L Xplained Pro or SAM4L8 Xplained Pro, please attach IO1
- * Xplained Pro extension board to EXT1.
- *
- * While using Xplained Pro evaluation kits, please attach I/O1 Xplained Pro
- * extension board to EXT1.
- *
- * \section Usage
- *
- * -# Build the program and download it into the  board.
- * -# On the computer, open and configure a terminal application.
- * Refer to conf_example.h file.
- * -# Start the application.
- * -# In the terminal window, the following text should appear:
- *    \code
-	-- SD/MMC/SDIO Card Example --
-	-- Compiled: xxx xx xxxx xx:xx:xx --
-	Please plug an SD, MMC or SDIO card in slot 1.
-	!!Warning, the data contained will be lost!!
-\endcode
- * -# If the inserted card is a SD or MMC card, the following text should appear:
- *    \code
- 	A card has been connected.
- 	Card information:
- 	    xxxx
- 	    xxxx MB
- 	    Write pattern... XXXXKBps [OK]
- 	    Read... XXXXKBps [OK]
- 	    Read and check pattern... [OK]
- 	Test finished, please unplugged card.
-\endcode
- * -# If inserted card is a SDIO card, similar following text should appear:
- *    \code
-	A card has been connected.
-	Card information:
-	    SDIO
-	    0MB
-	--- Test with direct read and write command of CIA:
-	Dump buffer (length=22):
-	  0: 11 00 00 00 00 00 00 00 17 00 10 00 00 00 00 00
-	 10: 00 00 01 00 00 00
-	Write 0x02 to IEN(CIA.4).
-	Check IEN after write:0x02
-	Test OK
-
-	--- Test with extended read and write command of CIA:
-	Dump buffer (length=22):
-	  0: 11 00 00 00 00 00 00 00 17 00 10 00 00 00 00 00
-	 10: 00 00 01 00 00 00
-	Modify Some R/W bytes (2,4) for FN0 and write:
-	Check CIA after write:
-	Dump buffer (length=22):
-	  0: 11 00 00 00 03 00 00 00 17 00 10 00 00 00 00 00
-	 10: 00 00 01 00 00 00
-	test OK
-	All test done.
-\endcode
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
 #include <asf.h>
 #include <stdio_serial.h>
 #include "conf_board.h"
 #include "conf_clock.h"
 #include "sd_mmc_protocol.h"
 #include <string.h>
+
+#define ETH_SS                         IOPORT_CREATE_PIN(PORTC, 0)
+#define ETH_SEN                         IOPORT_CREATE_PIN(PORTB, 7)
 
 //! \name Read/write access configurations
 //! @{
@@ -198,6 +69,11 @@ int main(void)
 
 	sysclk_init();
 	board_init();
+	ioport_set_pin_dir(ETH_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(ETH_SEN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(SPIC_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(ETH_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 	stdio_serial_init(&USARTC0, &usart_serial_options);
 
 	// Initialize SD MMC stack

@@ -1,30 +1,22 @@
-/*****************************************************************************
-//  File Name    : wiznetweb.c
-//  Version      : 1.0
-//  Description  : AVRJazz Mega328 and Wiznet W5100 Web Server
-//  Author       : RWB
-//  Target       : AVRJazz Mega328 Board
-//  Compiler     : AVR-GCC 4.3.2; avr-libc 1.6.6 (WinAVR 20090313)
-//  IDE          : Atmel AVR Studio 4.17
-//  Programmer   : AVRJazz Mega328 STK500 v2.0 Bootloader
-//               : AVR Visual Studio 4.17, STK500 programmer
-//  Last Updated : 20 July 2010
-*****************************************************************************/
-#include <avr/io.h>
-#include <string.h>
-#include <stdio.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
 #include <asf.h>
+#include <string.h>
 
-struct spi_device spi_device_conf = {
-	.id = IOPORT_CREATE_PIN(PORTC, 4)
+#define ETH_SS                         IOPORT_CREATE_PIN(PORTC, 0)
+#define ADC_DRDY                         IOPORT_CREATE_PIN(PORTC, 1)
+#define SD_SS                         IOPORT_CREATE_PIN(PORTE, 2)
+#define ETH_RES                         IOPORT_CREATE_PIN(PORTA, 0)
+#define ETH_SEN                         IOPORT_CREATE_PIN(PORTB, 7)
+
+struct spi_device adc_spi = { .id = SPIC_SS };
+struct spi_device eth_spi = { .id = ETH_SS };
+struct spi_device sd_spi = { .id = SD_SS };
+
+const usart_serial_options_t usart_serial_options = {
+	.baudrate     = 9600,
+	.charlength   = USART_CHSIZE_8BIT_gc,
+	.paritytype   = USART_PMODE_DISABLED_gc,
+	.stopbits     = false
 };
-
-// AVRJazz Mega328 SPI I/O
-#define SPI_PORT PORTC.OUT
-#define SPI_DDR  PORTC.DIR
-#define SPI_CS   PIN4_bp
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -97,13 +89,6 @@ struct spi_device spi_device_conf = {
 
 #define TCP_PORT         80       // TCP/IP Port
 
-// Debugging Mode, 0 - Debug OFF, 1 - Debug ON
-#define _DEBUG_MODE      0
-
-#if _DEBUG_MODE
-#define BAUD_RATE 19200
-#endif
-
 // Define W5100 Socket Register and Variables Used
 uint8_t sockreg;
 
@@ -113,135 +98,59 @@ uint8_t buf[MAX_BUF];
 int tempvalue;
 uint8_t ledmode,ledeye,ledsign;
 
-#if _DEBUG_MODE
-void uart_init(void)
+char spi_transfer(char c)
 {
-	UBRR0H = (((F_CPU/BAUD_RATE)/16)-1)>>8;		// set baud rate
-	UBRR0L = (((F_CPU/BAUD_RATE)/16)-1);
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0); 				// enable Rx & Tx
-	UCSR0C=  (1<<UCSZ01)|(1<<UCSZ00);  	        // config USART; 8N1
+	SPIC.DATA = c;
+	loop_until_bit_is_set(SPIC.STATUS,SPI_IF_bp);
+	return SPIC.DATA;
 }
-
-void uart_flush(void)
-{
-	unsigned char dummy;
-
-	while (UCSR0A & (1<<RXC0)) dummy = UDR0;
-}
-
-int uart_putch(char ch,FILE *stream)
-{
-	if (ch == '\n')
-	uart_putch('\r', stream);
-
-	while (!(UCSR0A & (1<<UDRE0)));
-	UDR0=ch;
-
-	return 0;
-}
-
-int uart_getch(FILE *stream)
-{
-	unsigned char ch;
-
-	while (!(UCSR0A & (1<<RXC0)));
-	ch=UDR0;
-
-	/* Echo the Output Back to terminal */
-	uart_putch(ch,stream);
-
-	return ch;
-}
-
-void ansi_cl(void)
-{
-	// ANSI clear screen: cl=\E[H\E[J
-	putchar(27);
-	putchar('[');
-	putchar('H');
-	putchar(27);
-	putchar('[');
-	putchar('J');
-}
-
-void ansi_me(void)
-{
-	// ANSI turn off all attribute: me=\E[0m
-	putchar(27);
-	putchar('[');
-	putchar('0');
-	putchar('m');
-}
-#endif
 
 void SPI_Write(uint16_t addr,uint8_t data)
 {
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
-	spi_select_device(&SPIC, &spi_device_conf);
+	spi_select_device(&SPIC, &eth_spi);
 
 	// Start Wiznet W5100 Write OpCode transmission
-	spi_write_single(&SPIC,WIZNET_WRITE_OPCODE);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(WIZNET_WRITE_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	spi_write_single(&SPIC,(addr & 0xFF00) >> 8);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	spi_write_single(&SPIC,addr & 0x00FF);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(addr & 0x00FF);
 
 	// Start Data transmission
-	spi_write_single(&SPIC,data);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(data);
 
 	// CS pin is not active
-	spi_deselect_device(&SPIC, &spi_device_conf);
+	spi_deselect_device(&SPIC, &eth_spi);
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 }
 
 unsigned char SPI_Read(uint16_t addr)
 {
 	unsigned char recieveddata;
 
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_HIGH);
 	// Activate the CS pin
-	spi_select_device(&SPIC, &spi_device_conf);
+	spi_select_device(&SPIC, &eth_spi);
 
 	// Start Wiznet W5100 Read OpCode transmission
-	spi_write_single(&SPIC,WIZNET_READ_OPCODE);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(WIZNET_READ_OPCODE);
 
 	// Start Wiznet W5100 Address High Bytes transmission
-	spi_write_single(&SPIC,(addr & 0xFF00) >> 8);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer((addr & 0xFF00) >> 8);
 
 	// Start Wiznet W5100 Address Low Bytes transmission
-	spi_write_single(&SPIC,addr & 0x00FF);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
+	spi_transfer(addr & 0x00FF);
 
 	// Send Dummy transmission for reading the data
-	spi_write_single(&SPIC,CONFIG_SPI_MASTER_DUMMY);
-
-	// Wait for transmission complete
-	while(!spi_is_rx_full(&SPIC));
-
-	spi_read_single(&SPIC, &recieveddata);
+	recieveddata = spi_transfer(0x00);
 
 	// CS pin is not active
-	spi_deselect_device(&SPIC, &spi_device_conf);
+	spi_deselect_device(&SPIC, &eth_spi);
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 
 	return(recieveddata);
 }
@@ -369,17 +278,9 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 	if (buflen <= 0 || sock != 0) return 0;
 
-	#if _DEBUG_MODE
-	printf("Send Size: %d\n",buflen);
-	#endif
-
 	// Make sure the TX Free Size Register is available
 	txsize=SPI_Read(SO_TX_FSR);
 	txsize=(((txsize & 0x00FF) << 8 ) + SPI_Read(SO_TX_FSR + 1));
-
-	#if _DEBUG_MODE
-	printf("TX Free Size: %d\n",txsize);
-	#endif
 
 	timeout=0;
 	while (txsize < buflen) {
@@ -390,9 +291,6 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 
 		// Timeout for approx 1000 ms
 		if (timeout++ > 1000) {
-			#if _DEBUG_MODE
-			printf("TX Free Size Error!\n");
-			#endif
 			// Disconnect the connection
 			disconnect(sock);
 			return 0;
@@ -402,9 +300,6 @@ uint16_t send(uint8_t sock,const uint8_t *buf,uint16_t buflen)
 	// Read the Tx Write Pointer
 	ptr = SPI_Read(S0_TX_WR);
 	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_TX_WR + 1));
-	#if _DEBUG_MODE
-	printf("TX Buffer: %x\n",offaddr);
-	#endif
 
 	while(buflen) {
 		buflen--;
@@ -443,9 +338,6 @@ uint16_t recv(uint8_t sock,uint8_t *buf,uint16_t buflen)
 	// Read the Rx Read Pointer
 	ptr = SPI_Read(S0_RX_RD);
 	offaddr = (((ptr & 0x00FF) << 8 ) + SPI_Read(S0_RX_RD + 1));
-	#if _DEBUG_MODE
-	printf("RX Buffer: %x\n",offaddr);
-	#endif
 
 	while(buflen) {
 		buflen--;
@@ -484,41 +376,60 @@ int strindex(char *s,char *t)
 	return -1;
 }
 
-#if _DEBUG_MODE
-// Assign I/O stream to UART
-FILE uart_str = FDEV_SETUP_STREAM(uart_putch, uart_getch, _FDEV_SETUP_RW);
-#endif
+void ad7705_init(void)
+{
+	// Activate the CS pin
+	spi_select_device(&SPIC, &adc_spi);
+	spi_write_packet(&SPIC, "\xFF\xFF\xFF\xFF\xFF", 5);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x20\x0C", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x10\x04", 2);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x60\x18\x3A\x00", 4);
+	delay_ms(10);
+	spi_write_packet(&SPIC, "\x70\x89\x78\xD7", 4);
+	delay_ms(10);
+	// CS pin is not active
+	spi_deselect_device(&SPIC, &adc_spi);
+}
 
 int main(void){
+	unsigned int adcresult;
+
 	uint8_t sockstat;
 	uint16_t rsize;
 	char radiostat0[10],radiostat1[10],temp[4];
 	int getidx,postidx;
 
-	#if _DEBUG_MODE
-	// Define Output/Input Stream
-	stdout = stdin = &uart_str;
+	ioport_init();
+	ioport_set_pin_dir(SPIC_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MOSI, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SPIC_MISO, IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(SPIC_SCK, IOPORT_DIR_OUTPUT);
 
-	// Initial UART Peripheral
-	uart_init();
+	ioport_set_pin_dir(ETH_SS, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(ETH_RES, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(ETH_SEN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(SD_SS, IOPORT_DIR_OUTPUT);
 
-	// Clear Screen
-	ansi_me();
-	ansi_cl();
-	ansi_me();
-	ansi_cl();
-	uart_flush();
-	#endif
+	ioport_set_pin_level(SPIC_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(ETH_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(SD_SS, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
 
-	// Initial the AVR ATMega328 SPI Peripheral
-	// Set MOSI (PORTC5),SCK (PORTC7) and PORTC4 (SS) as output, others as input
-    ioport_configure_port_pin(&PORTC, PIN4_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN5_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
-    ioport_configure_port_pin(&PORTC, PIN7_bm, IOPORT_INIT_HIGH | IOPORT_DIR_OUTPUT);
+	stdio_serial_init(&USARTC0, &usart_serial_options);
 
 	spi_master_init(&SPIC);
-	spi_master_setup_device(&SPIC, &spi_device_conf, SPI_MODE_0, 1000000, 0);
 	spi_enable(&SPIC);
+
+	// init ad7705
+	ad7705_init();
+
+	// Reset W5100
+	ioport_set_pin_level(ETH_RES, IOPORT_PIN_LEVEL_LOW);
+	delay_ms(1);
+	ioport_set_pin_level(ETH_RES, IOPORT_PIN_LEVEL_HIGH);
 
 	// Initial the W5100 Ethernet
 	W5100_Init();
@@ -530,12 +441,17 @@ int main(void){
 	ledeye=0x01;                  // Initial LED Eye Variables
 	ledsign=0;
 
-	#if _DEBUG_MODE
-	printf("WEB Server Debug Mode\n\n");
-	#endif
-
 	// Loop forever
 	for(;;){
+		//read adc
+		if (bit_is_clear(PORTC.IN,PIN1_bp))
+		{
+			PORTC.OUTCLR = PIN4_bm;
+			spi_transfer(0x38);
+			spi_read_packet(&SPIC, (char *)&adcresult,2);
+			PORTC.OUTSET = PIN4_bm;
+		}
+
 		sockstat=SPI_Read(S0_SR);
 		switch(sockstat) {
 			case SOCK_CLOSED:
@@ -543,32 +459,20 @@ int main(void){
 				// Listen to Socket 0
 				if (listen(sockreg) <= 0)
 				delay_ms(1);
-				#if _DEBUG_MODE
-				printf("Socket Listen!\n");
-				#endif
 			}
 			break;
 
 			case SOCK_ESTABLISHED:
 			// Get the client request size
 			rsize=recv_size();
-			#if _DEBUG_MODE
-			printf("Size: %d\n",rsize);
-			#endif
 			if (rsize > 0) {
 				// Now read the client Request
 				if (recv(sockreg,buf,rsize) <= 0) break;
-				#if _DEBUG_MODE
-				printf("Content:\n%s\n",buf);
-				#endif
 				// Check the Request Header
 				getidx=strindex((char *)buf,"GET /");
 				postidx=strindex((char *)buf,"POST /");
 
 				if (getidx >= 0 || postidx >= 0) {
-					#if _DEBUG_MODE
-					printf("Req. Check!\n");
-					#endif
 					// Now check the Radio Button for POST request
 					if (postidx >= 0) {
 						if (strindex((char *)buf,"radio=0") > 0)
@@ -577,9 +481,6 @@ int main(void){
 						if (strindex((char *)buf,"radio=1") > 0)
 						ledmode=1;
 					}
-					#if _DEBUG_MODE
-					printf("Req. Send!\n");
-					#endif
 					// Create the HTTP Response	Header
 					strcpy_P((char *)buf,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
 					strcat_P((char *)buf,PSTR("<html><body><span style=\"color:#0000A0\">\r\n"));
@@ -591,9 +492,9 @@ int main(void){
 					if (send(sockreg,buf,strlen((char *)buf)) <= 0) break;
 
 					// Create the HTTP Temperature Response
-					sprintf((char *)temp,"%d",tempvalue);        // Convert temperature value to string
+					sprintf((char *)temp,"%X",__builtin_bswap16(adcresult));        // Convert temperature value to string
 
-					strcpy_P((char *)buf,PSTR("<strong>Temp: <input type=\"text\" size=2 value=\""));
+					strcpy_P((char *)buf,PSTR("<strong>AD7705: <input type=\"text\" size=2 value=\""));
 					strcat((char *)buf,temp);
 					strcat_P((char *)buf,PSTR("\"> <sup>O</sup>C\r\n"));
 
@@ -634,9 +535,6 @@ int main(void){
 			case SOCK_LAST_ACK:
 			// Force to close the socket
 			close(sockreg);
-			#if _DEBUG_MODE
-			printf("Socket Close!\n");
-			#endif
 			break;
 		}
 	}

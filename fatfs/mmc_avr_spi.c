@@ -15,13 +15,13 @@
 #include "diskio.h"
 #include "mmc_avr.h"
 
-/* Peripheral controls (Platform dependent) */
-#define CS_LOW()		To be filled	/* Set MMC_CS = low */
-#define	CS_HIGH()		To be filled	/* Set MMC_CS = high */
-#define MMC_CD			To be filled	/* Test if card detected.   yes:true, no:false, default:true */
-#define MMC_WP			To be filled	/* Test if write protected. yes:true, no:false, default:false */
-#define	FCLK_SLOW()		To be filled	/* Set SPI clock for initialization (100-400kHz) */
-#define	FCLK_FAST()		To be filled	/* Set SPI clock for read/write (20MHz max) */
+/* Port controls (Platform dependent) */
+#define CS_LOW()	PORTD &= ~_BV(5)	/* MMC_CS = low */
+#define	CS_HIGH()	PORTD |= _BV(5)		/* MMC_CS = high */
+#define MMC_CD		(!(PINB & _BV(3)))	/* Card detected.   yes:true, no:false, default:true */
+#define MMC_WP		(PINB & _BV(2))		/* Write protected. yes:true, no:false, default:false */
+#define	FCLK_SLOW()	SPSR |= SPR0|SPR1	/* Set SPI clock for initialization (100-400kHz) */
+#define	FCLK_FAST()	SPSR &= ~(SPR0|SPR1)					/* Set SPI clock for read/write (20HMz max) */
 
 
 /*--------------------------------------------------------------------------

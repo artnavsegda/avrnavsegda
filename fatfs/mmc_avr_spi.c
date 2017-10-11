@@ -76,15 +76,16 @@ static
 void power_on (void)
 {
 	/* Trun socket power on and wait for 10ms+ (nothing to do if no power controls) */
-	To be filled
+	//To be filled
 
 
 	/* Configure MOSI/MISO/SCLK/CS pins */
-	To be filled
+	PORTB |= (_BV(5)|_BV(3)); DDRB |= (_BV(5)|_BV(2)|_BV(3));
 
 
 	/* Enable SPI module in SPI mode 0 */
-	To be filled
+	SPCR = _BV(SPE)|_BV(MSTR);
+	SPSR = _BV(SPI2X);
 }
 
 
@@ -92,15 +93,15 @@ static
 void power_off (void)
 {
 	/* Disable SPI function */
-	To be filled
+	//To be filled
 
 
 	/* De-configure MOSI/MISO/SCLK/CS pins (set hi-z) */
-	To be filled
+	//To be filled
 
 
 	/* Trun socket power off (nothing to do if no power controls) */
-	To be filled
+	//To be filled
 }
 
 

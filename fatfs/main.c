@@ -183,8 +183,6 @@ void put_rc (FRESULT rc)
 static
 void ioinit (void)
 {
-	MCUCR = _BV(JTD); MCUCR = _BV(JTD);	/* Disable JTAG */
-
 	/* Start 100Hz system timer with TC0 */
 	OCR0A = F_CPU / 1024 / 100 - 1;
 	TCCR0A = _BV(WGM01);

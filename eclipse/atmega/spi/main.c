@@ -3,6 +3,14 @@
 #include <stdio.h>
 #include "serial.h"
 
+void starttimer(void)
+{
+	TCCR2A = 0x33;
+	TCCR2B = 0x09;
+	OCR2A = 0x06;
+	OCR2B = 0x03;
+}
+
 void startspi(void)
 {
 	DDRB = _BV(PORTB3)|_BV(PORTB5)|_BV(PORTB2);
@@ -47,6 +55,7 @@ int main(void)
 	uint16_t result;
 	startserial();
 	startspi();
+	starttimer();
 	SPI_Write_Bytes("\xFF\xFF\xFF\xFF\xFF", 5);
 	_delay_ms(10);
 	SPI_Write_Bytes("\x20\x0C\x10\x04", 4);

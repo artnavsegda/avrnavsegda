@@ -2,12 +2,12 @@
 PROJECT	= avr_mmc
 
 ### Source files and search directory
-CSRC    = main.c uart.c diskio.c mmc_avr_usart.c rtc_ds1338.c ff.c ffunicode_avr.c sound.c
+CSRC    = main.c uart.c diskio.c mmc_avr_spi.c rtc_ds1338.c ff.c ffunicode_avr.c sound.c
 ASRC    = xitoa.S
 VPATH   =
 
 ### Target device
-DEVICE  = atmega1284p
+DEVICE  = atmega328p
 
 ### Optimization level (0, 1, 2, 3, 4 or s)
 OPTIMIZE = s

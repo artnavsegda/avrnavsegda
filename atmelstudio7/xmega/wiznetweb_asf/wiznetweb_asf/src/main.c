@@ -11,6 +11,13 @@ struct spi_device adc_spi = { .id = SPIC_SS };
 struct spi_device eth_spi = { .id = ETH_SS };
 struct spi_device sd_spi = { .id = SD_SS };
 
+const usart_serial_options_t usart_serial_options = {
+	.baudrate     = 9600,
+	.charlength   = USART_CHSIZE_8BIT_gc,
+	.paritytype   = USART_PMODE_DISABLED_gc,
+	.stopbits     = false
+};
+
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
 #define WIZNET_READ_OPCODE 0x0F
@@ -409,8 +416,9 @@ int main(void){
 	ioport_set_pin_level(SPIC_SS, IOPORT_PIN_LEVEL_HIGH);
 	ioport_set_pin_level(ETH_SS, IOPORT_PIN_LEVEL_HIGH);
 	ioport_set_pin_level(SD_SS, IOPORT_PIN_LEVEL_HIGH);
-
 	ioport_set_pin_level(ETH_SEN, IOPORT_PIN_LEVEL_LOW);
+
+	stdio_serial_init(&USARTC0, &usart_serial_options);
 
 	spi_master_init(&SPIC);
 	spi_enable(&SPIC);

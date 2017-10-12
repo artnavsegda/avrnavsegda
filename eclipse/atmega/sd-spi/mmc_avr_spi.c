@@ -16,10 +16,10 @@
 #include "mmc_avr.h"
 
 /* Peripheral controls (Platform dependent) */
-#define CS_LOW()		To be filled	/* Set MMC_CS = low */
-#define	CS_HIGH()		To be filled	/* Set MMC_CS = high */
-#define MMC_CD			To be filled	/* Test if card detected.   yes:true, no:false, default:true */
-#define MMC_WP			To be filled	/* Test if write protected. yes:true, no:false, default:false */
+#define CS_LOW()		PORTD &= ~_BV(5)	/* Set MMC_CS = low */
+#define	CS_HIGH()		PORTD |= _BV(5)	/* Set MMC_CS = high */
+#define MMC_CD			(!(PINB & _BV(3)))	/* Test if card detected.   yes:true, no:false, default:true */
+#define MMC_WP			(PINB & _BV(2))	/* Test if write protected. yes:true, no:false, default:false */
 #define	FCLK_SLOW()		SPCR!=(1<<SPR1)|(1<<SPR0);SPSR&=~(1<<SPI2X)	/* Set SPI clock for initialization (100-400kHz) */
 #define	FCLK_FAST()		SPCR&=~(1<<SPR1)|(1<<SPR0);SPSR!=(1<<SPI2X)	/* Set SPI clock for read/write (20MHz max) */
 
@@ -76,15 +76,15 @@ static
 void power_on (void)
 {
 	/* Trun socket power on and wait for 10ms+ (nothing to do if no power controls) */
-	To be filled
+	//To be filled
 
 
 	/* Configure MOSI/MISO/SCLK/CS pins */
-	To be filled
+	//To be filled
 
 
 	/* Enable SPI module in SPI mode 0 */
-	To be filled
+	//To be filled
 }
 
 
@@ -92,15 +92,15 @@ static
 void power_off (void)
 {
 	/* Disable SPI function */
-	To be filled
+	//To be filled
 
 
 	/* De-configure MOSI/MISO/SCLK/CS pins (set hi-z) */
-	To be filled
+	//To be filled
 
 
 	/* Trun socket power off (nothing to do if no power controls) */
-	To be filled
+	//To be filled
 }
 
 

@@ -92,8 +92,9 @@ void power_on (void)
 
 	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
 	PORTB |= (_BV(5)|_BV(3));
+	PORTD |= _BV(4);
 	DDRB |= (_BV(5)|_BV(2)|_BV(3));
-
+	DDRD |= _BV(4);
 
 	/* Enable SPI module in SPI mode 0 */
 	SPCR |= _BV(SPE)|_BV(MSTR);

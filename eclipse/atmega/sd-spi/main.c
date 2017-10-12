@@ -7,5 +7,6 @@ int main()
 {
 	startserial();
 	printf("Hello world\r\n");
+
 	while(1);
 }

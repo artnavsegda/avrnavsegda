@@ -86,16 +86,17 @@ BYTE CardType;			/* Card type flags (b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressi
 static
 void power_on (void)
 {
-	/* Trun socket power on and wait for 10ms+ (nothing to do if no power controls) */
+	/* Turn socket power on and wait for 10ms+ (nothing to do if no power controls) */
 	//To be filled
 
 
-	/* Configure MOSI/MISO/SCLK/CS pins */
-	//To be filled
+	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
+	PORTB |= (_BV(5)|_BV(3));
+	DDRB |= (_BV(5)|_BV(2)|_BV(3));
 
 
 	/* Enable SPI module in SPI mode 0 */
-	//To be filled
+	SPCR |= _BV(SPE)|_BV(MSTR);
 }
 
 

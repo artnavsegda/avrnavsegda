@@ -13,8 +13,8 @@ void starttimer(void)
 
 void startspi(void)
 {
-	DDRB = _BV(PORTB3)|_BV(PORTB5)|_BV(PORTB2);
-	SPCR = _BV(SPE)|_BV(MSTR);
+	DDRB |= _BV(PORTB3)|_BV(PORTB5)|_BV(PORTB2);
+	SPCR |= _BV(SPE)|_BV(MSTR);
 	SPSR |= _BV(SPI2X);
 }
 

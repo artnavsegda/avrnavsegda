@@ -8,12 +8,7 @@
 /*-----------------------------------------------------------------------*/
 
 #include "diskio.h"		/* FatFs lower layer API */
-#ifdef DRV_CFC
-#include "cfc_avr.h"	/* Header file of existing CF control module */
-#endif
-#ifdef DRV_MMC
 #include "mmc_avr.h"	/* Header file of existing SD control module */
-#endif
 
 
 /*-----------------------------------------------------------------------*/
@@ -24,17 +19,7 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
-	switch (pdrv) {
-#ifdef DRV_CFC
-	case DRV_CFC :
-		return cf_disk_status();
-#endif
-#ifdef DRV_MMC
-	case DRV_MMC :
-		return mmc_disk_status();
-#endif
-	}
-	return STA_NOINIT;
+	return mmc_disk_status();
 }
 
 
@@ -47,17 +32,7 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	switch (pdrv) {
-#ifdef DRV_CFC
-	case DRV_CFC :
-		return cf_disk_initialize();
-#endif
-#ifdef DRV_MMC
-	case DRV_MMC :
-		return mmc_disk_initialize();
-#endif
-	}
-	return STA_NOINIT;
+	return mmc_disk_initialize();
 }
 
 
@@ -73,17 +48,7 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	switch (pdrv) {
-#ifdef DRV_CFC
-	case DRV_CFC :
-		return cf_disk_read(buff, sector, count);
-#endif
-#ifdef DRV_MMC
-	case DRV_MMC :
-		return mmc_disk_read(buff, sector, count);
-#endif
-	}
-	return RES_PARERR;
+	return mmc_disk_read(buff, sector, count);
 }
 
 
@@ -100,17 +65,7 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	switch (pdrv) {
-#ifdef DRV_CFC
-	case DRV_CFC :
-		return cf_disk_write(buff, sector, count);
-#endif
-#ifdef DRV_MMC
-	case DRV_MMC :
-		return mmc_disk_write(buff, sector, count);
-#endif
-	}
-	return RES_PARERR;
+	return mmc_disk_write(buff, sector, count);
 }
 #endif
 
@@ -126,17 +81,7 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	switch (pdrv) {
-#ifdef DRV_CFC
-	case DRV_CFC :
-		return cf_disk_ioctl(cmd, buff);
-#endif
-#ifdef DRV_MMC
-	case DRV_MMC :
-		return mmc_disk_ioctl(cmd, buff);
-#endif
-	}
-	return RES_PARERR;
+	return mmc_disk_ioctl(cmd, buff);
 }
 #endif
 
@@ -148,12 +93,7 @@ DRESULT disk_ioctl (
 
 void disk_timerproc (void)
 {
-#ifdef DRV_CFC
-	cf_disk_timerproc();
-#endif
-#ifdef DRV_MMC
 	mmc_disk_timerproc();
-#endif
 }
 
 

@@ -89,7 +89,8 @@ void power_on (void)
 
 
 	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
-	PORTC.OUTSET = (_BV(5)|_BV(3)|_BV(4));
+	PORTC.OUTSET = (_BV(5)|_BV(7)|_BV(4));
+	PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc;
 	PORTD.OUTSET = _BV(4);
 	PORTC.DIRSET |= (_BV(5)|_BV(2)|_BV(3));
 	PORTD.DIRSET |= _BV(4);

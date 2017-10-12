@@ -18,7 +18,7 @@
 /* Peripheral controls (Platform dependent) */
 #define CS_LOW()		PORTD &= ~_BV(4)	/* Set MMC_CS = low */
 #define	CS_HIGH()		PORTD |= _BV(4)	/* Set MMC_CS = high */
-#define MMC_CD			(!(PINB & _BV(3)))	/* Test if card detected.   yes:true, no:false, default:true */
+#define MMC_CD			(!(PIND & _BV(5)))	/* Test if card detected.   yes:true, no:false, default:true */
 #define MMC_WP			(PINB & _BV(2))	/* Test if write protected. yes:true, no:false, default:false */
 
 /* Set SPI clock for initialization (100-400kHz) */

@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "integer.h"
 #include "diskio.h"
+#include "mmc_avr.h"
 
 volatile UINT Timer;    /* Performance timer (100Hz increment) */
 
@@ -21,6 +22,8 @@ int main()
 	starttimer();
 	startserial();
 	printf("Hello world\r\n");
+
+	printf("MMC status %d\r\n", mmc_disk_initialize());
 
 	while(1);
 }

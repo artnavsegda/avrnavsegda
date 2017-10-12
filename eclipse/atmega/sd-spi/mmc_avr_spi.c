@@ -24,15 +24,15 @@
 /* Set SPI clock for initialization (100-400kHz) */
 void FCLK_SLOW(void)
 {
-	SPCR |= (1<<SPR1)|(1<<SPR0);
-	SPSR &= ~(1<<SPI2X);
+	SPCR |= _BV(SPR1)|_BV(SPR0);
+	//SPSR &= ~(1<<SPI2X);
 }
 
 /* Set SPI clock for read/write (20MHz max) */
 void FCLK_FAST(void)
 {
-	SPCR &= ~(1<<SPR1)|(1<<SPR0);
-	SPSR |= (1<<SPI2X);
+	SPCR &= ~(_BV(SPR1)|_BV(SPR0));
+	//SPSR |= (1<<SPI2X);
 }
 
 /*--------------------------------------------------------------------------
@@ -91,13 +91,14 @@ void power_on (void)
 
 
 	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
-	PORTB |= (_BV(5)|_BV(3));
-	PORTD |= _BV(4);
+	PORTB |= (_BV(5)|_BV(3)|_BV(4));
+	PORTD &= ~_BV(4);
 	DDRB |= (_BV(5)|_BV(2)|_BV(3));
 	DDRD |= _BV(4);
 
 	/* Enable SPI module in SPI mode 0 */
 	SPCR |= _BV(SPE)|_BV(MSTR);
+	SPSR |= _BV(SPI2X);
 }
 
 

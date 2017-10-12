@@ -23,7 +23,9 @@ int main()
 	startserial();
 	printf("Hello world\r\n");
 
-	printf("MMC status %d\r\n", mmc_disk_initialize());
-
-	while(1);
+	while(1)
+	{
+		printf("MMC status %d\r\n", mmc_disk_initialize());
+		_delay_ms(1000);
+	}
 }

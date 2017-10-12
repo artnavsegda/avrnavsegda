@@ -13,9 +13,6 @@
 #include "rtc.h"
 #include "sound.h"
 
-
-
-FUSES = {0xF7, 0x91, 0xFC};		/* ATmega1284p fuses: Low, High, Extended. */
 /* This is the fuse settings for this project. The fuse bits will be included
 in the output hex file with program code. However some old flash programmers
 cannot load the fuse bits from hex file. If it is the case, remove this line
@@ -212,7 +209,7 @@ int main (void)
 
 
 	ioinit();				/* Initialize port settings and start system timer process */
-	uart_init(115200);		/* Initialize UART driver */
+	uart_init(9600);		/* Initialize UART driver */
 	xdev_out(uart_putc);	/* Register uart_putc() to xitoa module as console output */
 	xputs(PSTR("\nFatFs Module Test Monitor\n"));
 	xprintf(PSTR("LFN=%S, CP=%u\n"), FF_USE_LFN ? PSTR("Enabled") : PSTR("Disabled"), FF_CODE_PAGE);

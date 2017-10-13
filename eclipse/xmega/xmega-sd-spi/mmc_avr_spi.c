@@ -19,7 +19,7 @@
 #define CS_LOW()		PORTE.OUTCLR = _BV(2)	/* Set MMC_CS = low */
 #define	CS_HIGH()		PORTE.OUTSET = _BV(2)	/* Set MMC_CS = high */
 #define MMC_CD			(!(PORTB.IN & _BV(5)))	/* Test if card detected.   yes:true, no:false, default:true */
-#define MMC_WP			(PORTC.IN & _BV(2))	/* Test if write protected. yes:true, no:false, default:false */
+#define MMC_WP			0	/* Test if write protected. yes:true, no:false, default:false */
 
 /* Set SPI clock for initialization (100-400kHz) */
 void FCLK_SLOW(void)

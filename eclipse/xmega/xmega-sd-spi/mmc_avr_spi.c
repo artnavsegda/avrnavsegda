@@ -16,9 +16,9 @@
 #include "mmc_avr.h"
 
 /* Peripheral controls (Platform dependent) */
-#define CS_LOW()		PORTC.OUTCLR = _BV(4)	/* Set MMC_CS = low */
-#define	CS_HIGH()		PORTC.OUTSET |= _BV(4)	/* Set MMC_CS = high */
-#define MMC_CD			(!(PORTC.IN & _BV(5)))	/* Test if card detected.   yes:true, no:false, default:true */
+#define CS_LOW()		PORTE.OUTCLR = _BV(2)	/* Set MMC_CS = low */
+#define	CS_HIGH()		PORTE.OUTSET = _BV(2)	/* Set MMC_CS = high */
+#define MMC_CD			(!(PORTB.IN & _BV(5)))	/* Test if card detected.   yes:true, no:false, default:true */
 #define MMC_WP			(PORTC.IN & _BV(2))	/* Test if write protected. yes:true, no:false, default:false */
 
 /* Set SPI clock for initialization (100-400kHz) */
@@ -89,11 +89,10 @@ void power_on (void)
 
 
 	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
-	PORTC.OUTSET = (_BV(5)|_BV(7)|_BV(4));
-	PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc;
-	PORTD.OUTSET = _BV(4);
-	PORTC.DIRSET |= (_BV(5)|_BV(2)|_BV(3));
-	PORTD.DIRSET |= _BV(4);
+	PORTC.DIRSET = (_BV(5)|_BV(7)|_BV(4)); // MOSI,SCLK,CS output
+	PORTC.OUTSET = _BV(7); // SCLK level high
+	PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc; // MISO level pull up
+	PORTE.DIRSET = _BV(2); // MMC_CS output
 
 	/* Enable SPI module in SPI mode 0 */
 	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;

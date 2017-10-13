@@ -27,17 +27,23 @@ int main()
 	starttimer();
 	startserial();
 	printf("Hello world\r\n");
-	// disable all spi devices for now, except sd card
-	// PORTE.DIRSET = _BV(2); // sd card output
-	// PORTE.OUTSET = _BV(2); // sd card cs level high
-	PORTC.DIRSET = _BV(4); // ad7705 output
-	PORTC.OUTSET = _BV(4); // ad7705 cs level high
-	PORTC.DIRSET = _BV(0); // ethernet output
-	PORTC.OUTSET = _BV(0); // ethernet cs level high
-	// also disable wiznet SEN control
+
+	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
+	PORTC.DIRSET = (_BV(5)|_BV(7)|_BV(4)|_BV(0)); // MOSI,SCLK,CS output
 	PORTB.DIRSET = _BV(7); // wiznet SEN output
+	PORTE.DIRSET = _BV(2); // sd card output
+	PORTC.OUTSET = _BV(7); // SCLK level high
+	// disable all spi devices for now, except sd card
+	PORTE.OUTSET = _BV(2); // sd card cs level high
+	PORTC.OUTSET = _BV(4); // ad7705 cs level high
+	PORTC.OUTSET = _BV(0); // ethernet cs level high
+	PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc; // MISO level pull up
+	// also disable wiznet SEN control
 	// pretty unnecessary because output pin defaults to level low
 	PORTB.OUTCLR = _BV(7); // wiznet SEN level low
+
+	/* Enable SPI module in SPI mode 0 */
+	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
 
 	f_mount(&fs, "", 0);
 	f_opendir(&dir, "/");

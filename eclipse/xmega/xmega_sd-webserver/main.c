@@ -1,8 +1,10 @@
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include "wizchip_conf.h"
 #include "serial.h"
+#include "ff.h"
 
 #define DATA_BUF_SIZE   1024
 uint8_t RX_BUF[DATA_BUF_SIZE];
@@ -10,6 +12,14 @@ uint8_t TX_BUF[DATA_BUF_SIZE];
 
 #define MAX_HTTPSOCK	2
 uint8_t socknumlist[] = {2, 3};
+
+volatile UINT Timer;    /* Performance timer (100Hz increment) */
+
+ISR(TCC0_OVF_vect)
+{
+	Timer++;                        /* Performance counter for this module */
+	disk_timerproc();       /* Drive timer procedure of low level disk I/O module */
+}
 
 static void  wizchip_select(void)
 {
@@ -88,12 +98,12 @@ void start_ethernet(void)
 
 void start_timer(void)
 {
-	//OCR0A = F_CPU / 1024 / 100 - 1;
-	//TCCR0A = _BV(WGM01);
-	//TCCR0B = 0b101;
-	//TIMSK0 = _BV(OCIE0A);
+	TCC0_PER = 20000;                // Set period 10000
+	TCC0_CTRLA = TC_CLKSEL_DIV1_gc;                // Prescaler DIV1
+	TCC0_INTCTRLA = 2;                // Enable overflow interrupt
+	PMIC_CTRL = 2;                    // Enable medium level interrupts
 
-	//sei();
+	sei();
 }
 
 void start_sd(void)

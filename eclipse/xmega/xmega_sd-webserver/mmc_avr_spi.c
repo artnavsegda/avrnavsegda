@@ -76,47 +76,6 @@ BYTE CardType;			/* Card type flags (b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressi
 
 
 /*-----------------------------------------------------------------------*/
-/* Power Control  (Platform dependent)                                   */
-/*-----------------------------------------------------------------------*/
-/* When the target system does not support socket power control, there   */
-/* is nothing to do in these functions and chk_power always returns 1.   */
-
-static
-void power_on (void)
-{
-	/* Turn socket power on and wait for 10ms+ (nothing to do if no power controls) */
-	//To be filled
-
-
-	/* Configure MOSI/MISO/SCLK/CS pins (PD5-4-3 = H-L-H) */
-	PORTC.DIRSET = (_BV(5)|_BV(7)|_BV(4)); // MOSI,SCLK,CS output
-	PORTC.OUTSET = _BV(7); // SCLK level high
-	PORTC.PIN6CTRL = PORT_OPC_PULLUP_gc; // MISO level pull up
-	PORTE.DIRSET = _BV(2); // MMC_CS output
-
-	/* Enable SPI module in SPI mode 0 */
-	SPIC.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm;
-}
-
-
-static
-void power_off (void)
-{
-	/* Disable SPI function */
-	//To be filled
-
-
-	/* De-configure MOSI/MISO/SCLK/CS pins (set hi-z) */
-	//To be filled
-
-
-	/* Trun socket power off (nothing to do if no power controls) */
-	//To be filled
-}
-
-
-
-/*-----------------------------------------------------------------------*/
 /* Transmit/Receive data from/to MMC via SPI  (Platform dependent)       */
 /*-----------------------------------------------------------------------*/
 
@@ -346,12 +305,9 @@ DSTATUS mmc_disk_initialize (void)
 {
 	BYTE n, cmd, ty, ocr[4];
 
-
-	power_off();						/* Turn off the socket power to reset the card */
 	for (Timer1 = 10; Timer1; ) ;		/* Wait for 100ms */
 	if (Stat & STA_NODISK) return Stat;	/* No card in the socket? */
-
-	power_on();							/* Turn on the socket power */
+	select();							/* CS active low */
 	FCLK_SLOW();
 	for (n = 10; n; n--) xchg_spi(0xFF);	/* 80 dummy clocks */
 
@@ -384,8 +340,6 @@ DSTATUS mmc_disk_initialize (void)
 	if (ty) {			/* Initialization succeded */
 		Stat &= ~STA_NOINIT;		/* Clear STA_NOINIT */
 		FCLK_FAST();
-	} else {			/* Initialization failed */
-		power_off();
 	}
 
 	return Stat;
@@ -593,11 +547,6 @@ DRESULT mmc_disk_ioctl (
 		deselect();
 		break;
 
-	case CTRL_POWER_OFF :	/* Power off */
-		power_off();
-		Stat |= STA_NOINIT;
-		res = RES_OK;
-		break;
 #if _USE_ISDIO
 	case ISDIO_READ:
 		sdi = buff;

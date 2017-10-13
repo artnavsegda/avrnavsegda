@@ -20,10 +20,9 @@ ISR(TCC0_OVF_vect)
 
 int main()
 {
-	DWORD sz_drv, sz_eblk;
-	WORD sz_sect;
-	BYTE buff[FF_MAX_SS];
-	DRESULT dr;
+	FATFS fs;
+	DIR dir;
+	FILINFO fi;
 
 	starttimer();
 	startserial();
@@ -40,34 +39,15 @@ int main()
 	// pretty unnecessary because output pin defaults to level low
 	PORTB.OUTCLR = _BV(7); // wiznet SEN level low
 
-
+	f_mount(&fs, "", 0);
+	f_opendir(&dir, "/");
 	while(1)
 	{
-		printf("MMC status %d\r\n", disk_initialize(0));
-		_delay_ms(1000);
-		dr = disk_ioctl(0, GET_SECTOR_COUNT, &sz_drv);
-        if (dr == RES_OK)
-        	printf("Drive size %lu\r\n", sz_drv);
-        else
-            printf("Drive size ioctl failed.\n");
-        _delay_ms(1000);
-		dr = disk_ioctl(0, GET_SECTOR_SIZE, &sz_sect);
-        if (dr == RES_OK)
-        	printf("Sector size %u\r\n", sz_sect);
-        else
-            printf("Sector size ioctl failed.\n");
-		_delay_ms(1000);
-		dr = disk_ioctl(0, GET_BLOCK_SIZE, &sz_eblk);
-        if (dr == RES_OK)
-        	printf("Erase block is %lu sectors.\r\n", sz_eblk);
-        else
-            printf("Erase block sector size ioctl failed.\n");
-		_delay_ms(1000);
-		dr = disk_read(0, buff, 0, 1);
-        if (dr == RES_OK)
-        	printf("Disk read ok\r\n");
-        else
-            printf("Disk read failed.\n");
-        _delay_ms(1000);
+		f_readdir(&dir,&fi);
+		if (fi.fname[0] == 0)
+			break;
+		printf("%s\r\n", fi.fname);
 	}
+
+	while(1);
 }

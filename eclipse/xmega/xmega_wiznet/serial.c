@@ -1,8 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
-#define BAUD 9600
-#include <util/setbaud.h>
+#include <stdbool.h>
 
 static int uart_putchar(char c, FILE *stream);
 
@@ -10,22 +9,21 @@ static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
 static int uart_putchar(char c, FILE *stream)
 {
-	loop_until_bit_is_set(UCSR0A, UDRE0);
-	UDR0 = c;
+	loop_until_bit_is_set(USARTC0.STATUS,USART_DREIF_bp);
+	USARTC0.DATA = c;
 	return 0;
 }
 
 void start_serial(void)
 {
-    UBRR0H = UBRRH_VALUE;
-    UBRR0L = UBRRL_VALUE;
-#if USE_2X
-    UCSR0A |= _BV(U2X0);
-#else
-    UCSR0A &= ~(_BV(U2X0));
-#endif
-    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
-    UCSR0B = _BV(RXEN0) | _BV(TXEN0);   /* Enable RX and TX */
+	PORTC.DIRSET = PIN3_bm;
+	PORTC.DIRCLR = PIN2_bm;
+
+	USARTC0.CTRLC = (uint8_t) USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | false;
+	USARTC0.BAUDCTRLA = 12; // 9600
+
+	USARTC0.CTRLB |= USART_RXEN_bm;
+	USARTC0.CTRLB |= USART_TXEN_bm;
+
 	stdout = &mystdout;
 }
-

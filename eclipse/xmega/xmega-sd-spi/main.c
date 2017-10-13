@@ -22,6 +22,18 @@ int main()
 	starttimer();
 	startserial();
 	printf("Hello world\r\n");
+	// disable all spi devices for now, except sd card
+	// PORTE.DIRSET = _BV(2); // sd card output
+	// PORTE.OUTSET = _BV(2); // sd card cs level high
+	PORTC.DIRSET = _BV(4); // ad7705 output
+	PORTC.OUTSET = _BV(4); // ad7705 cs level high
+	PORTC.DIRSET = _BV(0); // ethernet output
+	PORTC.OUTSET = _BV(0); // ethernet cs level high
+	// also disable wiznet SEN control
+	PORTB.DIRSET = _BV(7); // wiznet SEN output
+	// pretty unnecessary because output pin defaults to level low
+	PORTB.OUTCLR = _BV(7); // wiznet SEN level low
+
 
 	while(1)
 	{

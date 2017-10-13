@@ -19,6 +19,10 @@ ISR(TCC0_OVF_vect)
 
 int main()
 {
+	DWORD sz_drv;
+	WORD sz_sect;
+	DRESULT dr;
+
 	starttimer();
 	startserial();
 	printf("Hello world\r\n");
@@ -37,7 +41,18 @@ int main()
 
 	while(1)
 	{
-		printf("MMC status %d\r\n", mmc_disk_initialize());
+		printf("MMC status %d\r\n", disk_initialize(0));
+		_delay_ms(1000);
+		dr = disk_ioctl(0, GET_SECTOR_COUNT, &sz_drv);
+        if (dr == RES_OK)
+        	printf("Drive size %lu\r\n", sz_drv);
+        else
+            printf("Drive size ioctl failed.\n");
+		dr = disk_ioctl(0, GET_SECTOR_SIZE, &sz_sect);
+        if (dr == RES_OK)
+        	printf("Sector size %u\r\n", sz_sect);
+        else
+            printf("Sector size ioctl failed.\n");
 		_delay_ms(1000);
 	}
 }

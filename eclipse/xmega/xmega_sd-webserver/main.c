@@ -5,6 +5,7 @@
 #include "wizchip_conf.h"
 #include "serial.h"
 #include "ff.h"
+#include "diskio.h"
 
 #define DATA_BUF_SIZE   1024
 uint8_t RX_BUF[DATA_BUF_SIZE];

@@ -8,6 +8,7 @@
 #include "integer.h"
 #include "diskio.h"
 #include "mmc_avr.h"
+#include "ff.h"
 
 volatile UINT Timer;    /* Performance timer (100Hz increment) */
 
@@ -19,8 +20,9 @@ ISR(TCC0_OVF_vect)
 
 int main()
 {
-	DWORD sz_drv;
+	DWORD sz_drv, sz_eblk;
 	WORD sz_sect;
+	BYTE buff[FF_MAX_SS];
 	DRESULT dr;
 
 	starttimer();
@@ -55,5 +57,17 @@ int main()
         else
             printf("Sector size ioctl failed.\n");
 		_delay_ms(1000);
+		dr = disk_ioctl(0, GET_BLOCK_SIZE, &sz_eblk);
+        if (dr == RES_OK)
+        	printf("Erase block is %lu sectors.\r\n", sz_eblk);
+        else
+            printf("Erase block sector size ioctl failed.\n");
+		_delay_ms(1000);
+		dr = disk_read(0, buff, 0, 1);
+        if (dr == RES_OK)
+        	printf("Disk read ok\r\n");
+        else
+            printf("Disk read failed.\n");
+        _delay_ms(1000);
 	}
 }

@@ -50,8 +50,8 @@ static void  wizchip_writeburst(uint8_t* pBuf, uint16_t len)
 void start_ethernet(void)
 {
 	wiz_NetInfo netinfo = { .mac 	= {0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef},	// Mac address
-	                            .ip 	= {192, 168, 0, 112},					// IP address
-	                            .sn 	= {255, 255, 255, 0},					// Subnet mask
+	                            .ip 	= {192, 168, 1, 150},					// IP address
+	                            .sn 	= {255, 255, 0, 0},					// Subnet mask
 	                            .gw 	= {192, 168, 0, 1},						// Gateway address
 	                            .dns 	= {8, 8, 8, 8},							// DNS server
 	                            .dhcp 	= NETINFO_STATIC };						// DHCP enable / disable
@@ -67,9 +67,14 @@ void start_ethernet(void)
 int main(void)
 {
 	start_serial();
-	printf("Serial started");
+	printf("Serial started\r\n");
+
+	DDRB |= _BV(PORTB3)|_BV(PORTB5)|_BV(PORTB2);
+	SPCR |= _BV(SPE)|_BV(MSTR);
+	SPSR |= _BV(SPI2X);
+
 	start_ethernet();
-	printf("Ethernet started");
+	printf("Ethernet started\r\n");
 
 	while(1);
 

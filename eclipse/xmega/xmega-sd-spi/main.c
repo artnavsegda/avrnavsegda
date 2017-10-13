@@ -48,6 +48,7 @@ int main()
         	printf("Drive size %lu\r\n", sz_drv);
         else
             printf("Drive size ioctl failed.\n");
+        _delay_ms(1000);
 		dr = disk_ioctl(0, GET_SECTOR_SIZE, &sz_sect);
         if (dr == RES_OK)
         	printf("Sector size %u\r\n", sz_sect);

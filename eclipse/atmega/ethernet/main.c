@@ -17,7 +17,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
-// AVRJazz Mega328 SPI I/O
+// Mega328 SPI I/O
 #define SPI_PORT PORTB
 #define SPI_DDR  DDRB
 #define SPI_CS   PORTB2

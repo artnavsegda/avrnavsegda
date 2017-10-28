@@ -97,7 +97,8 @@
 #define _DEBUG_MODE      1
 
 #if _DEBUG_MODE
-  #define BAUD_RATE 9600
+  #define BAUD 9600
+  #include <util/setbaud.h>
 #endif
 
 // Define W5100 Socket Register and Variables Used
@@ -112,8 +113,13 @@ uint8_t ledmode,ledeye,ledsign;
 #if _DEBUG_MODE
 void uart_init(void)
 {
-  UBRR0H = (((F_CPU/BAUD_RATE)/16)-1)>>8;		// set baud rate
-  UBRR0L = (((F_CPU/BAUD_RATE)/16)-1);
+  UBRR0H = UBRRH_VALUE;		// set baud rate
+  UBRR0L = UBRRL_VALUE;
+#if USE_2X
+    UCSR0A |= _BV(U2X0);
+#else
+    UCSR0A &= ~(_BV(U2X0));
+#endif
   UCSR0B = (1<<RXEN0)|(1<<TXEN0); 				// enable Rx & Tx
   UCSR0C=  (1<<UCSZ01)|(1<<UCSZ00);  	        // config USART; 8N1
 }
@@ -242,8 +248,8 @@ void W5100_Init(void)
 {
   // Ethernet Setup
   unsigned char mac_addr[] = {0x00,0x16,0x36,0xDE,0x58,0xF6};
-  unsigned char ip_addr[] = {192,168,1,150};
-  unsigned char sub_mask[] = {255,255,255,0};
+  unsigned char ip_addr[] = {192,168,1,177};
+  unsigned char sub_mask[] = {255,255,0,0};
   unsigned char gtw_addr[] = {192,168,1,1};
 
   // Setting the Wiznet W5100 Mode Register: 0x0000
@@ -649,7 +655,7 @@ int main(void){
 	    strcpy_P((char *)buf,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
 	    strcat_P((char *)buf,PSTR("<html><body><span style=\"color:#0000A0\">\r\n"));
 	    strcat_P((char *)buf,PSTR("<h1>Embedded Web Server</h1>\r\n"));
-	    strcat_P((char *)buf,PSTR("<h3>AVRJazz Mega328 and WIZ811MJ</h3>\r\n"));
+	    strcat_P((char *)buf,PSTR("<h3>Arduino Pro mini and Wiznet W5100</h3>\r\n"));
 	    strcat_P((char *)buf,PSTR("<p><form method=\"POST\">\r\n"));
 
 	    // Now Send the HTTP Response

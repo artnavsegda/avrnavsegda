@@ -1,9 +1,9 @@
 /*****************************************************************************
 //  File Name    : wiznetweb.c
 //  Version      : 1.0
-//  Description  : AVRJazz Mega328 and Wiznet W5100 Web Server
+//  Description  : Arduino Mega328 and Wiznet W5100 Web Server
 //  Author       : RWB
-//  Target       : AVRJazz Mega328 Board
+//  Target       : Arduino Mega328 Board
 //  Compiler     : AVR-GCC 4.3.2; avr-libc 1.6.6 (WinAVR 20090313)
 //  IDE          : Atmel AVR Studio 4.17
 //  Programmer   : AVRJazz Mega328 STK500 v2.0 Bootloader
@@ -94,10 +94,10 @@
 #define TCP_PORT         80       // TCP/IP Port
 
 // Debugging Mode, 0 - Debug OFF, 1 - Debug ON
-#define _DEBUG_MODE      0
+#define _DEBUG_MODE      1
 
 #if _DEBUG_MODE
-  #define BAUD_RATE 19200
+  #define BAUD_RATE 9600
 #endif
 
 // Define W5100 Socket Register and Variables Used

@@ -95,7 +95,7 @@ int main(void)
 
 	while(1)
 	{
-		loopback_tcps(0, gDATABUF, 5000);
+		loopback_tcps(0, gDATABUF, 23);
 	}
 
 	return 0;

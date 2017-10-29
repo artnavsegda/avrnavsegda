@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "wizchip_conf.h"
 #include "serial.h"
+#include "loopback.h"
 
 static void  wizchip_select(void)
 {
@@ -75,6 +76,8 @@ void Display_Net_Conf()
 	printf("DNS: %d.%d.%d.%d\r\n", gWIZNETINFO.dns[0], gWIZNETINFO.dns[1], gWIZNETINFO.dns[2], gWIZNETINFO.dns[3]);
 }
 
+uint8_t gDATABUF[128];
+
 int main(void)
 {
 	uint8_t tmpstr[6] = {0,};
@@ -90,7 +93,10 @@ int main(void)
 	printf("Wiznet %s started\r\n", tmpstr);
 	Display_Net_Conf();
 
-	while(1);
+	while(1)
+	{
+		loopback_tcps(0, gDATABUF, 5000);
+	}
 
 	return 0;
 }

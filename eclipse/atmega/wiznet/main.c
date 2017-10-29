@@ -56,7 +56,7 @@ void start_ethernet(void)
 	                            .dns 	= {8, 8, 8, 8},							// DNS server
 	                            .dhcp 	= NETINFO_STATIC };						// DHCP enable / disable
 
-	uint8_t memsize[2][8] = { { 2, 2, 2, 2 }, { 2, 2, 2, 2 } };
+	uint8_t memsize[2][4] = { { 2, 2, 2, 2 }, { 2, 2, 2, 2 } };
 	reg_wizchip_cs_cbfunc(wizchip_select, wizchip_deselect);
 	reg_wizchip_spi_cbfunc(wizchip_read, wizchip_write);
 	reg_wizchip_spiburst_cbfunc(wizchip_readburst, wizchip_writeburst);

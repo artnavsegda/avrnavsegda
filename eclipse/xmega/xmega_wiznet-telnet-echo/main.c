@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "wizchip_conf.h"
 #include "serial.h"
+#include "loopback.h"
 
 static void  wizchip_select(void)
 {
@@ -67,8 +68,22 @@ void start_ethernet(void)
 	ctlnetwork(CN_SET_NETINFO, (void*) &netinfo);
 }
 
+void Display_Net_Conf()
+{
+	wiz_NetInfo gWIZNETINFO;
+	ctlnetwork(CN_GET_NETINFO, (void*) &gWIZNETINFO);
+	printf("\r\nMAC: %02X:%02X:%02X:%02X:%02X:%02X\r\n", gWIZNETINFO.mac[0], gWIZNETINFO.mac[1], gWIZNETINFO.mac[2], gWIZNETINFO.mac[3], gWIZNETINFO.mac[4], gWIZNETINFO.mac[5]);
+	printf("IP: %d.%d.%d.%d\r\n", gWIZNETINFO.ip[0], gWIZNETINFO.ip[1], gWIZNETINFO.ip[2], gWIZNETINFO.ip[3]);
+	printf("GW: %d.%d.%d.%d\r\n", gWIZNETINFO.gw[0], gWIZNETINFO.gw[1], gWIZNETINFO.gw[2], gWIZNETINFO.gw[3]);
+	printf("SN: %d.%d.%d.%d\r\n", gWIZNETINFO.sn[0], gWIZNETINFO.sn[1], gWIZNETINFO.sn[2], gWIZNETINFO.sn[3]);
+	printf("DNS: %d.%d.%d.%d\r\n", gWIZNETINFO.dns[0], gWIZNETINFO.dns[1], gWIZNETINFO.dns[2], gWIZNETINFO.dns[3]);
+}
+
+uint8_t gDATABUF[128];
+
 int main(void)
 {
+	uint8_t tmpstr[6] = {0,};
 	start_serial();
 	printf("Serial started\r\n");
 
@@ -98,9 +113,14 @@ int main(void)
 	PORTA.OUTSET = PIN0_bm; //write one
 
 	start_ethernet();
-	printf("Ethernet started\r\n");
+	ctlwizchip(CW_GET_ID,(void*)tmpstr);
+	printf("Wiznet %s started\r\n", tmpstr);
+	Display_Net_Conf();
 
-	while(1);
+	while(1)
+	{
+		loopback_tcps(0, gDATABUF, 23);
+	}
 
 	return 0;
 }

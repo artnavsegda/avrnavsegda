@@ -4,6 +4,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include "serial.h"
 
 // Wiznet W5100 Op Code
 #define WIZNET_WRITE_OPCODE 0xF0
@@ -369,6 +370,9 @@ int main(void){
 	uint16_t rsize;
 	char radiostat0[10],radiostat1[10],temp[4];
 	int getidx,postidx;
+
+	startserial();
+	printf("serial started\n\r");
 
 	// Initial the Peripheral
 	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input

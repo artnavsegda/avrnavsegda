@@ -1,10 +1,27 @@
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include "wizchip_conf.h"
 #include "serial.h"
 #include "httpServer.h"
 #include "webpage.h"
+
+ISR(TCC0_OVF_vect)
+{
+	PORTD.OUTTGL = PIN4_bm;
+	httpServer_time_handler();
+}
+
+void start_timer(void)
+{
+	// 31250 * 64 = 2000000 = 2 mHz
+	TCC0_PER = 31250;                // Set period 31250
+	TCC0_CTRLA = TC_CLKSEL_DIV64_gc;                // Prescaler DIV64
+	TCC0_INTCTRLA = 2;                // Enable overflow interrupt
+	PMIC_CTRL = 2;                    // Enable medium level interrupts
+	sei();
+}
 
 uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t * len)
 {
@@ -92,13 +109,16 @@ void Display_Net_Conf()
 
 uint8_t RX_BUF[1024];
 uint8_t TX_BUF[1024];
-uint8_t socknumlist[] = {0, 1, 2, 3};
+//uint8_t socknumlist[] = {0, 1, 2, 3};
+uint8_t socknumlist[] = {0};
 
 int main(void)
 {
 	uint8_t tmpstr[6] = {0,};
 	start_serial();
 	printf("Serial started\r\n");
+	start_timer();
+	printf("Timer started\r\n");
 
 	// Initial the Peripheral
 	// Set MOSI (PORTC5),SCK (PORTC7), PORTC0 (ETH SS) and PORTC4 (adc SS) as output, others as input
@@ -109,6 +129,8 @@ int main(void)
 	PORTA.DIRSET = PIN0_bm;
 	// SEN wiznet
 	PORTB.DIRSET = PIN7_bm;
+	// Status LED
+	PORTD.DIRSET = PIN4_bm;
 
 	// adc SS and eth SS deactivate
 	PORTC.OUTSET = PIN4_bm|PIN0_bm;
@@ -129,14 +151,18 @@ int main(void)
 	ctlwizchip(CW_GET_ID,(void*)tmpstr);
 	printf("Wiznet %s started\r\n", tmpstr);
 	Display_Net_Conf();
-	httpServer_init(TX_BUF, RX_BUF, 4, socknumlist);
+	//httpServer_init(TX_BUF, RX_BUF, 4, socknumlist);
+	httpServer_init(TX_BUF, RX_BUF, 1, socknumlist);
 	reg_httpServer_webContent((uint8_t *)"index.html", (uint8_t *)index_page);
 	display_reg_webContent_list();
 
 	while(1)
 	{
-		for(int i = 0; i < 4; i++)
+		//for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 1; i++)
+		{
 			httpServer_run(i);
+		}
 	}
 
 	return 0;

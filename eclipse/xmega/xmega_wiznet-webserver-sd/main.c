@@ -7,12 +7,9 @@
 #include "ff.h"
 #include "diskio.h"
 
-#define DATA_BUF_SIZE   1024
-uint8_t RX_BUF[DATA_BUF_SIZE];
-uint8_t TX_BUF[DATA_BUF_SIZE];
-
-#define MAX_HTTPSOCK	2
-uint8_t socknumlist[] = {2, 3};
+uint8_t RX_BUF[1024];
+uint8_t TX_BUF[1024];
+uint8_t socknumlist[] = {0, 1, 2, 3};
 
 ISR(TCC0_OVF_vect)
 {
@@ -172,11 +169,11 @@ int main(void)
 	ctlwizchip(CW_GET_ID,(void*)tmpstr);
 	printf("Wiznet %s started\r\n", tmpstr);
 	Display_Net_Conf();
-	httpServer_init(TX_BUF, RX_BUF, MAX_HTTPSOCK, socknumlist);
+	httpServer_init(TX_BUF, RX_BUF, 4, socknumlist);
 
 	while(1)
 	{
-		for(int i = 0; i < MAX_HTTPSOCK; i++)
+		for(int i = 0; i < 4; i++)
 		{
 			httpServer_run(i);
 		}

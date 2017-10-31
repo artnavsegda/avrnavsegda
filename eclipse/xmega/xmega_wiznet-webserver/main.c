@@ -25,7 +25,12 @@ void start_timer(void)
 
 uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t * len)
 {
-	return 0;
+	uint8_t ret = 1; // ret = 1 means 'uri_name' matched
+	if(strcmp((const char *)uri_name, "hello.cgi") == 0)
+	{
+		*len = sprintf((char *)buf, "hello world");
+	}
+	return ret;
 }
 
 uint8_t predefined_set_cgi_processor(uint8_t * uri_name, uint8_t * uri, uint8_t * buf, uint16_t * len)

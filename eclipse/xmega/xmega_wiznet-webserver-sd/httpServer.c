@@ -170,7 +170,7 @@ void httpServer_run(uint8_t seqnum)
 
 						gettime = get_httpServer_timecount();
 						// Check the TX socket buffer for End of HTTP response sends
-						while(getSn_TX_FSR(s) != (getSn_TXBUF_SIZE(s)*1024))
+						while(getSn_TX_FSR(s) != (getSn_TXBUF_SIZE(s)*1024*2))
 						{
 							if((get_httpServer_timecount() - gettime) > 3)
 							{
@@ -207,9 +207,9 @@ void httpServer_run(uint8_t seqnum)
 					HTTPSock_Status[seqnum].file_start = 0;
 					HTTPSock_Status[seqnum].sock_status = STATE_HTTP_IDLE;
 
-//#ifdef _USE_SDCARD_
-//					f_close(&fs);
-//#endif
+#ifdef _USE_SDCARD_
+					f_close(&fs);
+#endif
 #ifdef _USE_WATCHDOG_
 					HTTPServer_WDT_Reset();
 #endif
@@ -453,9 +453,9 @@ static void send_http_response_body(uint8_t s, uint8_t * uri_name, uint8_t * buf
 	}
 
 // ## 20141219 Eric added, for 'File object structure' (fs) allocation reduced (8 -> 1)
-#ifdef _USE_SDCARD_
-	f_close(&fs);
-#endif
+//#ifdef _USE_SDCARD_
+//	f_close(&fs);
+//#endif
 // ## 20141219 added end
 }
 

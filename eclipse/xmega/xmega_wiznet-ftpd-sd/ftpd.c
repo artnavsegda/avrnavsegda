@@ -147,7 +147,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
 {
 	uint16_t size = 0, i;
 	long ret = 0;
-	uint32_t blocklen, send_byte, recv_byte;
+	UINT blocklen, send_byte, recv_byte;
 	uint32_t remain_filesize;
 	uint32_t remain_datasize;
 #if defined(F_FILESYSTEM)
@@ -487,7 +487,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
    			{
    				if(ftp.dsock_mode == PASSIVE_MODE){
 #if defined(_FTP_DEBUG_)
-   					printf("%d:FTPDataStart, port : %d\r\n",DATA_SOCK, local_port);
+   					printf("%d:FTPDataStart, port : %u\r\n",DATA_SOCK, local_port);
 #endif
    					if((ret=socket(DATA_SOCK, Sn_MR_TCP, local_port, 0x0)) != DATA_SOCK)
    					{
@@ -778,7 +778,7 @@ char proc_ftpd(char * buf)
 			ftp.dsock_mode = PASSIVE_MODE;
 			ftp.dsock_state = DATASOCK_READY;
 #if defined(_FTP_DEBUG_)
-			printf("PASV port: %d\r\n", local_port);
+			printf("PASV port: %u\r\n", local_port);
 #endif
 		break;
 

@@ -90,7 +90,10 @@ void start_ethernet(wiz_NetInfo netinfo)
 	reg_wizchip_cs_cbfunc(wizchip_select, wizchip_deselect);
 	reg_wizchip_spi_cbfunc(wizchip_read, wizchip_write);
 	reg_wizchip_spiburst_cbfunc(wizchip_readburst, wizchip_writeburst);
-	ctlwizchip(CW_INIT_WIZCHIP, (void*) memsize);
+	wizchip_sw_reset();
+	//ctlwizchip(CW_INIT_WIZCHIP, (void*) memsize);
+	WIZCHIP_WRITE(RMSR, 0x55);
+	WIZCHIP_WRITE(TMSR, 0x55);
 	ctlnetwork(CN_SET_NETINFO, (void*) &netinfo);
 }
 

@@ -503,7 +503,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
    						local_port = 35000;
    				}else{
 #if defined(_FTP_DEBUG_)
-   					printf("%d:FTPDataStart, port : %d\r\n",DATA_SOCK, IPPORT_FTPD);
+   					printf("%d:FTPDataStart, port : %u\r\n",DATA_SOCK, IPPORT_FTPD);
 #endif
    					if((ret=socket(DATA_SOCK, Sn_MR_TCP, IPPORT_FTPD, 0x0)) != DATA_SOCK)
    					{
@@ -665,7 +665,7 @@ char proc_ftpd(char * buf)
 			break;
 
 		case FEAT_CMD :
-			slen = sprintf(sendbuf, "211-Features:\r\n MDTM\r\n REST STREAM\r\n SIZE\r\n MLST size*;type*;create*;modify*;\r\n MLSD\r\n UTF8\r\n CLNT\r\n MFMT\r\n211 END\r\n");
+			slen = sprintf(sendbuf, "211-Features:\r\n REST STREAM\r\n SIZE\r\n MLST size*;type*;create*;modify*;\r\n MLSD\r\n UTF8\r\n CLNT\r\n MFMT\r\n211 END\r\n");
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			break;
 
@@ -954,7 +954,7 @@ int pport(char * arg)
 		}
 	}
 #if defined(_FTP_DEBUG_)
-	printf("ip : %d.%d.%d.%d, port : %d\r\n", remote_ip.cVal[0], remote_ip.cVal[1], remote_ip.cVal[2], remote_ip.cVal[3], remote_port);
+	printf("ip : %d.%d.%d.%d, port : %u\r\n", remote_ip.cVal[0], remote_ip.cVal[1], remote_ip.cVal[2], remote_ip.cVal[3], remote_port);
 #endif
 
 	return 0;

@@ -15,6 +15,8 @@
 #include <string.h>
 #include <limits.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 //#include "stdio_private.h"
 #include "socket.h"
 #include "ftpd.h"
@@ -291,11 +293,11 @@ uint8_t ftpd_run(uint8_t * dbuf)
     				if (strncmp(ftp.workingdir, "/$Recycle.Bin", sizeof("/$Recycle.Bin")) != 0)
     					size = sprintf(dbuf, "drwxr-xr-x 1 ftp ftp 0 Dec 31 2014 $Recycle.Bin\r\n-rwxr-xr-x 1 ftp ftp 512 Dec 31 2014 test.txt\r\n");
 #endif
-    				size = strlen(dbuf);
+    				size = strlen((char *)dbuf);
     				send(DATA_SOCK, dbuf, size);
     				ftp.current_cmd = NO_CMD;
     				disconnect(DATA_SOCK);
-    				size = sprintf(dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.workingdir);
+    				size = sprintf((char *)dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.workingdir);
     				send(CTRL_SOCK, dbuf, size);
     				break;
 
@@ -359,7 +361,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
 #endif
     				ftp.current_cmd = NO_CMD;
     				disconnect(DATA_SOCK);
-    				size = sprintf(dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.filename);
+    				size = sprintf((char *)dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.filename);
     				send(CTRL_SOCK, dbuf, size);
     				break;
 
@@ -462,7 +464,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
 #endif
     				ftp.current_cmd = NO_CMD;
     				disconnect(DATA_SOCK);
-    				size = sprintf(dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.filename);
+    				size = sprintf((char *)dbuf, "226 Successfully transferred \"%s\"\r\n", ftp.filename);
     				send(CTRL_SOCK, dbuf, size);
     				break;
 
@@ -689,8 +691,8 @@ char proc_ftpd(char * buf)
 			if(strlen(ftp.workingdir) == 1)
 				sprintf(ftp.filename, "/%s", arg);
 			else
-				sprintf(ftp.filename, "%s/%s", ftp.workingdir, arg);
-			slen = sprintf(sendbuf, "150 Opening data channel for file downloand from server of \"%s\"\r\n", ftp.filename);
+				snprintf(ftp.filename, LINELEN, "%s/%s", ftp.workingdir, arg);
+			slen = snprintf(sendbuf, 200, "150 Opening data channel for file downloand from server of \"%s\"\r\n", ftp.filename);
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			ftp.current_cmd = RETR_CMD;
 			break;
@@ -706,8 +708,8 @@ char proc_ftpd(char * buf)
 			if(strlen(ftp.workingdir) == 1)
 				sprintf(ftp.filename, "/%s", arg);
 			else
-				sprintf(ftp.filename, "%s/%s", ftp.workingdir, arg);
-			slen = sprintf(sendbuf, "150 Opening data channel for file upload to server of \"%s\"\r\n", ftp.filename);
+				snprintf(ftp.filename, LINELEN, "%s/%s", ftp.workingdir, arg);
+			slen = snprintf(sendbuf, 200, "150 Opening data channel for file upload to server of \"%s\"\r\n", ftp.filename);
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			ftp.current_cmd = STOR_CMD;
 			if((ret = connect(DATA_SOCK, remote_ip.cVal, remote_port)) != SOCK_OK){
@@ -740,7 +742,7 @@ char proc_ftpd(char * buf)
 #if defined(_FTP_DEBUG_)
 			printf("MLSD_CMD\r\n");
 #endif
-			slen = sprintf(sendbuf, "150 Opening data channel for directory listing of \"%s\"\r\n", ftp.workingdir);
+			slen = snprintf(sendbuf, 200, "150 Opening data channel for directory listing of \"%s\"\r\n", ftp.workingdir);
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			ftp.current_cmd = MLSD_CMD;
 			break;
@@ -749,7 +751,7 @@ char proc_ftpd(char * buf)
 #if defined(_FTP_DEBUG_)
 			printf("LIST_CMD\r\n");
 #endif
-			slen = sprintf(sendbuf, "150 Opening data channel for directory listing of \"%s\"\r\n", ftp.workingdir);
+			slen = snprintf(sendbuf, 200, "150 Opening data channel for directory listing of \"%s\"\r\n", ftp.workingdir);
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			ftp.current_cmd = LIST_CMD;
 			break;
@@ -767,7 +769,7 @@ char proc_ftpd(char * buf)
 
 		case PWD_CMD:
 		case XPWD_CMD:
-			slen = sprintf(sendbuf, "257 \"%s\" is current directory.\r\n", ftp.workingdir);
+			slen = snprintf(sendbuf, 200, "257 \"%s\" is current directory.\r\n", ftp.workingdir);
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			break;
 
@@ -825,7 +827,7 @@ char proc_ftpd(char * buf)
 				if(slen == 0){
 					slen = sprintf(sendbuf, "213 %d\r\n", slen);
 					strcpy(ftp.workingdir, arg);
-					slen = sprintf(sendbuf, "250 CWD successful. \"%s\" is current directory.\r\n", ftp.workingdir);
+					slen = snprintf(sendbuf, 200, "250 CWD successful. \"%s\" is current directory.\r\n", ftp.workingdir);
 				}
 				else
 				{
@@ -835,7 +837,7 @@ char proc_ftpd(char * buf)
 			else
 			{
 				strcpy(ftp.workingdir, arg);
-				slen = sprintf(sendbuf, "250 CWD successful. \"%s\" is current directory.\r\n", ftp.workingdir);
+				slen = snprintf(sendbuf, 200, "250 CWD successful. \"%s\" is current directory.\r\n", ftp.workingdir);
 			}
 			send(CTRL_SOCK, (uint8_t *)sendbuf, slen);
 			break;
@@ -930,7 +932,7 @@ int pport(char * arg)
 	{
 		if(i==0) tok = strtok(arg,",\r\n");
 		else	 tok = strtok(NULL,",");
-		remote_ip.cVal[i] = (uint8_t)atoi(tok, 10);
+		remote_ip.cVal[i] = (uint8_t)atoi(tok);
 		if (!tok)
 		{
 #if defined(_FTP_DEBUG_)
@@ -944,7 +946,7 @@ int pport(char * arg)
 	{
 		tok = strtok(NULL,",\r\n");
 		remote_port <<= 8;
-		remote_port += atoi(tok, 10);
+		remote_port += atoi(tok);
 		if (!tok)
 		{
 #if defined(_FTP_DEBUG_)

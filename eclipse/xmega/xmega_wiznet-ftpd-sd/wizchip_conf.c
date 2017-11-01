@@ -147,7 +147,7 @@ void 	wizchip_spi_writeburst(uint8_t* pBuf, uint16_t len) {}
 //M20150401 : For a compiler didnot support a member of structure
 //            Replace the assignment of struct members with the assingment of array
 //
-/*
+
 _WIZCHIP  WIZCHIP =
       {
       .id                  = _WIZCHIP_ID_,
@@ -156,13 +156,12 @@ _WIZCHIP  WIZCHIP =
       .CRIS._exit          = wizchip_cris_exit,
       .CS._select          = wizchip_cs_select,
       .CS._deselect        = wizchip_cs_deselect,
-      .IF.BUS._read_byte   = wizchip_bus_readbyte,
-      .IF.BUS._write_byte  = wizchip_bus_writebyte
+      .IF.BUS._read_data   = wizchip_bus_readdata,
+      .IF.BUS._write_data  = wizchip_bus_writedata
 //    .IF.SPI._read_byte   = wizchip_spi_readbyte,
 //    .IF.SPI._write_byte  = wizchip_spi_writebyte
       };
-*/      
-_WIZCHIP  WIZCHIP =
+/*_WIZCHIP  WIZCHIP =
       {
       _WIZCHIP_IO_MODE_,
       _WIZCHIP_ID_ ,
@@ -177,7 +176,7 @@ _WIZCHIP  WIZCHIP =
       wizchip_bus_writedata,
 //    wizchip_spi_readbyte,
 //    wizchip_spi_writebyte
-      };
+      };*/
 
 
 static uint8_t    _DNS_[4];      // DNS server ip address

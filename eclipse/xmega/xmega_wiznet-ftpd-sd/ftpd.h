@@ -24,7 +24,7 @@
 #define _FTP_DEBUG_
 
 
-#define LINELEN		100
+#define LINELEN		300
 //#define DATA_BUF_SIZE	100
 //#if !defined(F_FILESYSTEM)
 #define _MAX_SS		512

@@ -21,6 +21,8 @@
 
 #include "ff.h"			/* Declarations of FatFs API */
 #include "diskio.h"		/* Declarations of device I/O functions */
+#include <stdio.h>
+#include <string.h>
 
 
 /*--------------------------------------------------------------------------
@@ -3302,52 +3304,26 @@ FRESULT validate (	/* Returns FR_OK or FR_INVALID_OBJECT */
 
 FRESULT scan_files(char* path, char *buf, int * buf_len)
 {
-	FRESULT res;
-	FILINFO fno;
-	DIR dir;
-	int i, len, buf_ptr = 0;
-	char *fn; 	/* This function is assuming no_Unicode cfg.*/
-#ifdef FF_USE_LFN
-	//static char lfn[FF_MAX_LFN + 1];
-	//fno.fname = lfn;
-	//fno.lfsize = sizeof(lfn);
-#endif
+    FRESULT res;
+    DIR dir;
+    FILINFO fno;
 
-	res = f_opendir(&dir, path);
-	printf("f_opendir res: %d\r\n", res);
-	if(res == FR_OK){
-		i = strlen(path);
-		printf("strlen of path: %s %d \r\n", path, i);
-		for(;;){
-			res = f_readdir(&dir, &fno);
-			if(res != FR_OK || fno.fname[0] == 0) break;
-			if(fno.fname[0] == '.') continue;
-#ifdef FF_USE_LFN
-			fn = *fno.fname ? fno.fname : fno.altname;
-#else
-			fn = fno.fname;
-#endif
+    *buf_len = 0;
 
-			if(fno.fattrib & AM_DIR)
-			{
-				sprintf(buf + buf_ptr, "d");
-			}else
-			{
-				sprintf(buf + buf_ptr, "-");
+	res = f_opendir(&dir, path);                       /* Open the directory */
+    if (res == FR_OK) {
+    		for (;;) {
+    			res = f_readdir(&dir, &fno);                   /* Read a directory item */
+    			if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
+			if (fno.fattrib & AM_DIR) {                    /* It is a directory */
+				printf("directory: %s \r\n", fno.fname);
+				*buf_len += sprintf(buf + *buf_len, "directory: %s \r\n", fno.fname);
+			} else {                                       /* It is a file. */
+				printf("file: %s \r\n", fno.fname);
+				*buf_len += sprintf(buf + *buf_len, "file: %s \r\n", fno.fname);
 			}
-			buf_ptr++;
-			// drwxr-xr-x 1 ftp ftp              0 Apr 07  2014 $RECYCLE.BIN\r\n
-			//len = sprintf(buf + buf_ptr, "rwxr-xr-x 1 ftp ftp              %d %s %s\r\n", fno.fsize, date_str, fn);
-			printf("rwxr-xr-x 1 ftp ftp %d Apr 07  2014 %s\r\n", fno.fsize, fno.fname);
-			len = sprintf(buf + buf_ptr, "rwxr-xr-x 1 ftp ftp %d Apr 07  2014 %s\r\n", fno.fsize, fno.fname);
-			buf_ptr += len;
-			printf("fn: %s \r\n", fno.fname);
-
 		}
-		//*buf_len = strlen(buf);
-		printf("%s", buf);
-		printf("\r\nbuf_len : %d, sizeof(buf): %d\r\n", buf_len, sizeof(buf));
-		//f_closedir(&dir);
+		f_closedir(&dir);
 	}
 	return res;
 }
@@ -3357,7 +3333,6 @@ int get_filesize(char* path, char *filename)
 	FRESULT res;
 	FILINFO fno;
 	DIR dir;
-	int i, len, buf_ptr = 0;
 	char *fn; 	/* This function is assuming no_Unicode cfg.*/
 #ifdef _USE_LFN
 	static char lfn[_MAX_LFN + 1];

@@ -8,7 +8,7 @@
 #include "diskio.h"
 #include "ftpd.h"
 
-uint8_t gFTPBUF[_MAX_SS];
+uint8_t gFTPBUF[4096];
 
 ISR(TCC0_OVF_vect)
 {

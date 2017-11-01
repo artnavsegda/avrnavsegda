@@ -3316,11 +3316,9 @@ FRESULT scan_files(char* path, char *buf, int * buf_len)
     			res = f_readdir(&dir, &fno);                   /* Read a directory item */
     			if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
 			if (fno.fattrib & AM_DIR) {                    /* It is a directory */
-				printf("directory: %s \r\n", fno.fname);
-				*buf_len += sprintf(buf + *buf_len, "directory: %s \r\n", fno.fname);
+				*buf_len += sprintf(buf + *buf_len, "drwxr-xr-x 1 ftp ftp %lu Apr 07 2014 %s\r\n", fno.fsize, fno.fname);
 			} else {                                       /* It is a file. */
-				printf("file: %s \r\n", fno.fname);
-				*buf_len += sprintf(buf + *buf_len, "file: %s \r\n", fno.fname);
+				*buf_len += sprintf(buf + *buf_len, "-rwxr-xr-x 1 ftp ftp %lu Apr 07 2014 %s\r\n", fno.fsize, fno.fname);
 			}
 		}
 		f_closedir(&dir);

@@ -793,7 +793,10 @@ char proc_ftpd(char * buf)
 				tmpstr = strrchr(arg, '/');
 				*tmpstr = 0;
 #if defined(F_FILESYSTEM)
-				slen = get_filesize(arg, tmpstr + 1);
+				if (tmpstr == NULL)
+					slen = get_filesize("/", arg);
+				else
+					slen = get_filesize(arg, tmpstr + 1);
 #else
 				slen = _MAX_SS;
 #endif

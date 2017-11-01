@@ -281,7 +281,7 @@ uint8_t ftpd_run(uint8_t * dbuf)
     				printf("previous size: %d\r\n", size);
 #endif
 #if defined(F_FILESYSTEM)
-    				scan_files(ftp.workingdir, dbuf, (int *)&size);
+    				scan_files(ftp.workingdir, (char *)dbuf, (int *)&size);
 #endif
 #if defined(_FTP_DEBUG_)
     				printf("returned size: %d\r\n", size);

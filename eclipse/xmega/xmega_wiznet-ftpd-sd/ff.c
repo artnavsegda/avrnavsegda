@@ -3307,73 +3307,26 @@ FRESULT scan_files(char* path, char *buf, int * buf_len)
 	DIR dir;
 	int i, len, buf_ptr = 0;
 	char *fn; 	/* This function is assuming no_Unicode cfg.*/
-	char date_str[15];
-	int date_str_ptr = 0;
-#ifdef _USE_LFN
-	static char lfn[_MAX_LFN + 1];
-	fno.lfname = lfn;
-	fno.lfsize = sizeof(lfn);
+#ifdef FF_USE_LFN
+	//static char lfn[FF_MAX_LFN + 1];
+	//fno.fname = lfn;
+	//fno.lfsize = sizeof(lfn);
 #endif
 
 	res = f_opendir(&dir, path);
-	//printf("f_opendir res: %d\r\n", res);
+	printf("f_opendir res: %d\r\n", res);
 	if(res == FR_OK){
 		i = strlen(path);
-		//printf("strlen of path: %s %d \r\n", path, i);
+		printf("strlen of path: %s %d \r\n", path, i);
 		for(;;){
 			res = f_readdir(&dir, &fno);
 			if(res != FR_OK || fno.fname[0] == 0) break;
 			if(fno.fname[0] == '.') continue;
-#ifdef _USE_LFN
-			fn = *fno.lfname ? fno.lfname : fno.fname;
+#ifdef FF_USE_LFN
+			fn = *fno.fname ? fno.fname : fno.altname;
 #else
 			fn = fno.fname;
 #endif
-			switch((fno.fdate >> 5) & 0x0f)
-			{
-			case 1:
-				len = sprintf(date_str, "JAN ");
-				break;
-			case 2:
-				len = sprintf(date_str, "FEB ");
-				break;
-			case 3:
-				len = sprintf(date_str, "MAR ");
-				break;
-			case 4:
-				len = sprintf(date_str, "APR ");
-				break;
-			case 5:
-				len = sprintf(date_str, "MAY ");
-				break;
-			case 6:
-				len = sprintf(date_str, "JUN ");
-				break;
-			case 7:
-				len = sprintf(date_str, "JUL ");
-				break;
-			case 8:
-				len = sprintf(date_str, "AUG ");
-				break;
-			case 9:
-				len = sprintf(date_str, "SEP ");
-				break;
-			case 10:
-				len = sprintf(date_str, "OCT ");
-				break;
-			case 11:
-				len = sprintf(date_str, "NOV ");
-				break;
-			case 12:
-				len = sprintf(date_str, "DEC ");
-				break;
-			}
-			date_str_ptr += len;
-			len = sprintf(date_str + date_str_ptr, "%d ", (fno.fdate & 0x1f));
-			date_str_ptr += len;
-			len = sprintf(date_str + date_str_ptr, "%d", (((fno.fdate >> 9) & 0x7f) + 1980));
-			date_str_ptr = 0;
-			//printf("date str : %s \r\n", date_str);
 
 			if(fno.fattrib & AM_DIR)
 			{
@@ -3385,14 +3338,15 @@ FRESULT scan_files(char* path, char *buf, int * buf_len)
 			buf_ptr++;
 			// drwxr-xr-x 1 ftp ftp              0 Apr 07  2014 $RECYCLE.BIN\r\n
 			//len = sprintf(buf + buf_ptr, "rwxr-xr-x 1 ftp ftp              %d %s %s\r\n", fno.fsize, date_str, fn);
-			len = sprintf(buf + buf_ptr, "rwxr-xr-x 1 ftp ftp %d %s %s\r\n", fno.fsize, date_str, fn);
+			printf("rwxr-xr-x 1 ftp ftp %d Apr 07  2014 %s\r\n", fno.fsize, fno.fname);
+			len = sprintf(buf + buf_ptr, "rwxr-xr-x 1 ftp ftp %d Apr 07  2014 %s\r\n", fno.fsize, fno.fname);
 			buf_ptr += len;
-			//printf("fn: %s \r\n", fn);
+			printf("fn: %s \r\n", fno.fname);
 
 		}
 		//*buf_len = strlen(buf);
-		//printf("%s", buf);
-		//printf("\r\nbuf_len : %d, sizeof(buf): %d\r\n", buf_len, sizeof(buf));
+		printf("%s", buf);
+		printf("\r\nbuf_len : %d, sizeof(buf): %d\r\n", buf_len, sizeof(buf));
 		//f_closedir(&dir);
 	}
 	return res;

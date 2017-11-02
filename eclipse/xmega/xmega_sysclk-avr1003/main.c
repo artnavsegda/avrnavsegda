@@ -10,5 +10,11 @@ int main(void)
 	CLKSYS_Main_ClockSource_Select(CLK_SCLKSEL_RC32M_gc);
 	CLKSYS_Disable(OSC_RC2MEN_bm);
 
-	while(1);
+    PORTD_DIRSET = _BV(4);
+
+	while(1)
+	{
+		PORTD_OUTTGL = _BV(4);
+		_delay_ms(1000);
+	}
 }

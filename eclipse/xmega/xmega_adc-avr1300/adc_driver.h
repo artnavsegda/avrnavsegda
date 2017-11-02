@@ -204,12 +204,12 @@
  *  \param  _inputMode      Input mode for this channel, differential,
  *                         single-ended, gain etc. Use ADC_CH_INPUTMODE_t type.
  *  \param  _gain           The preamplifiers gain value.
- *                         Use ADC_CH_GAINFAC_t type.
+ *                         Use ADC_CH_GAIN_gm type.
  *
  */
 #define ADC_Ch_InputMode_and_Gain_Config(_adc_ch, _inputMode, _gain)           \
 	(_adc_ch)->CTRL = ((_adc_ch)->CTRL &                                   \
-	                  (~(ADC_CH_INPUTMODE_gm|ADC_CH_GAINFAC_gm))) |        \
+	                  (~(ADC_CH_INPUTMODE_gm|ADC_CH_GAIN_gm))) |        \
 	                  ((uint8_t) _inputMode|_gain)
 
 

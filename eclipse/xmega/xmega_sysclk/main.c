@@ -8,5 +8,11 @@ int main(void)
     CPU_CCP = 0xD8;
     CLK_CTRL = 1;
 
-	while(1);
+    PORTD_DIRSET = _BV(4);
+
+	while(1)
+	{
+		PORTD_OUTTGL = _BV(4);
+		_delay_ms(1000);
+	}
 }

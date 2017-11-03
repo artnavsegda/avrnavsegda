@@ -25,7 +25,7 @@ float calculateSD(float data[])
 
 int main(void)
 {
-	int16_t result[10];
+	float result[10];
 	startserial();
 	printf("MCU started\n\r");
 	ADCA.CTRLB |= ADC_RESOLUTION_12BIT_gc;
@@ -43,7 +43,7 @@ int main(void)
 			while(!ADCA.CH0.INTFLAGS);
 			result[i] = ADCA.CH0RES;
 		}
-		printf("\nStandard Deviation = %.6f", calculateSD(result));
+		printf("Standard Deviation = %.6f\n\r", calculateSD(result));
 	}
 	return 0;
 }

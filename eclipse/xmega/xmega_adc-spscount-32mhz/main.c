@@ -56,7 +56,7 @@ int main(void)
 
 	while(1)
 	{
-		average(16);
+		average(64);
 		counter++;
 	}
 	return 0;

@@ -23,7 +23,7 @@ float calculateSD(float data[])
     return sqrt(standardDeviation/100);
 }
 
-unsigned long average(int amount)
+float average(int amount)
 {
 	unsigned long temporary = 0;
 	for (int i=0; i<amount;i++)
@@ -32,7 +32,7 @@ unsigned long average(int amount)
 		while(!ADCB.CH0.INTFLAGS);
 		temporary += ADCB.CH0RES;
 	}
-	return temporary;
+	return temporary/amount;
 }
 
 int main(void)

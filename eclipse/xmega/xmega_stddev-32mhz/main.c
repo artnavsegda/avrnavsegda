@@ -23,6 +23,18 @@ float calculateSD(float data[])
     return sqrt(standardDeviation/100);
 }
 
+unsigned long average(int amount)
+{
+	unsigned long temporary = 0;
+	for (int i=0; i<amount;i++)
+	{
+		ADCB.CH0.CTRL |= ADC_CH_START_bm;
+		while(!ADCB.CH0.INTFLAGS);
+		temporary += ADCB.CH0RES;
+	}
+	return temporary;
+}
+
 int main(void)
 {
 	float result[100];
@@ -48,7 +60,7 @@ int main(void)
 		{
 			ADCB.CH0.CTRL |= ADC_CH_START_bm;
 			while(!ADCB.CH0.INTFLAGS);
-			result[i] = ADCB.CH0RES;
+			result[i] = average(64);
 		}
 		printf("Standard Deviation = %.6f\n\r", calculateSD(result));
 		_delay_ms(100);

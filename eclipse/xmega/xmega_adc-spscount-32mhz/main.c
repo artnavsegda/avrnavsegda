@@ -7,15 +7,27 @@
 
 unsigned long counter = 0;
 
-ISR(ADCA_CH0_vect)
-{
-	counter++;
-}
+//ISR(ADCB_CH0_vect)
+//{
+//	counter++;
+//}
 
 ISR(TCC0_OVF_vect)
 {
 	printf("samples per second: %lu\n\r",counter);
 	counter = 0;
+}
+
+uint16_t average(int amount)
+{
+	unsigned long temporary = 0;
+	for (int i=0; i<amount;i++)
+	{
+		ADCB.CH0.CTRL |= ADC_CH_START_bm;
+		while(!ADCB.CH0.INTFLAGS);
+		temporary += ADCB.CH0RES;
+	}
+	return temporary/amount;
 }
 
 int main(void)
@@ -31,17 +43,21 @@ int main(void)
 
 	startserial(207);//9600
 	printf("MCU started\n\r");
-	ADCA.CTRLB |= ADC_RESOLUTION_12BIT_gc;
-	ADCA.PRESCALER |= ADC_PRESCALER_DIV64_gc; //about 487010 SPS at DIV64 at 32mhz
-	ADCA.REFCTRL |= ADC_REFSEL_INTVCC_gc;
-	ADCA.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
-	ADCA.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN0_gc;
-	ADCA.CH0.INTCTRL |= ADC_CH_INTMODE_COMPLETE_gc | ADC_CH_INTLVL_LO_gc;
+	ADCB.CTRLB |= ADC_RESOLUTION_12BIT_gc;
+	ADCB.PRESCALER |= ADC_PRESCALER_DIV64_gc; //about 487010 SPS at DIV64 at 32mhz
+	ADCB.REFCTRL |= ADC_REFSEL_INTVCC_gc;
+	ADCB.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
+	ADCB.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN0_gc;
+	ADCB.CH0.INTCTRL |= ADC_CH_INTMODE_COMPLETE_gc | ADC_CH_INTLVL_LO_gc;
 	PMIC.CTRL |= PMIC_LOLVLEX_bm | PMIC_MEDLVLEX_bm;
 	sei();
-	ADCA.CTRLB |= ADC_FREERUN_bm;
-	ADCA.CTRLA |= ADC_ENABLE_bm;
+	ADCB.CTRLB |= ADC_FREERUN_bm;
+	ADCB.CTRLA |= ADC_ENABLE_bm;
 
-	while(1);
+	while(1)
+	{
+		average(16);
+		counter++;
+	}
 	return 0;
 }

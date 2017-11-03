@@ -27,6 +27,8 @@ int main(void)
 	sei();
 	ADCA.CTRLA |= ADC_ENABLE_bm|ADC_CH_START_bm;
 
+	//ADCA.CTRLB |= ADC_FREERUN_bm;
+
 	while(1)
 	{
 		//ADCA.CH0.CTRL |= ADC_CH_START_bm;

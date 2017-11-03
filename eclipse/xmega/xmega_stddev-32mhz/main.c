@@ -34,20 +34,21 @@ int main(void)
 
 	startserial(207);//9600
 	printf("MCU started\n\r");
-	ADCA.CTRLB |= ADC_RESOLUTION_12BIT_gc;
-	ADCA.PRESCALER |= ADC_PRESCALER_DIV512_gc;
-	ADCA.REFCTRL |= ADC_REFSEL_INTVCC_gc;
-	ADCA.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
-	ADCA.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN0_gc;
-	ADCA.CTRLA |= ADC_ENABLE_bm;
+
+	ADCB.CTRLB |= ADC_RESOLUTION_12BIT_gc;
+	ADCB.PRESCALER |= ADC_PRESCALER_DIV64_gc;
+	ADCB.REFCTRL |= ADC_REFSEL_INTVCC_gc;
+	ADCB.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
+	ADCB.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN3_gc;
+	ADCB.CTRLA |= ADC_ENABLE_bm;
 
 	while(1)
 	{
 		for (int i = 0; i < 100; i++)
 		{
-			ADCA.CH0.CTRL |= ADC_CH_START_bm;
-			while(!ADCA.CH0.INTFLAGS);
-			result[i] = ADCA.CH0RES;
+			ADCB.CH0.CTRL |= ADC_CH_START_bm;
+			while(!ADCB.CH0.INTFLAGS);
+			result[i] = ADCB.CH0RES;
 		}
 		printf("Standard Deviation = %.6f\n\r", calculateSD(result));
 		_delay_ms(100);

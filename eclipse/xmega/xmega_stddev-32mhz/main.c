@@ -10,22 +10,22 @@ float calculateSD(float data[])
 
     int i;
 
-    for(i=0; i<10; ++i)
+    for(i=0; i<100; ++i)
     {
         sum += data[i];
     }
 
-    mean = sum/10;
+    mean = sum/100;
 
-    for(i=0; i<10; ++i)
+    for(i=0; i<100; ++i)
         standardDeviation += pow(data[i] - mean, 2);
 
-    return sqrt(standardDeviation/10);
+    return sqrt(standardDeviation/100);
 }
 
 int main(void)
 {
-	float result[10];
+	float result[100];
 
     OSC.CTRL = 0x02;
     while(!(OSC.STATUS & OSC_RC32MRDY_bm));
@@ -35,7 +35,7 @@ int main(void)
 	startserial(207);//9600
 	printf("MCU started\n\r");
 	ADCA.CTRLB |= ADC_RESOLUTION_12BIT_gc;
-	ADCA.PRESCALER |= ADC_PRESCALER_DIV4_gc;
+	ADCA.PRESCALER |= ADC_PRESCALER_DIV512_gc;
 	ADCA.REFCTRL |= ADC_REFSEL_INTVCC_gc;
 	ADCA.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
 	ADCA.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN0_gc;
@@ -43,7 +43,7 @@ int main(void)
 
 	while(1)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			ADCA.CH0.CTRL |= ADC_CH_START_bm;
 			while(!ADCA.CH0.INTFLAGS);

@@ -32,7 +32,7 @@ int main(void)
 	startserial(207);//9600
 	printf("MCU started\n\r");
 	ADCA.CTRLB |= ADC_RESOLUTION_12BIT_gc;
-	ADCA.PRESCALER |= ADC_PRESCALER_DIV4_gc;
+	ADCA.PRESCALER |= ADC_PRESCALER_DIV64_gc; //about 487010 SPS at DIV64 at 32mhz
 	ADCA.REFCTRL |= ADC_REFSEL_INTVCC_gc;
 	ADCA.CH0.CTRL |= ADC_CH_INPUTMODE_SINGLEENDED_gc;
 	ADCA.CH0.MUXCTRL |= ADC_CH_MUXPOS_PIN0_gc;
@@ -42,11 +42,6 @@ int main(void)
 	ADCA.CTRLB |= ADC_FREERUN_bm;
 	ADCA.CTRLA |= ADC_ENABLE_bm;
 
-	while(1)
-	{
-		printf("samples per second: %lu\n\r",counter);
-		counter = 0;
-		_delay_ms(1000);
-	}
+	while(1);
 	return 0;
 }

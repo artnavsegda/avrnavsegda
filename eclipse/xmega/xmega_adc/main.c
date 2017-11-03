@@ -29,7 +29,7 @@ int main(void)
 
 	while(1)
 	{
-		printf("adc: %lu\n\r",average(16));
+		printf("adc: %u\n\r",average(16));
 		_delay_ms(1000);
 	}
 	return 0;

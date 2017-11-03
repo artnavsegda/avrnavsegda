@@ -18,7 +18,6 @@ uint16_t average(int amount)
 
 int main(void)
 {
-	int16_t result = 0;
 	startserial();
 	printf("MCU started\n\r");
 	ADCB.CTRLB |= ADC_RESOLUTION_12BIT_gc;
@@ -30,7 +29,7 @@ int main(void)
 
 	while(1)
 	{
-		printf("adc: %d\n\r",average(16));
+		printf("adc: %lu\n\r",average(16));
 		_delay_ms(1000);
 	}
 	return 0;

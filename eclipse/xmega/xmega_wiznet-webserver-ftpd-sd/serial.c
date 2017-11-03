@@ -14,16 +14,17 @@ static int uart_putchar(char c, FILE *stream)
 	return 0;
 }
 
-void start_serial(void)
+void start_serial(uint8_t bsel)
 {
 	PORTC.DIRSET = PIN3_bm;
 	PORTC.DIRCLR = PIN2_bm;
 
 	USARTC0.CTRLC = (uint8_t) USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | false;
-	USARTC0.BAUDCTRLA = 12; // 9600
+	USARTC0.BAUDCTRLA = bsel;
 
 	USARTC0.CTRLB |= USART_RXEN_bm;
 	USARTC0.CTRLB |= USART_TXEN_bm;
 
 	stdout = &mystdout;
 }
+

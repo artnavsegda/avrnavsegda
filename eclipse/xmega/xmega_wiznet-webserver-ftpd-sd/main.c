@@ -99,12 +99,12 @@ void start_ethernet(wiz_NetInfo netinfo)
 
 void start_timer(void)
 {
-	TCC0_PER = 20000;                // Set period 10000
-	TCC0_CTRLA = TC_CLKSEL_DIV1_gc;                // Prescaler DIV1
+	TCC0_PER = 5000;                // Set period 10000
+	TCC0_CTRLA = TC_CLKSEL_DIV64_gc;                // Prescaler DIV1
 	TCC0_INTCTRLA = 2;                // Enable overflow interrupt
 	// 31250 * 64 = 2000000 = 2 mHz
 	TCC1_PER = 31250;                // Set period 31250
-	TCC1_CTRLA = TC_CLKSEL_DIV64_gc;                // Prescaler DIV64
+	TCC1_CTRLA = TC_CLKSEL_DIV1024_gc;                // Prescaler DIV64
 	TCC1_INTCTRLA = 2;                // Enable overflow interrupt
 	PMIC_CTRL = 2;                    // Enable medium level interrupts
 	sei();
@@ -133,7 +133,12 @@ int main(void)
 	FATFS fs;
 	uint8_t tmpstr[6] = {0,};
 
-	start_serial();
+    OSC.CTRL = 0x02;
+    while(!(OSC.STATUS & OSC_RC32MRDY_bm));
+    CPU_CCP = 0xD8;
+    CLK.CTRL = 1;
+
+	start_serial(207);//9600
 	printf("Serial started\r\n");
 	start_timer();
 	printf("Timer started\r\n");

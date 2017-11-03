@@ -4,6 +4,18 @@
 #include <stdbool.h>
 #include "serial.h"
 
+uint16_t average(int amount)
+{
+	unsigned long temporary = 0;
+	for (int i=0; i<amount;i++)
+	{
+		ADCB.CH0.CTRL |= ADC_CH_START_bm;
+		while(!ADCB.CH0.INTFLAGS);
+		temporary += ADCB.CH0RES;
+	}
+	return temporary/amount;
+}
+
 int main(void)
 {
 	int16_t result = 0;
@@ -18,11 +30,8 @@ int main(void)
 
 	while(1)
 	{
-		ADCB.CH0.CTRL |= ADC_CH_START_bm;
-		while(!ADCB.CH0.INTFLAGS);
-		result = ADCB.CH0RES;
-		printf("adc: %d\n\r",result);
-		//_delay_ms(1000);
+		printf("adc: %d\n\r",average(16));
+		_delay_ms(1000);
 	}
 	return 0;
 }

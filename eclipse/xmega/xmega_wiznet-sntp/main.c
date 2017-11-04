@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "wizchip_conf.h"
 #include "serial.h"
-#include "loopback.h"
+#include "sntp.h"
 
 static void  wizchip_select(void)
 {
@@ -83,6 +83,10 @@ uint8_t gDATABUF[128];
 
 int main(void)
 {
+	//uint8_t ntp_server[4] = {128, 138, 141, 172};	// time.nist.gov
+	uint8_t ntp_server[4] = {211, 233, 84, 186}; // kr.pool.ntp.org
+	datetime time;
+
 	uint8_t tmpstr[6] = {0,};
 	start_serial();
 	printf("Serial started\r\n");
@@ -117,9 +121,13 @@ int main(void)
 	printf("Wiznet %s started\r\n", tmpstr);
 	Display_Net_Conf();
 
+	SNTP_init(0, ntp_server, 31, gDATABUF); // timezone: Russia (European)
+
 	while(1)
 	{
-		loopback_tcps(0, gDATABUF, 23);
+		_delay_ms(10000);
+		while (SNTP_run(&time) != 1);
+		printf("%d-%d-%d, %d:%d:%d\n\r", time.yy, time.mo, time.dd, time.hh, time.mm, time.ss);
 	}
 
 	return 0;

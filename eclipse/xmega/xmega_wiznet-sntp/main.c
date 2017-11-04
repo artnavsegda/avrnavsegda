@@ -83,8 +83,8 @@ uint8_t gDATABUF[128];
 
 int main(void)
 {
-	//uint8_t ntp_server[4] = {128, 138, 141, 172};	// time.nist.gov
-	uint8_t ntp_server[4] = {211, 233, 84, 186}; // kr.pool.ntp.org
+	uint8_t ntp_server[4] = {128, 138, 141, 172};	// time.nist.gov
+	//uint8_t ntp_server[4] = {211, 233, 84, 186}; // kr.pool.ntp.org
 	datetime time;
 
 	uint8_t tmpstr[6] = {0,};
@@ -125,7 +125,7 @@ int main(void)
 
 	while(1)
 	{
-		_delay_ms(10000);
+		_delay_ms(1000);
 		while (SNTP_run(&time) != 1);
 		printf("%d-%d-%d, %d:%d:%d\n\r", time.yy, time.mo, time.dd, time.hh, time.mm, time.ss);
 	}

@@ -20,7 +20,8 @@ void startserial(uint8_t bsel)
 	PORTC.DIRCLR = PIN2_bm;
 
 	USARTC0.CTRLC = (uint8_t) USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | false;
-	USARTC0.BAUDCTRLA = bsel;
+
+	USART_Baudrate_Set(&USARTC0, bsel , 0);
 
 	USARTC0.CTRLB |= USART_RXEN_bm;
 	USARTC0.CTRLB |= USART_TXEN_bm;

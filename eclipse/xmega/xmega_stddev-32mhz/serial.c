@@ -24,6 +24,7 @@ void startserial(uint8_t bsel)
 
 	USARTC0.CTRLB |= USART_RXEN_bm;
 	USARTC0.CTRLB |= USART_TXEN_bm;
+	USARTC0.CTRLB |= USART_CLK2X_bm;
 
 	stdout = &mystdout;
 }

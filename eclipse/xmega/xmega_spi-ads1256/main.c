@@ -25,9 +25,29 @@ char spi_transfer(char c)
 	return SPIC.DATA;
 }
 
+void ads1256config()
+{
+	while(bit_is_set(PORTC.IN,PIN1_bp));
+	PORTC.OUTCLR = PIN4_bm;
+	_delay_us(2);
+	spi_transfer(0x50|0);
+	_delay_us(2);
+	spi_transfer(0x03);
+	_delay_us(2);
+	spi_transfer(0x00);
+	_delay_us(2);
+	spi_transfer(0x08);
+	_delay_us(2);
+	spi_transfer(0x00);
+	_delay_us(2);
+	spi_transfer(0x03);
+	PORTC.OUTSET = PIN4_bm;
+	_delay_us(50);
+}
+
 int main(void)
 {
-	unsigned int result;
+	uint8_t result[3];
 	_delay_ms(1000);
 	startserial();
 	startspi();
@@ -43,7 +63,23 @@ int main(void)
 	PORTC.OUTSET = PIN4_bm;
 	printf("chip id %d\n",_data >> 4);
 
-	while(1);
+	ads1256config();
+
+	while(1)
+	{
+		if (bit_is_clear(PORTC.IN,PIN1_bp))
+		{
+			PORTC.OUTCLR = PIN4_bm;
+			_delay_us(2);
+			spi_transfer(0x01);
+			_delay_us(10);
+			result[0] = spi_transfer(0xFF);
+			result[1] = spi_transfer(0xFF);
+			result[2] = spi_transfer(0xFF);
+			PORTC.OUTSET = PIN4_bm;
+			printf("%02X%02X%02X\r\n",result[0],result[1],result[2]);
+		}
+	}
 
 	return 0;
 }

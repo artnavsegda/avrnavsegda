@@ -47,7 +47,7 @@ void ads1256config()
 
 int main(void)
 {
-	uint8_t result[3];
+	uint32_t result = 0;
 	_delay_ms(1000);
 	startserial();
 	startspi();
@@ -61,7 +61,7 @@ int main(void)
 	_delay_us(10);
 	uint8_t _data = spi_transfer(0xFF);
 	PORTC.OUTSET = PIN4_bm;
-	printf("chip id %d\n",_data >> 4);
+	printf("chip id %d\n\r",_data >> 4);
 
 	ads1256config();
 
@@ -73,11 +73,11 @@ int main(void)
 			_delay_us(2);
 			spi_transfer(0x01);
 			_delay_us(10);
-			result[0] = spi_transfer(0xFF);
-			result[1] = spi_transfer(0xFF);
-			result[2] = spi_transfer(0xFF);
+			((char *)&result)[2] = spi_transfer(0xFF);
+			((char *)&result)[1] = spi_transfer(0xFF);
+			((char *)&result)[0] = spi_transfer(0xFF);
 			PORTC.OUTSET = PIN4_bm;
-			printf("%02X%02X%02X\r\n",result[0],result[1],result[2]);
+			printf("%lu\r\n",result);
 		}
 	}
 

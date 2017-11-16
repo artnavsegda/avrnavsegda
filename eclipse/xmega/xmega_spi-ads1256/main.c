@@ -29,20 +29,13 @@ void ads1256config()
 {
 	while(bit_is_set(PORTC.IN,PIN1_bp));
 	PORTC.OUTCLR = PIN4_bm;
-	_delay_us(2);
 	spi_transfer(0x50|0);
-	_delay_us(2);
 	spi_transfer(0x03);
-	_delay_us(2);
 	spi_transfer(0x00);
-	_delay_us(2);
 	spi_transfer(0x08);
-	_delay_us(2);
 	spi_transfer(0x00);
-	_delay_us(2);
 	spi_transfer(0x03);
 	PORTC.OUTSET = PIN4_bm;
-	_delay_us(50);
 }
 
 int main(void)
@@ -54,11 +47,8 @@ int main(void)
 
 	while(bit_is_set(PORTC.IN,PIN1_bp));
 	PORTC.OUTCLR = PIN4_bm;
-	_delay_us(2);
 	spi_transfer(0x10|0);
-	_delay_us(2);
 	spi_transfer(0x00);
-	_delay_us(10);
 	uint8_t _data = spi_transfer(0xFF);
 	PORTC.OUTSET = PIN4_bm;
 	printf("chip id %d\n\r",_data >> 4);
@@ -70,9 +60,7 @@ int main(void)
 		if (bit_is_clear(PORTC.IN,PIN1_bp))
 		{
 			PORTC.OUTCLR = PIN4_bm;
-			_delay_us(2);
 			spi_transfer(0x01);
-			_delay_us(10);
 			((char *)&result)[2] = spi_transfer(0xFF);
 			((char *)&result)[1] = spi_transfer(0xFF);
 			((char *)&result)[0] = spi_transfer(0xFF);

@@ -4,14 +4,6 @@
 #include "serial.h"
 #include "i2c.h"
 
-void starti2c(void)
-{
-	TWIE.MASTER.CTRLB = TWI_MASTER_SMEN_bm;
-	TWIE.MASTER.BAUD = TWI_BAUD(2000000, 10000);
-	TWIE.MASTER.CTRLA = TWI_MASTER_ENABLE_bm;
-	TWIE.MASTER.STATUS = TWI_MASTER_BUSSTATE_IDLE_gc;
-}
-
 uint8_t pcaread(uint8_t ModuleAddress, uint8_t ModuleRegister)
 {
 	i2csend(0x18, ModuleRegister);//write word addr

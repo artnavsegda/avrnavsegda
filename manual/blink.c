@@ -1,16 +1,26 @@
-#define F_CPU 1000000
+#define F_CPU 8000000
 
 #include <avr/io.h>
 #include <util/delay.h>
 
 int main(void)
 {
-	DDRB = 0xFF;
+	MCUCR = 0x80;
+	//SFIOR = 0x78; //bus keeper enable
+	SFIOR = 0x38; //bus keeper disable
+
+	unsigned char * p = 0x500;
+	unsigned char * d = 0x5FF;
+
 	while (1)
 	{
-		PORTB = 0xFF;
+		*p = 0xFF;
 		_delay_ms(1000);
-		PORTB = 0x00;
+		*d = 0xFF;
+		_delay_ms(1000);
+		*p = 0x00;
+		_delay_ms(1000);
+		*d = 0x00;
 		_delay_ms(1000);
 	}
 	return 0;

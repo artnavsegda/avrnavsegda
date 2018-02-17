@@ -11,6 +11,7 @@ int main(void)
 
 	unsigned char * p = 0x500;
 	unsigned char * d = 0x5FF;
+	unsigned char x;
 
 	while (1)
 	{
@@ -18,9 +19,15 @@ int main(void)
 		_delay_ms(1000);
 		*d = 0xFF;
 		_delay_ms(1000);
+
 		*p = 0x00;
 		_delay_ms(1000);
 		*d = 0x00;
+		_delay_ms(1000);
+
+		*p = *d;
+		_delay_ms(1000);
+		*d = !*p;
 		_delay_ms(1000);
 	}
 	return 0;

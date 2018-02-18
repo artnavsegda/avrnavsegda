@@ -20,13 +20,13 @@ int main(void)
 	UBRR0L = UBRRL_VALUE;
 
 #if USE_2X
-    UCSR0A |= _BV(U2X0);
+	UCSR0A |= _BV(U2X0);
 #else
-    UCSR0A &= ~(_BV(U2X0));
+	UCSR0A &= ~(_BV(U2X0));
 #endif
 
-	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0); /* Enable RX and TX */
+	UCSR0C = _BV(URSEL0) | _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
 
 	MCUCR = 0x80; // XMEM enable
 	SFIOR = 0x78; //bus keeper enable

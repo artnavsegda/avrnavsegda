@@ -29,16 +29,42 @@ int main(void)
 	UCSR0C = _BV(URSEL0) | _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
 
 	MCUCR = 0x80; // XMEM enable
-	SFIOR = 0x78; //bus keeper enable
-	//SFIOR = 0x38; //bus keeper disable
+	//SFIOR = 0x78; //bus keeper enable
+	SFIOR = 0x38; //bus keeper disable
 
-	unsigned char * p = 0x500;
-	unsigned char * d = 0x5FF;
+	volatile unsigned char *p = (unsigned char *) 0x500;
+	volatile unsigned char *d = (unsigned char *) 0x5FF;
 	unsigned char x;
 
 	stdout = &mystdout;
 	_delay_ms(500);
-	printf("hello\r\n");
+	//printf("hello\r\n");
+
+	/*while (1)
+	{
+		//printf("hello");
+		uart_putchar('a',NULL);
+		_delay_ms(1000);
+	}*/	
+
+	/*while (1)
+	{
+		x = *p;
+		_delay_ms(1000);
+		x = *d;
+		_delay_ms(1000);
+	}*/
+
+	while (1)
+	{
+		*p = 0x00;
+		_delay_ms(1000);
+		x = *p;
+		//printf("%x read\r\n",x);
+		_delay_ms(1000);	
+		//*d = 0x00;
+		//_delay_ms(1000);
+	}
 
 	while (1)
 	{

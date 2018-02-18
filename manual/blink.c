@@ -6,8 +6,8 @@
 int main(void)
 {
 	MCUCR = 0x80;
-	//SFIOR = 0x78; //bus keeper enable
-	SFIOR = 0x38; //bus keeper disable
+	SFIOR = 0x78; //bus keeper enable
+	//SFIOR = 0x38; //bus keeper disable
 
 	unsigned char * p = 0x500;
 	unsigned char * d = 0x5FF;

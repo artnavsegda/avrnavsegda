@@ -14,6 +14,18 @@ static int uart_putchar(char c, FILE *stream)
 
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
+unsigned short adc(unsigned char controlbyte)
+{
+	volatile unsigned char *p = (unsigned char *) 0x500;
+	volatile unsigned short *r = 0x500;
+	unsigned short z;
+	*p = controlbyte;
+	_delay_ms(1);
+	loop_until_bit_is_clear(PORTD, PD2);
+	z = *r;
+	return z;
+}
+
 int main(void)
 {
 	UBRR0H = UBRRH_VALUE;
@@ -34,7 +46,11 @@ int main(void)
 
 	volatile unsigned char *p = (unsigned char *) 0x500;
 	volatile unsigned char *d = (unsigned char *) 0x5FF;
+
+	volatile unsigned short *r = 0x500;
+
 	unsigned char x;
+	unsigned short z;
 
 	stdout = &mystdout;
 	_delay_ms(500);
@@ -54,6 +70,25 @@ int main(void)
 		x = *d;
 		_delay_ms(1000);
 	}*/
+
+	while (1)
+	{
+		printf("%x %x %x %x %x %x %x %x\r\n",adc(0), adc(1), adc(2), adc(3), adc(4), adc(5), adc(6), adc(7));
+	}
+
+	while (1)
+	{
+		*p = 0x00;
+		_delay_ms(100);
+		z = *r;
+		printf("%x ch0\r\n",z);
+		_delay_ms(1000);
+		*p = 0x01;
+		_delay_ms(100);
+		z = *r;
+		printf("%x ch1\r\n",z);
+		_delay_ms(1000);
+	}
 
 	while (1)
 	{

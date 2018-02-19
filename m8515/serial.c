@@ -7,7 +7,7 @@
 
 static int uart_putchar(char c, FILE *stream)
 {
-	loop_until_bit_is_set(UCSR0A, UDRE0);
+	loop_until_bit_is_set(UCSRA, UDRE);
 	UDR0 = c;
 	return 0;
 }
@@ -28,17 +28,17 @@ unsigned short adc(unsigned char controlbyte)
 
 int main(void)
 {
-	UBRR0H = UBRRH_VALUE;
-	UBRR0L = UBRRL_VALUE;
+	UBRRH = UBRRH_VALUE;
+	UBRRL = UBRRL_VALUE;
 
 #if USE_2X
-	UCSR0A |= _BV(U2X0);
+	UCSRA |= _BV(U2X);
 #else
-	UCSR0A &= ~(_BV(U2X0));
+	UCSRA &= ~(_BV(U2X));
 #endif
 
-	UCSR0B = _BV(RXEN0) | _BV(TXEN0); /* Enable RX and TX */
-	UCSR0C = _BV(URSEL0) | _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
+	UCSRB = _BV(RXEN) | _BV(TXEN); /* Enable RX and TX */
+	UCSRC = _BV(URSEL) | _BV(UCSZ1) | _BV(UCSZ0); /* 8-bit data */
 
 	MCUCR = 0x80; // XMEM enable
 	//SFIOR = 0x78; //bus keeper enable

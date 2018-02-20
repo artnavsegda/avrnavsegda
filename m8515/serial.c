@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#define F_CPU 1000000
+#define F_CPU 2000000
 #define BAUD 9600
 #include <util/delay.h>
 #include <util/setbaud.h>
@@ -8,7 +8,7 @@
 static int uart_putchar(char c, FILE *stream)
 {
 	loop_until_bit_is_set(UCSRA, UDRE);
-	UDR0 = c;
+	UDR = c;
 	return 0;
 }
 

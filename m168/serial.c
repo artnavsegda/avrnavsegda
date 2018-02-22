@@ -36,12 +36,12 @@ unsigned char read(void)
         return x;
 }
 
-unsigned short adc(unsigned char controlbyte)
+short adc(unsigned char controlbyte)
 {
-	unsigned short z;
+	short z;
 	write(controlbyte);
-	_delay_ms(1);
-	loop_until_bit_is_clear(PORTD, PD2);
+	//_delay_ms(1);
+	loop_until_bit_is_clear(PORTB, PB0);
 	PORTB &= ~_BV(PD5);
 	((char *)&z)[0] = read();
 	PORTB |= _BV(PD5);		
@@ -51,7 +51,7 @@ unsigned short adc(unsigned char controlbyte)
 
 int main(void)
 {
-	DDRB |= _BV(PB3)|_BV(PB4)|_BV(PB5); // gpio latch cs, mac cs, max hben as outputs
+	DDRB |= _BV(PB3)|_BV(PB4)|_BV(PB5); // gpio latch, mac cs, max hben as outputs
 	DDRE |= _BV(PE1); // ALE line as otput
 	DDRD |= _BV(PD6)|_BV(PD7); // WR/RD output
 	PORTD |= _BV(PD6)|_BV(PD7); // WR/RD idle high
@@ -77,7 +77,7 @@ int main(void)
 
 	while (1)
 	{
-		printf("%x %x %x %x %x %x %x %x\r\n",adc(0x40), adc(0x41), adc(0x42), adc(0x43), adc(0x44), adc(0x45), adc(0x46), adc(0x47));
+		printf("%4d %4d %4d %4d %4d %4d %4d %4d\r\n",adc(0x48), adc(0x49), adc(0x4a), adc(0x4b), adc(0x4c), adc(0x4d), adc(0x4e), adc(0x4f));
 	}
 
 	return 0;

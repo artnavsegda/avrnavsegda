@@ -6,7 +6,7 @@
 int main(void)
 {
 	DDRA = 0xFF; // AD line as output
-	DDRC = 0xFF;
+	DDRC = 0xFF; // display line as output
 	DDRE |= _BV(PE1); // ALE line as otput
 	DDRD |= _BV(PD6)|_BV(PD7); // WR/RD output
 	PORTD |= _BV(PD6)|_BV(PD7); // WR/RD idle high
@@ -42,11 +42,16 @@ int main(void)
 		DDRA = 0x00; // tristate AD line for data read
 
 		PORTD &= ~_BV(PD7); // RD line strobe low start
-		x = PORTA;
+		//x = PINA;
+		PORTC = PINA;
+		_delay_ms(1000); // for demonstation purposes
 		PORTD |= _BV(PD7); // RD line strobe low end
 		
 		//x = *p; same but in hardware
 		_delay_ms(100);
+
+
+		//PORTC = x;
 
 
 		/*z = *r;

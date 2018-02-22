@@ -14,27 +14,19 @@ static int uart_putchar(char c, FILE *stream)
 
 static FILE mystdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
-void write(unsigned char address, unsigned char data)
+void write(unsigned char data)
 {
         DDRA = 0xFF; // AD line as output
-        PORTE |= _BV(PE1); // open address latch
-        PORTA = address; // set address
-        _delay_us(1);
-        PORTE &= ~_BV(PE1); // close address latch
+
         PORTA = data;
         PORTD &= ~_BV(PD6); // WR line strobe low start
         _delay_us(1);
         PORTD |= _BV(PD6); // WR line strobe low end
 }
 
-unsigned char read(unsigned char address)
+unsigned char read(void)
 {
         unsigned char x;
-        DDRA = 0xFF; // AD line as output
-        PORTE |= _BV(PE1); // open address latch
-        PORTA = address; // set address
-        _delay_us(1);
-        PORTE &= ~_BV(PE1); // close address latch
 
         DDRA = 0x00; // tristate AD line for data read
         PORTD &= ~_BV(PD7); // RD line strobe low start
@@ -46,21 +38,20 @@ unsigned char read(unsigned char address)
 
 unsigned short adc(unsigned char controlbyte)
 {
-	//volatile unsigned char *p = (unsigned char *) 0x500;
-	//volatile unsigned short *r = 0x500;
 	unsigned short z;
-	write(0x00,controlbyte);
-	//*p = controlbyte;
+	write(controlbyte);
 	_delay_ms(1);
 	loop_until_bit_is_clear(PORTD, PD2);
-	((char *)&z)[0] = read(0x00);
-	((char *)&z)[1] = read(0x01);
-	//z = *r;
+	PORTB &= ~_BV(PD5);
+	((char *)&z)[0] = read();
+	PORTB |= _BV(PD5);		
+	((char *)&z)[1] = read();
 	return z;
 }
 
 int main(void)
 {
+	DDRB |= _BV(PB3)|_BV(PB4)|_BV(PB5); // gpio latch cs, mac cs, max hben as outputs
 	DDRE |= _BV(PE1); // ALE line as otput
 	DDRD |= _BV(PD6)|_BV(PD7); // WR/RD output
 	PORTD |= _BV(PD6)|_BV(PD7); // WR/RD idle high
@@ -77,15 +68,6 @@ int main(void)
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0); /* Enable RX and TX */
 	UCSR0C = _BV(URSEL0) | _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
 
-	//MCUCR = 0x80; // XMEM enable
-	//SFIOR = 0x78; //bus keeper enable
-	//SFIOR = 0x38; //bus keeper disable
-
-	//volatile unsigned char *p = (unsigned char *) 0x500;
-	//volatile unsigned char *d = (unsigned char *) 0x5FF;
-
-	//volatile unsigned short *r = 0x500;
-
 	unsigned char x;
 	unsigned short z;
 
@@ -93,68 +75,11 @@ int main(void)
 	_delay_ms(500);
 	//printf("hello\r\n");
 
-	/*while (1)
-	{
-		//printf("hello");
-		uart_putchar('a',NULL);
-		_delay_ms(1000);
-	}*/	
-
-	/*while (1)
-	{
-		x = *p;
-		_delay_ms(1000);
-		x = *d;
-		_delay_ms(1000);
-	}*/
-
 	while (1)
 	{
-		printf("%x %x %x %x %x %x %x %x\r\n",adc(0), adc(1), adc(2), adc(3), adc(4), adc(5), adc(6), adc(7));
+		printf("%x %x %x %x %x %x %x %x\r\n",adc(0x40), adc(0x41), adc(0x42), adc(0x43), adc(0x44), adc(0x45), adc(0x46), adc(0x47));
 	}
 
-	/*while (1)
-	{
-		*p = 0x00;
-		_delay_ms(100);
-		z = *r;
-		printf("%x ch0\r\n",z);
-		_delay_ms(1000);
-		*p = 0x01;
-		_delay_ms(100);
-		z = *r;
-		printf("%x ch1\r\n",z);
-		_delay_ms(1000);
-	}
-
-	while (1)
-	{
-		*p = 0x00;
-		_delay_ms(1000);
-		x = *p;
-		//printf("%x read\r\n",x);
-		_delay_ms(1000);	
-		//*d = 0x00;
-		//_delay_ms(1000);
-	}
-
-	while (1)
-	{
-		*p = 0xFF;
-		_delay_ms(1000);
-		*d = 0xFF;
-		_delay_ms(1000);
-
-		*p = 0x00;
-		_delay_ms(1000);
-		*d = 0x00;
-		_delay_ms(1000);
-
-		*p = *d;
-		_delay_ms(1000);
-		*d = !*p;
-		_delay_ms(1000);
-	}*/
 	return 0;
 }
 

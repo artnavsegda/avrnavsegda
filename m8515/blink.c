@@ -42,16 +42,13 @@ int main(void)
 		DDRA = 0x00; // tristate AD line for data read
 
 		PORTD &= ~_BV(PD7); // RD line strobe low start
-		//x = PINA;
-		PORTC = PINA;
-		_delay_ms(1000); // for demonstation purposes
+		_delay_us(1);
+		x = PINA;
 		PORTD |= _BV(PD7); // RD line strobe low end
 		
 		//x = *p; same but in hardware
-		_delay_ms(100);
 
-
-		//PORTC = x;
+		PORTC = x;
 
 
 		/*z = *r;

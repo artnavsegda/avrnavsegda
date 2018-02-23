@@ -20,8 +20,8 @@ unsigned short adc(unsigned char controlbyte)
 	volatile unsigned short *r = 0x500;
 	unsigned short z;
 	*p = controlbyte;
-	_delay_ms(1);
-	loop_until_bit_is_clear(PORTD, PD2);
+	//_delay_ms(1);
+	loop_until_bit_is_clear(PIND, PD2);
 	z = *r;
 	return z;
 }
@@ -44,80 +44,15 @@ int main(void)
 	//SFIOR = 0x78; //bus keeper enable
 	SFIOR = 0x38; //bus keeper disable
 
-	volatile unsigned char *p = (unsigned char *) 0x500;
-	volatile unsigned char *d = (unsigned char *) 0x5FF;
-
-	volatile unsigned short *r = 0x500;
-
-	unsigned char x;
-	unsigned short z;
-
 	stdout = &mystdout;
 	_delay_ms(500);
 	//printf("hello\r\n");
-
-	/*while (1)
-	{
-		//printf("hello");
-		uart_putchar('a',NULL);
-		_delay_ms(1000);
-	}*/	
-
-	/*while (1)
-	{
-		x = *p;
-		_delay_ms(1000);
-		x = *d;
-		_delay_ms(1000);
-	}*/
 
 	while (1)
 	{
 		printf("%x %x %x %x %x %x %x %x\r\n",adc(0), adc(1), adc(2), adc(3), adc(4), adc(5), adc(6), adc(7));
 	}
 
-	while (1)
-	{
-		*p = 0x00;
-		_delay_ms(100);
-		z = *r;
-		printf("%x ch0\r\n",z);
-		_delay_ms(1000);
-		*p = 0x01;
-		_delay_ms(100);
-		z = *r;
-		printf("%x ch1\r\n",z);
-		_delay_ms(1000);
-	}
-
-	while (1)
-	{
-		*p = 0x00;
-		_delay_ms(1000);
-		x = *p;
-		//printf("%x read\r\n",x);
-		_delay_ms(1000);	
-		//*d = 0x00;
-		//_delay_ms(1000);
-	}
-
-	while (1)
-	{
-		*p = 0xFF;
-		_delay_ms(1000);
-		*d = 0xFF;
-		_delay_ms(1000);
-
-		*p = 0x00;
-		_delay_ms(1000);
-		*d = 0x00;
-		_delay_ms(1000);
-
-		*p = *d;
-		_delay_ms(1000);
-		*d = !*p;
-		_delay_ms(1000);
-	}
 	return 0;
 }
 

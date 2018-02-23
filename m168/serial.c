@@ -41,7 +41,7 @@ short adc(unsigned char controlbyte)
 	short z;
 	write(controlbyte);
 	//_delay_ms(1);
-	loop_until_bit_is_clear(PORTB, PB0);
+	loop_until_bit_is_clear(PINB, PB0);
 	PORTB &= ~_BV(PD5);
 	((char *)&z)[0] = read();
 	PORTB |= _BV(PD5);		
@@ -73,7 +73,7 @@ int main(void)
 
 	while (1)
 	{
-		loop_until_bit_is_clear(PORTD, PD2);
+		loop_until_bit_is_clear(PIND, PD2);
 		if (bit_is_clear(PINB,PB2))
 		{
 			//printf("positive\r\n");

@@ -52,7 +52,6 @@ short adc(unsigned char controlbyte)
 int main(void)
 {
 	DDRB |= _BV(PB3)|_BV(PB4)|_BV(PB5); // gpio latch, mac cs, max hben as outputs
-	DDRE |= _BV(PE1); // ALE line as otput
 	DDRD |= _BV(PD6)|_BV(PD7); // WR/RD output
 	PORTD |= _BV(PD6)|_BV(PD7); // WR/RD idle high
 
@@ -67,9 +66,6 @@ int main(void)
 
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0); /* Enable RX and TX */
 	UCSR0C = _BV(URSEL0) | _BV(UCSZ01) | _BV(UCSZ00); /* 8-bit data */
-
-	unsigned char x;
-	unsigned short z;
 
 	stdout = &mystdout;
 	_delay_ms(500);

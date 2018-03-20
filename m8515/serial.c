@@ -5,6 +5,16 @@
 #include <util/setbaud.h>
 #include <stdio.h>
 
+#include <avr/interrupt.h>
+
+ISR(INT0_vect)
+{
+	if (bit_is_set(PINB,PB2))
+		PORTC &= ~_BV(PC0);
+	if (bit_is_clear(PINB,PB2))
+		PORTC |= _BV(PC0);	
+}
+
 static int uart_putchar(char c, FILE *stream)
 {
 	loop_until_bit_is_set(UCSRA, UDRE);
@@ -55,6 +65,8 @@ int main(void)
 	DDRD |= _BV(PD6)|_BV(PD7); // WR/RD output
 	PORTD |= _BV(PD6)|_BV(PD7); // WR/RD idle high	
 
+	DDRC |= _BV(PC0); //PC0 out;
+
 	UBRRH = UBRRH_VALUE;
 	UBRRL = UBRRL_VALUE;
 
@@ -70,6 +82,11 @@ int main(void)
 	stdout = &mystdout;
 	_delay_ms(500);
 	//printf("hello\r\n");
+
+	GICR |= _BV(INT0); // enable INT0 external interrupt
+	MCUCR |= _BV(ISC01); // falling edge
+
+	sei();
 
         while (1)
         {

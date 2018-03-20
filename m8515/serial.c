@@ -74,15 +74,16 @@ int main(void)
         while (1)
         {
                 loop_until_bit_is_clear(PIND, PD2);
+		adc(0x48);
                 if (bit_is_clear(PINB,PB2))
                 {
                         //printf("positive\r\n");
-                        printf("negative %4d %4d %4d %4d %4d %4d %4d %4d\r\n",adc(0x48), adc(0x49), adc(0x4a), adc(0x4b), adc(0x4c), adc(0x4d), adc(0x4e), adc(0x4f));
+                        //printf("negative %4d %4d %4d %4d %4d %4d %4d %4d\r\n",adc(0x48), adc(0x49), adc(0x4a), adc(0x4b), adc(0x4c), adc(0x4d), adc(0x4e), adc(0x4f));
                 }
                 else if(bit_is_set(PINB,PB2))
                 {
                         //printf("negative\r\n");
-                        printf("positive %4d %4d %4d %4d %4d %4d %4d %4d\r\n",adc(0x48), adc(0x49), adc(0x4a), adc(0x4b), adc(0x4c), adc(0x4d), adc(0x4e), adc(0x4f));
+                        //printf("positive %4d %4d %4d %4d %4d %4d %4d %4d\r\n",adc(0x48), adc(0x49), adc(0x4a), adc(0x4b), adc(0x4c), adc(0x4d), adc(0x4e), adc(0x4f));
                 }
         }
 

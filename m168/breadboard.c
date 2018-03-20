@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#define F_CPU 1000000
+#define F_CPU 2000000
 #define BAUD 9600
 #include <util/delay.h>
 #include <util/setbaud.h>
@@ -20,7 +20,6 @@ unsigned short adc(unsigned char controlbyte)
 	volatile unsigned short *r = 0x500;
 	unsigned short z;
 	*p = controlbyte;
-	//_delay_ms(1);
 	loop_until_bit_is_clear(PIND, PD2);
 	z = *r;
 	return z;
@@ -46,7 +45,7 @@ int main(void)
 
 	stdout = &mystdout;
 	_delay_ms(500);
-	//printf("hello\r\n");
+	printf("hello\r\n");
 
 	while (1)
 	{

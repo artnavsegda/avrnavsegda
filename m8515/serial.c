@@ -7,12 +7,28 @@
 
 #include <avr/interrupt.h>
 
+
+short positive[3];
+short negative[3];
+
+short adc(unsigned char controlbyte);
+
 ISR(INT0_vect)
 {
 	if (bit_is_set(PINB,PB2))
+	{
 		PORTC &= ~_BV(PC0);
+		positive[0] = adc(0x49);
+		positive[1] = adc(0x4a);
+		positive[2] = adc(0x4b);
+	}
 	if (bit_is_clear(PINB,PB2))
-		PORTC |= _BV(PC0);	
+	{
+		PORTC |= _BV(PC0);
+		negative[0] = adc(0x49);
+		negative[1] = adc(0x4a);
+		negative[2] = adc(0x4b);
+	}
 }
 
 static int uart_putchar(char c, FILE *stream)
@@ -46,7 +62,7 @@ unsigned char read(void)
 	return x;
 }
 
-unsigned short adc(unsigned char controlbyte)
+short adc(unsigned char controlbyte)
 {
 	short z;
 	write(controlbyte);
@@ -87,6 +103,14 @@ int main(void)
 	MCUCR |= _BV(ISC01); // falling edge
 
 	sei();
+
+	while(1)
+	{
+		_delay_ms(1000);
+		printf("positive %4d %4d %4d ",positive[0],positive[1],positive[2]);
+		printf("negative %4d %4d %4d ",negative[0],negative[1],negative[2]);
+		printf("diff %4d %4d %4d\r\n",negative[0]-positive[0],positive[1]-negative[1],negative[2]-positive[2]);
+	}
 
         while (1)
         {

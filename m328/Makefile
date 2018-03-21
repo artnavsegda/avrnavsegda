@@ -18,4 +18,7 @@ CFLAGS	= -Os -mmcu=atmega328
 %.isp:	%.hex
 	avrdude -c avrisp2 -p m328 -U $^
 
+%.ard:	%.hex
+	avrdude -c arduino -p m328p -P /dev/cu.usbserial-00000000 -b57600 -U $^
+
 

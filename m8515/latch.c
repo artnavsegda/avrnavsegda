@@ -1,6 +1,29 @@
 #include <avr/io.h>
 #define F_CPU 2000000
 #include <util/delay.h>
+#include <avr/interrupt.h>
+
+ISR(TIMER1_COMPA_vect)
+{
+	//PORTD |= _BV(PD4);
+
+        PORTA |= _BV(PA2);
+        _delay_us(1);
+        PORTB &= ~_BV(PB3); // drop front low
+        _delay_us(1);
+        PORTB |= _BV(PB3); // raise front high
+}
+
+ISR(TIMER1_OVF_vect)
+{
+	//PORTD &= ~_BV(PD4);
+
+	PORTA &= ~_BV(PA2);
+	_delay_us(1);
+	PORTB &= ~_BV(PB3); // drop front low
+	_delay_us(1);
+	PORTB |= _BV(PB3); // raise front high
+}
 
 int main(void)
 {
@@ -8,9 +31,25 @@ int main(void)
 	DDRB |= _BV(PB3); // latch strobe input
 	DDRC |= _BV(PC7);
 
-	_delay_ms(1000);
+	TCCR1A |= _BV(WGM11)|_BV(COM1A1)|_BV(COM1A0);
+	TCCR1B |= _BV(WGM13)|_BV(WGM12)|_BV(CS10);
+	TIMSK |= _BV(OCIE1A)|_BV(TOIE1);
+	TIFR |= _BV(TOV1)|_BV(OCF1A);
+	ICR1 = 19999;
+	OCR1A = ICR1 - 2000;
+	sei();
 
+	_delay_ms(1000);
+	
 	while(1)
+	{
+		OCR1A = ICR1 - 1400;
+		_delay_ms(1000);
+		OCR1A = ICR1 - 4800;
+		_delay_ms(1000);
+	}
+
+	while(1);
 	{
 		PORTA |= _BV(PA2);
 		_delay_ms(100);
